@@ -27,8 +27,11 @@
     "sourceType": "module",
     "project": "tsconfig.json"
   },
+  "ignorePatterns": ["node_modules/", "dist/", "public/", "*.d.ts"],
   "rules": {
+    "semi": ["error", "always"],
     "no-console": "warn",
+    "@typescript-eslint/strict-boolean-expressions": "off",
     "import/order": [
       "error",
       {
