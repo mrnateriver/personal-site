@@ -1,0 +1,159 @@
+---
+import { convertRGBAToHSLA, darkenHSLAColor, lightenHSLAColor, normalizeColor, type Color, type HSLA } from '../colors';
+
+export interface Props {
+  wx: number;
+  wy: number;
+  wz: number;
+  surfaceColor:
+    | Color
+    | { all: Color }
+    | {
+        top: Color;
+        bottom: Color;
+        front: Color;
+        back: Color;
+        left: Color;
+        right: Color;
+      };
+}
+
+const { wx, wy, wz } = Astro.props;
+
+let surfaceColor = Astro.props.surfaceColor ?? { all: 'red' };
+if (typeof surfaceColor === 'number' || typeof surfaceColor === 'string') {
+  surfaceColor = { all: surfaceColor };
+}
+
+const typedColors = surfaceColor as Record<string, Color>;
+
+const surfaceTopColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.top));
+const surfaceBottomColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.bottom));
+const surfaceFrontColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.front));
+const surfaceBackColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.back));
+const surfaceLeftColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.left));
+const surfaceRightColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.right));
+
+const surfaceTopColorDark = darkenHSLAColor(surfaceTopColor, 15);
+const surfaceTopColorLight = lightenHSLAColor(surfaceTopColor, 10);
+
+const surfaceBottomColorDark = darkenHSLAColor(surfaceBottomColor, 10);
+
+const surfaceFrontColorDark = darkenHSLAColor(surfaceFrontColor, 10);
+
+const surfaceLeftColorDark = darkenHSLAColor(surfaceLeftColor, 15);
+const surfaceLeftColorMedium = darkenHSLAColor(surfaceLeftColor, 10);
+
+const surfaceRightColorDark = darkenHSLAColor(surfaceRightColor, 15);
+const surfaceRightColorMedium = darkenHSLAColor(surfaceRightColor, 10);
+
+const colors: Record<string, HSLA | string> = {
+  surfaceTopColor,
+  surfaceTopColorDark,
+  surfaceTopColorLight,
+  surfaceBottomColorDark,
+  surfaceFrontColor,
+  surfaceFrontColorDark,
+  surfaceBackColor,
+  surfaceLeftColor,
+  surfaceLeftColorDark,
+  surfaceLeftColorMedium,
+  surfaceRightColor,
+  surfaceRightColorDark,
+  surfaceRightColorMedium,
+};
+
+for (const key in colors) {
+  const { h, s, l, a } = colors[key] as HSLA;
+  colors[key] = `hsla(${h}, ${s}%, ${l}%, ${a})`;
+}
+---
+
+<i class="box">
+  <i class="box-top"></i>
+  <i class="box-bottom"></i>
+  <i class="box-front"></i>
+  <i class="box-back"></i>
+  <i class="box-left"></i>
+  <i class="box-right"></i>
+</i>
+
+<style
+  lang="scss"
+  define:vars={{
+    wx,
+    wy,
+    wz,
+    ...colors,
+  }}
+>
+  .box {
+    display: block;
+
+    width: var(--wx);
+    height: var(--wy);
+    transform-style: preserve-3d;
+    backface-visibility: visible;
+    overflow: visible;
+
+    [class^='box-'] {
+      overflow: hidden;
+      backface-visibility: visible;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    &-top,
+    &-bottom {
+      transform-origin: center top;
+      height: var(--wz);
+      width: var(--wx);
+    }
+    &-top {
+      transform: rotateX(-90deg) translateY(calc(var(--wz) / -2));
+      background-image: linear-gradient(to bottom, var(--surfaceTopColorDark), transparent),
+        linear-gradient(to right, var(--surfaceTopColorDark), transparent),
+        linear-gradient(to bottom, var(--surfaceTopColor), var(--surfaceTopColorLight));
+      background-size: 1px 100%, 100% 1px, auto;
+      background-repeat: no-repeat;
+    }
+    &-bottom {
+      transform: translateY(var(--wy)) rotateX(-90deg) translateY(calc(var(--wz) / -2));
+      background-color: var(--surfaceBottomColorDark);
+    }
+
+    &-front,
+    &-back {
+      height: var(--wy);
+      width: var(--wx);
+    }
+    &-front {
+      transform: translateZ(var(--wz) / 2);
+      background-image: linear-gradient(to bottom, var(--surfaceFrontColor), var(--surfaceFrontColorDark));
+    }
+    &-back {
+      transform: translateZ(calc(-1 * var(--wz) + var(--wz) / 2));
+      background-color: var(--surfaceBackColor);
+    }
+
+    &-left,
+    &-right {
+      height: var(--wy);
+      width: var(--wz);
+      background-size: 2px 100%, auto auto;
+      background-repeat: no-repeat;
+      transform-origin: left center;
+    }
+    &-left {
+      transform: translateZ(var(--wz) / 2) rotateY(90deg);
+      background-image: linear-gradient(to bottom, var(--surfaceLeftColorDark), transparent),
+        linear-gradient(to bottom, var(--surfaceLeftColor), var(--surfaceLeftColorMedium));
+    }
+    &-right {
+      transform: translateZ(var(--wz) / 2) translateX(var(--wx)) rotateY(90deg);
+      background-image: linear-gradient(to bottom, var(--surfaceRightColorDark), transparent),
+        linear-gradient(to bottom, var(--surfaceRightColor), var(--surfaceRightColorMedium));
+    }
+  }
+</style>
