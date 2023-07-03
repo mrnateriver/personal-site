@@ -2,7 +2,7 @@
 // import * as fs from 'fs';
 
 // import Card from '../components/Card.astro';
-import Box from '../components/Box.astro';
+import BoxImage from '../components/BoxImage.astro';
 import Layout from '../layouts/Layout.astro';
 
 // fs.readdirSync('src/pages').forEach((file) => {
@@ -12,7 +12,7 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="Hi mom">
   <main>
-    <Box wx={100} wy={100} wz={100} surfaceColor="red" />
+    <BoxImage imagePath="src/assets/kangaroo.bmp" />
   </main>
 </Layout>
 
@@ -22,7 +22,7 @@ import Layout from '../layouts/Layout.astro';
     position: relative;
     overflow: visible;
     transform-style: preserve-3d;
-    perspective: 2000px;
+    perspective: 10000px;
     transform: rotateX(339deg) rotateY(57deg) rotateZ(0deg);
   }
 </style>

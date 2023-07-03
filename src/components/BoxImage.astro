@@ -1,0 +1,18 @@
+---
+import type { Color } from '../colors';
+import { readBmpImage } from '../images';
+import BoxGrid from './BoxGrid.astro';
+
+export interface Props {
+  class?: string;
+  imagePath: `${string}.bmp`;
+}
+
+const { class: className, imagePath } = Astro.props;
+
+const imagePixels = (await readBmpImage(imagePath)).map((r) => r.map((p) => [p] as [Color, ...Color[]]));
+---
+
+<BoxGrid class={className} rows={imagePixels} />
+
+<style></style>

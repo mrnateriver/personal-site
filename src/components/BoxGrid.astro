@@ -1,0 +1,73 @@
+---
+import type { Color } from '../colors';
+
+import Box from './Box.astro';
+
+export interface Props {
+  gap?: number;
+  class?: string;
+  cellSize?: number;
+  transparentColor?: Color;
+  rows: Array<Array<[Color, ...Color[]]>>; // Pixel Rows -> Columns -> Frames+
+}
+
+const { gap = 4, cellSize = 50, transparentColor = 0xffffffff, rows, class: className } = Astro.props;
+
+const style = {
+  '--gap': `${gap}px`,
+  '--cell-size': `${cellSize}px`,
+  '--rows-count': rows.length,
+  '--columns-count': rows[0]?.length ?? 0,
+} as const;
+---
+
+<div class:list={['grid', className]} style={style}>
+  {
+    rows.map((row) => (
+      <div class="row">
+        {row
+          .map((c, i) => [c, i] as const)
+          .filter(([c]) => c[0] !== transparentColor)
+          .map(
+            (
+              [column, i],
+              // TODO: animate frames
+              // TODO: split grid into sections of vars, use getBoxStyleVars(Astro.props) to set vars
+            ) => (
+              <Box
+                class="cell"
+                style={{ left: `${i * (cellSize + gap)}px` }}
+                wx={cellSize}
+                wy={cellSize}
+                wz={cellSize}
+                surfaceColor={column[0]}
+              />
+            ),
+          )}
+      </div>
+    ))
+  }
+</div>
+
+<style lang="scss">
+  .grid {
+    display: block;
+    transform-style: preserve-3d;
+    backface-visibility: visible;
+    overflow: visible;
+
+    .row {
+      height: var(--cell-size);
+      width: calc(var(--columns-count) * var(--cell-size) + (var(--columns-count) - 1) * var(--gap));
+      margin-bottom: var(--gap);
+      transform-style: preserve-3d;
+      backface-visibility: visible;
+      position: relative;
+      overflow: visible;
+
+      .cell {
+        position: absolute;
+      }
+    }
+  }
+</style>

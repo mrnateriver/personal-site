@@ -1,82 +1,23 @@
 ---
-import { convertRGBAToHSLA, darkenHSLAColor, lightenHSLAColor, normalizeColor, type Color, type HSLA } from '../colors';
+import { getBoxStyleVars, type BoxProps } from './box-properties';
 
-export interface Props {
-  wx: number;
-  wy: number;
-  wz: number;
-  surfaceColor:
-    | Color
-    | { all: Color }
-    | {
-        top: Color;
-        bottom: Color;
-        front: Color;
-        back: Color;
-        left: Color;
-        right: Color;
-      };
+export interface Props extends BoxProps {
+  style?: Record<string, string>;
+  class?: string;
+  skipStyleVars?: boolean;
 }
 
-const { wx, wy, wz } = Astro.props;
-
-let surfaceColor = Astro.props.surfaceColor ?? { all: 'red' };
-if (typeof surfaceColor === 'number' || typeof surfaceColor === 'string') {
-  surfaceColor = { all: surfaceColor };
-}
-
-const typedColors = surfaceColor as Record<string, Color>;
-
-const normalizedAll = typedColors.all ? normalizeColor(typedColors.all) : undefined;
-
-const surfaceTopColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.top));
-const surfaceBottomColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.bottom));
-const surfaceFrontColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.front));
-const surfaceBackColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.back));
-const surfaceLeftColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.left));
-const surfaceRightColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.right));
-
-const surfaceTopColorDark = darkenHSLAColor(surfaceTopColor, 15);
-const surfaceTopColorLight = lightenHSLAColor(surfaceTopColor, 10);
-const surfaceBottomColorDark = darkenHSLAColor(surfaceBottomColor, 10);
-const surfaceFrontColorDark = darkenHSLAColor(surfaceFrontColor, 10);
-const surfaceLeftColorDark = darkenHSLAColor(surfaceLeftColor, 15);
-const surfaceLeftColorMedium = darkenHSLAColor(surfaceLeftColor, 10);
-const surfaceRightColorDark = darkenHSLAColor(surfaceRightColor, 15);
-const surfaceRightColorMedium = darkenHSLAColor(surfaceRightColor, 10);
-
-const colors: Record<string, HSLA | string> = {
-  surfaceTopColor,
-  surfaceTopColorDark,
-  surfaceTopColorLight,
-  surfaceBottomColorDark,
-  surfaceFrontColor,
-  surfaceFrontColorDark,
-  surfaceBackColor,
-  surfaceLeftColor,
-  surfaceLeftColorDark,
-  surfaceLeftColorMedium,
-  surfaceRightColor,
-  surfaceRightColorDark,
-  surfaceRightColorMedium,
-};
-
-for (const key in colors) {
-  const { h, s, l, a } = colors[key] as HSLA;
-  colors[key] = `hsla(${h}, ${s}%, ${l}%, ${a})`;
-}
+const { class: className, style: boxStyle, skipStyleVars = false } = Astro.props;
 
 // There are quite a lot of vars, and they get injected into all children, so to save up space, inject them manually
 // instead of using the `define:vars` prop.
 const style = {
-  [`--wx`]: `${wx}px`,
-  [`--wy`]: `${wy}px`,
-  [`--wz`]: `${wz}px`,
-  ...Object.fromEntries(Object.entries(colors).map(([key, value]) => [`--${key}`, value])),
+  ...boxStyle,
+  ...(skipStyleVars ? {} : getBoxStyleVars(Astro.props)),
 };
 ---
 
-<i class="box" style={style}>
+<i class:list={['box', className]} style={style}>
   <i class="box-top"></i>
   <i class="box-bottom"></i>
   <i class="box-front"></i>
@@ -111,15 +52,15 @@ const style = {
     }
     &-top {
       transform: rotateX(-90deg) translateY(calc(var(--wz) / -2));
-      background-image: linear-gradient(to bottom, var(--surfaceTopColorDark), transparent),
-        linear-gradient(to right, var(--surfaceTopColorDark), transparent),
-        linear-gradient(to bottom, var(--surfaceTopColor), var(--surfaceTopColorLight));
+      background-image: linear-gradient(to bottom, var(--surface-top-color-dark), transparent),
+        linear-gradient(to right, var(--surface-top-color-dark), transparent),
+        linear-gradient(to bottom, var(--surface-top-color), var(--surface-top-color-light));
       background-size: 1px 100%, 100% 1px, auto;
       background-repeat: no-repeat;
     }
     &-bottom {
       transform: translateY(var(--wy)) rotateX(-90deg) translateY(calc(var(--wz) / -2));
-      background-color: var(--surfaceBottomColorDark);
+      background-color: var(--surface-bottom-color-dark);
     }
 
     &-front,
@@ -129,11 +70,11 @@ const style = {
     }
     &-front {
       transform: translateZ(calc(var(--wz) / 2));
-      background-image: linear-gradient(to bottom, var(--surfaceFrontColor), var(--surfaceFrontColorDark));
+      background-image: linear-gradient(to bottom, var(--surface-front-color), var(--surface-front-color-dark));
     }
     &-back {
       transform: translateZ(calc(-1 * var(--wz) + var(--wz) / 2));
-      background-color: var(--surfaceBackColor);
+      background-color: var(--surface-back-color);
     }
 
     &-left,
@@ -146,13 +87,13 @@ const style = {
     }
     &-left {
       transform: translateZ(calc(var(--wz) / 2)) rotateY(90deg);
-      background-image: linear-gradient(to bottom, var(--surfaceLeftColorDark), transparent),
-        linear-gradient(to bottom, var(--surfaceLeftColor), var(--surfaceLeftColorMedium));
+      background-image: linear-gradient(to bottom, var(--surface-left-color-dark), transparent),
+        linear-gradient(to bottom, var(--surface-left-color), var(--surface-left-color-medium));
     }
     &-right {
       transform: translateZ(calc(var(--wz) / 2)) translateX(var(--wx)) rotateY(90deg);
-      background-image: linear-gradient(to bottom, var(--surfaceRightColorDark), transparent),
-        linear-gradient(to bottom, var(--surfaceRightColor), var(--surfaceRightColorMedium));
+      background-image: linear-gradient(to bottom, var(--surface-right-color-dark), transparent),
+        linear-gradient(to bottom, var(--surface-right-color), var(--surface-right-color-medium));
     }
   }
 </style>
