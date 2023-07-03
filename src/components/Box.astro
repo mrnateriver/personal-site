@@ -27,23 +27,21 @@ if (typeof surfaceColor === 'number' || typeof surfaceColor === 'string') {
 
 const typedColors = surfaceColor as Record<string, Color>;
 
-const surfaceTopColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.top));
-const surfaceBottomColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.bottom));
-const surfaceFrontColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.front));
-const surfaceBackColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.back));
-const surfaceLeftColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.left));
-const surfaceRightColor = convertRGBAToHSLA(normalizeColor(typedColors.all || typedColors.right));
+const normalizedAll = typedColors.all ? normalizeColor(typedColors.all) : undefined;
+
+const surfaceTopColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.top));
+const surfaceBottomColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.bottom));
+const surfaceFrontColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.front));
+const surfaceBackColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.back));
+const surfaceLeftColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.left));
+const surfaceRightColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.right));
 
 const surfaceTopColorDark = darkenHSLAColor(surfaceTopColor, 15);
 const surfaceTopColorLight = lightenHSLAColor(surfaceTopColor, 10);
-
 const surfaceBottomColorDark = darkenHSLAColor(surfaceBottomColor, 10);
-
 const surfaceFrontColorDark = darkenHSLAColor(surfaceFrontColor, 10);
-
 const surfaceLeftColorDark = darkenHSLAColor(surfaceLeftColor, 15);
 const surfaceLeftColorMedium = darkenHSLAColor(surfaceLeftColor, 10);
-
 const surfaceRightColorDark = darkenHSLAColor(surfaceRightColor, 15);
 const surfaceRightColorMedium = darkenHSLAColor(surfaceRightColor, 10);
 
@@ -67,9 +65,18 @@ for (const key in colors) {
   const { h, s, l, a } = colors[key] as HSLA;
   colors[key] = `hsla(${h}, ${s}%, ${l}%, ${a})`;
 }
+
+// There are quite a lot of vars, and they get injected into all children, so to save up space, inject them manually
+// instead of using the `define:vars` prop.
+const style = {
+  [`--wx`]: `${wx}px`,
+  [`--wy`]: `${wy}px`,
+  [`--wz`]: `${wz}px`,
+  ...Object.fromEntries(Object.entries(colors).map(([key, value]) => [`--${key}`, value])),
+};
 ---
 
-<i class="box">
+<i class="box" style={style}>
   <i class="box-top"></i>
   <i class="box-bottom"></i>
   <i class="box-front"></i>
@@ -78,15 +85,7 @@ for (const key in colors) {
   <i class="box-right"></i>
 </i>
 
-<style
-  lang="scss"
-  define:vars={{
-    wx,
-    wy,
-    wz,
-    ...colors,
-  }}
->
+<style lang="scss">
   .box {
     display: block;
 
@@ -129,7 +128,7 @@ for (const key in colors) {
       width: var(--wx);
     }
     &-front {
-      transform: translateZ(var(--wz) / 2);
+      transform: translateZ(calc(var(--wz) / 2));
       background-image: linear-gradient(to bottom, var(--surfaceFrontColor), var(--surfaceFrontColorDark));
     }
     &-back {
@@ -146,12 +145,12 @@ for (const key in colors) {
       transform-origin: left center;
     }
     &-left {
-      transform: translateZ(var(--wz) / 2) rotateY(90deg);
+      transform: translateZ(calc(var(--wz) / 2)) rotateY(90deg);
       background-image: linear-gradient(to bottom, var(--surfaceLeftColorDark), transparent),
         linear-gradient(to bottom, var(--surfaceLeftColor), var(--surfaceLeftColorMedium));
     }
     &-right {
-      transform: translateZ(var(--wz) / 2) translateX(var(--wx)) rotateY(90deg);
+      transform: translateZ(calc(var(--wz) / 2)) translateX(var(--wx)) rotateY(90deg);
       background-image: linear-gradient(to bottom, var(--surfaceRightColorDark), transparent),
         linear-gradient(to bottom, var(--surfaceRightColor), var(--surfaceRightColorMedium));
     }
