@@ -45,22 +45,15 @@ export function normalizeColor(color: Color): RGBA {
         return { r, g, b, a: a / 255 };
       }
     } else {
-      // rgb(r, g, b) / rgba(r, g, b, a)
+      // rgb(r, g, b) / rgba(r, g, b, a) / rgba(r g b a) / rgb(r g b) / rgba(r g b / a)
       if (color.startsWith('rgb')) {
-        const [r, g, b, a] = color
-          .slice(color.indexOf('(') + 1, -1)
-          .split(',')
-          .map((x) => parseFloat(x.trim()));
+        const [r, g, b, a] = parseColorParens(color);
         return { r, g, b, a: a ?? 1 };
       }
 
-      // hsl(h, s, l) / hsla(h, s, l, a)
+      // hsl(h, s, l) / hsla(h, s, l, a) / hsla(h s l a) / hsl(h s l) / hsla(h s l / a)
       if (color.startsWith('hsl')) {
-        const [h, s, l, a] = color
-          .slice(color.indexOf('(') + 1, -1)
-          .split(',')
-          .map((x) => parseFloat(x.trim()));
-
+        const [h, s, l, a] = parseColorParens(color);
         return convertHSLAToRGBA({ h, s, l, a: a ?? 1 });
       }
 
@@ -73,67 +66,123 @@ export function normalizeColor(color: Color): RGBA {
   throw new Error(`Unsupported color format: ${color}.`);
 }
 
-export function convertRGBAToHSLA(color: RGBA): HSLA {
-  const { r, g, b, a } = color;
-
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-
-  let h = (max + min) / 2;
-  let s = (max + min) / 2;
-  const l = (max + min) / 2;
-
-  if (max === min) {
-    h = s = 0; // achromatic
-  } else {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
+function parseColorParens(color: string): [number, number, number, number] {
+  let alphaCoef = true;
+  if (color.includes('/')) {
+    color = color.replace('/', ',');
+    if (color.includes('%')) {
+      alphaCoef = false;
     }
-    h /= 6;
   }
 
-  return { h: h * 360, s: s * 100, l: l * 100, a };
+  return color
+    .slice(color.indexOf('(') + 1, -1)
+    .replaceAll(/\s+/, ',')
+    .split(',')
+    .map((v) => v.trim())
+    .filter(Boolean)
+    .map((x, i) => (i === 3 ? (alphaCoef ? 1 : 0.01) : 1) * parseFloat(x)) as ReturnType<typeof parseColorParens>;
 }
 
-function hue2rgb(p: number, q: number, t: number): number {
-  if (t < 0) t += 1;
-  if (t > 1) t -= 1;
-  if (t < 1 / 6) return p + (q - p) * 6 * t;
-  if (t < 1 / 2) return q;
-  if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-  return p;
+/**
+ * @link https://css-tricks.com/converting-color-spaces-in-javascript/
+ */
+export function convertRGBAToHSLA(color: RGBA): HSLA {
+  let { r, g, b, a } = color;
+
+  // Make r, g, and b fractions of 1
+  r /= 255;
+  g /= 255;
+  b /= 255;
+
+  // Find greatest and smallest channel values
+  const cmin = Math.min(r, g, b);
+  const cmax = Math.max(r, g, b);
+  const delta = cmax - cmin;
+
+  let h = 0;
+  let s = 0;
+  let l = 0;
+
+  // Calculate hue
+  if (delta === 0) {
+    // No difference
+    h = 0;
+  } else if (cmax === r) {
+    // Red is max
+    h = ((g - b) / delta) % 6;
+  } else if (cmax === g) {
+    // Green is max
+    h = (b - r) / delta + 2;
+  } else {
+    // Blue is max
+    h = (r - g) / delta + 4;
+  }
+
+  h = Math.round(h * 60);
+
+  // Make negative hues positive behind 360°
+  if (h < 0) {
+    h += 360;
+  }
+
+  // Calculate lightness
+  l = (cmax + cmin) / 2;
+
+  // Calculate saturation
+  s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+
+  // Multiply l and s by 100
+  s = s * 100;
+  l = l * 100;
+
+  return { h, s, l, a };
 }
 
 export function convertHSLAToRGBA(color: HSLA): RGBA {
   let { h, s, l, a } = color;
 
-  h /= 360;
+  // Must be fractions of 1
   s /= 100;
   l /= 100;
 
-  let r, g, b;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+  let r = 0;
+  let g = 0;
+  let b = 0;
 
-  if (s === 0) {
-    r = g = b = l; // achromatic
-  } else {
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    r = hue2rgb(p, q, h + 1 / 3);
-    g = hue2rgb(p, q, h);
-    b = hue2rgb(p, q, h - 1 / 3);
+  if (h >= 0 && h < 60) {
+    r = c;
+    g = x;
+    b = 0;
+  } else if (h >= 60 && h < 120) {
+    r = x;
+    g = c;
+    b = 0;
+  } else if (h >= 120 && h < 180) {
+    r = 0;
+    g = c;
+    b = x;
+  } else if (h >= 180 && h < 240) {
+    r = 0;
+    g = x;
+    b = c;
+  } else if (h >= 240 && h < 300) {
+    r = x;
+    g = 0;
+    b = c;
+  } else if (h >= 300 && h < 360) {
+    r = c;
+    g = 0;
+    b = x;
   }
+  r = Math.round((r + m) * 255);
+  g = Math.round((g + m) * 255);
+  b = Math.round((b + m) * 255);
 
-  return { r: r * 255, g: g * 255, b: b * 255, a };
+  return { r, g, b, a };
 }
 
 export function convertRGBATo32Bit(color: RGBA): number {
