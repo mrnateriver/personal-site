@@ -1,11 +1,12 @@
 ---
 import { getBoxStyleVars, type BoxProps } from './box-properties';
 
-export interface Props extends BoxProps {
+interface BaseBoxProps {
   style?: Record<string, string>;
   class?: string;
-  skipStyleVars?: boolean;
 }
+
+export type Props = (BaseBoxProps & { skipStyleVars: true }) | (BaseBoxProps & { skipStyleVars?: false } & BoxProps);
 
 const { class: className, style: boxStyle, skipStyleVars = false } = Astro.props;
 
@@ -13,7 +14,7 @@ const { class: className, style: boxStyle, skipStyleVars = false } = Astro.props
 // instead of using the `define:vars` prop.
 const style = {
   ...boxStyle,
-  ...(skipStyleVars ? {} : getBoxStyleVars(Astro.props)),
+  ...(skipStyleVars ? {} : getBoxStyleVars(Astro.props as BoxProps)),
 };
 ---
 

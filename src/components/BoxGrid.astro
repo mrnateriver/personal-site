@@ -1,6 +1,7 @@
 ---
 import type { Color } from '../colors';
 
+import { getBoxStyleVars, type BoxProps } from './box-properties';
 import Box from './Box.astro';
 
 export interface Props {
@@ -11,7 +12,28 @@ export interface Props {
   rows: Array<Array<[Color, ...Color[]]>>; // Pixel Rows -> Columns -> Frames+
 }
 
-const { gap = 4, cellSize = 50, transparentColor = 0xffffffff, rows, class: className } = Astro.props;
+const { gap = 4, cellSize = 25, transparentColor = 0xffffffff, rows, class: className } = Astro.props;
+
+const rowsWithVisibleCells = rows.map(
+  (row) => row.map((c, j) => [c, j] as const).filter(([c]) => c[0] !== transparentColor), // TODO: animate frames
+);
+
+const rowsByColors = new Map<Color, Map<number, number[]>>(); // Color -> Row Index -> Column Index[]
+
+rowsWithVisibleCells.forEach((row, i) => {
+  for (const entry of row) {
+    const [[color], column] = entry; // TODO: animate frames
+
+    if (!rowsByColors.has(color)) {
+      rowsByColors.set(color, new Map([[i, []]]));
+    }
+    if (!rowsByColors.get(color)?.has(i)) {
+      rowsByColors.get(color)?.set(i, []);
+    }
+
+    rowsByColors.get(color)?.get(i)?.push(column);
+  }
+});
 
 const style = {
   '--gap': `${gap}px`,
@@ -19,31 +41,30 @@ const style = {
   '--rows-count': rows.length,
   '--columns-count': rows[0]?.length ?? 0,
 } as const;
+
+const baseSectionProps: BoxProps = {
+  surfaceColor: 0x00000000,
+  wx: cellSize,
+  wy: cellSize,
+  wz: cellSize,
+};
 ---
 
 <div class:list={['grid', className]} style={style}>
   {
-    rows.map((row) => (
-      <div class="row">
-        {row
-          .map((c, i) => [c, i] as const)
-          .filter(([c]) => c[0] !== transparentColor)
-          .map(
-            (
-              [column, i],
-              // TODO: animate frames
-              // TODO: split grid into sections of vars, use getBoxStyleVars(Astro.props) to set vars
-            ) => (
+    Array.from(rowsByColors.entries()).map(([surfaceColor, rows]) => (
+      <div class="grid-section" style={getBoxStyleVars({ ...baseSectionProps, surfaceColor })}>
+        {Array.from(rows.entries()).map(([rowIndex, cells]) => (
+          <div class="grid-section-row" style={{ top: `${rowIndex * (cellSize + gap)}px` }}>
+            {cells.map((columnIndex) => (
               <Box
-                class="cell"
-                style={{ left: `${i * (cellSize + gap)}px` }}
-                wx={cellSize}
-                wy={cellSize}
-                wz={cellSize}
-                surfaceColor={column[0]}
+                class="grid-section-row-cell"
+                style={{ left: `${columnIndex * (cellSize + gap)}px` }}
+                skipStyleVars={true}
               />
-            ),
-          )}
+            ))}
+          </div>
+        ))}
       </div>
     ))
   }
@@ -51,22 +72,24 @@ const style = {
 
 <style lang="scss">
   .grid {
-    display: block;
     transform-style: preserve-3d;
-    backface-visibility: visible;
-    overflow: visible;
+    position: relative;
 
-    .row {
-      height: var(--cell-size);
-      width: calc(var(--columns-count) * var(--cell-size) + (var(--columns-count) - 1) * var(--gap));
-      margin-bottom: var(--gap);
+    &-section {
       transform-style: preserve-3d;
-      backface-visibility: visible;
-      position: relative;
-      overflow: visible;
+      position: absolute;
+      left: 0;
+      top: 0;
 
-      .cell {
+      &-row {
+        height: var(--cell-size);
+        width: calc(var(--columns-count) * var(--cell-size) + (var(--columns-count) - 1) * var(--gap));
+        transform-style: preserve-3d;
         position: absolute;
+
+        &-cell {
+          position: absolute;
+        }
       }
     }
   }
