@@ -1,20 +1,19 @@
 import { convertRGBAToHSLA, darkenHSLAColor, lightenHSLAColor, normalizeColor, type Color, type HSLA } from '../colors';
 
+interface BoxSurfaceColors {
+  top: Color;
+  bottom: Color;
+  front: Color;
+  back: Color;
+  left: Color;
+  right: Color;
+}
+
 export interface BoxProps {
   wx: number;
   wy: number;
   wz: number;
-  surfaceColor:
-    | Color
-    | { all: Color }
-    | {
-        top: Color;
-        bottom: Color;
-        front: Color;
-        back: Color;
-        left: Color;
-        right: Color;
-      };
+  surfaceColor: Color | ({ all: Color } & Partial<BoxSurfaceColors>) | BoxSurfaceColors;
 }
 
 export function getBoxStyleVars(props: BoxProps): Record<string, string> {
@@ -29,21 +28,30 @@ export function getBoxStyleVars(props: BoxProps): Record<string, string> {
 
   const normalizedAll = typedColors.all ? normalizeColor(typedColors.all) : undefined;
 
-  const surfaceTopColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.top));
-  const surfaceBottomColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.bottom));
-  const surfaceFrontColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.front));
-  const surfaceBackColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.back));
-  const surfaceLeftColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.left));
-  const surfaceRightColor = convertRGBAToHSLA(normalizedAll ?? normalizeColor(typedColors.right));
+  const defaultColor = { r: 0, g: 0, b: 0, a: 1 };
+  const surfaceTopColor = convertRGBAToHSLA(normalizeColor(typedColors.top) ?? normalizedAll ?? defaultColor);
+  const surfaceBottomColor = convertRGBAToHSLA(normalizeColor(typedColors.bottom) ?? normalizedAll ?? defaultColor);
+  const surfaceFrontColor = convertRGBAToHSLA(normalizeColor(typedColors.front) ?? normalizedAll ?? defaultColor);
+  const surfaceBackColor = convertRGBAToHSLA(normalizeColor(typedColors.back) ?? normalizedAll ?? defaultColor);
+  const surfaceLeftColor = convertRGBAToHSLA(normalizeColor(typedColors.left) ?? normalizedAll ?? defaultColor);
+  const surfaceRightColor = convertRGBAToHSLA(normalizeColor(typedColors.right) ?? normalizedAll ?? defaultColor);
 
-  const surfaceTopColorDark = darkenHSLAColor(surfaceTopColor, 15);
-  const surfaceTopColorLight = lightenHSLAColor(surfaceTopColor, 10);
-  const surfaceBottomColorDark = darkenHSLAColor(surfaceBottomColor, 10);
-  const surfaceFrontColorDark = darkenHSLAColor(surfaceFrontColor, 10);
-  const surfaceLeftColorDark = darkenHSLAColor(surfaceLeftColor, 15);
-  const surfaceLeftColorMedium = darkenHSLAColor(surfaceLeftColor, 10);
-  const surfaceRightColorDark = darkenHSLAColor(surfaceRightColor, 15);
-  const surfaceRightColorMedium = darkenHSLAColor(surfaceRightColor, 10);
+  const surfaceTopColorDark =
+    typeof typedColors.top === 'undefined' ? darkenHSLAColor(surfaceTopColor, 15) : surfaceTopColor;
+  const surfaceTopColorLight =
+    typeof typedColors.top === 'undefined' ? lightenHSLAColor(surfaceTopColor, 10) : surfaceTopColor;
+  const surfaceBottomColorDark =
+    typeof typedColors.bottom === 'undefined' ? darkenHSLAColor(surfaceBottomColor, 10) : surfaceBottomColor;
+  const surfaceFrontColorDark =
+    typeof typedColors.front === 'undefined' ? darkenHSLAColor(surfaceFrontColor, 10) : surfaceFrontColor;
+  const surfaceLeftColorDark =
+    typeof typedColors.left === 'undefined' ? darkenHSLAColor(surfaceLeftColor, 15) : surfaceLeftColor;
+  const surfaceLeftColorMedium =
+    typeof typedColors.left === 'undefined' ? darkenHSLAColor(surfaceLeftColor, 10) : surfaceLeftColor;
+  const surfaceRightColorDark =
+    typeof typedColors.right === 'undefined' ? darkenHSLAColor(surfaceRightColor, 15) : surfaceRightColor;
+  const surfaceRightColorMedium =
+    typeof typedColors.right === 'undefined' ? darkenHSLAColor(surfaceRightColor, 10) : surfaceRightColor;
 
   const colors: Record<string, HSLA | string> = {
     surfaceTopColor,

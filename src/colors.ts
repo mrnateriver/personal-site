@@ -16,7 +16,11 @@ export interface HSLA {
   a: number; // 0 - 1
 }
 
-export function normalizeColor(color: Color): RGBA {
+export function normalizeColor(color?: Color): RGBA | undefined {
+  if (typeof color === 'undefined') {
+    return undefined;
+  }
+
   if (typeof color === 'number') {
     return {
       r: (color >> 24) & 0xff,
