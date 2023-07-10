@@ -22,7 +22,32 @@ import Layout from '../layouts/Layout.astro';
     position: relative;
     overflow: visible;
     transform-style: preserve-3d;
-    perspective: 10000px;
-    transform: rotateX(339deg) rotateY(57deg) rotateZ(0deg);
+
+    // FIXME: TEMP!
+    perspective: 1000000px;
+    perspective-origin: 300px 300px;
+    // transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
+    transform-origin: center center;
+    animation: 2s 2s image-rotation forwards ease-in-out;
+    // animation: shift-perspective 10s forwards ease-in-out;
+    // transition: perspective 2s ease-in-out;
+  }
+
+  @keyframes shift-perspective {
+    0% {
+      perspective: 1000000px;
+    }
+    100% {
+      perspective: 2000px;
+    }
+  }
+
+  @keyframes image-rotation {
+    0% {
+      transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    100% {
+      transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
+    }
   }
 </style>

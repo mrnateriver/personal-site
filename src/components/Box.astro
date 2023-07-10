@@ -25,7 +25,19 @@ const style = {
 </i>
 
 <style lang="scss">
+  @keyframes cube-rotation {
+    0% {
+      transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    100% {
+      transform: rotateX(180deg) rotateY(0deg) rotateZ(0deg);
+    }
+  }
+
   .box {
+    will-change: transform;
+    transform-origin: center center;
+    animation: cube-rotation 3s forwards 2s cubic-bezier(0.68, -0.55, 0.27, 1.55); // FIXME: TEMP!
     display: block;
 
     width: var(--wx);
