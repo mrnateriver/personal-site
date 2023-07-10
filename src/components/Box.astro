@@ -34,6 +34,15 @@ const style = {
     }
   }
 
+  @keyframes cube-rotation-hover {
+    0% {
+      transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    100% {
+      transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+  }
+
   .box {
     will-change: transform;
     transform-origin: center center;
@@ -44,6 +53,11 @@ const style = {
     height: var(--wy);
     transform-style: preserve-3d;
     overflow: visible;
+
+    &:hover {
+      animation: cube-rotation-hover 1s forwards ease-in-out; // FIXME: TEMP!
+      // transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
 
     [class^='box-sides-']::before,
     [class^='box-sides-']::after {
