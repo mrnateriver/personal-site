@@ -8,11 +8,13 @@ import Layout from '../layouts/Layout.astro';
 // fs.readdirSync('src/pages').forEach((file) => {
 //   console.log(file);
 // });
+
+const hideSurfaces = { right: true };
 ---
 
 <Layout title="Hi mom">
   <main>
-    <BoxImage imagePath="src/assets/kangaroo.bmp" />
+    <BoxImage imagePath="src/assets/kangaroo.bmp" hideSurfaces={hideSurfaces} />
   </main>
 </Layout>
 

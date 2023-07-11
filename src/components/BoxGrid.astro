@@ -2,9 +2,9 @@
 import type { Color } from '../colors';
 
 import { getBoxStyleVars, type BoxProps } from './box-properties';
-import Box from './Box.astro';
+import Box, { type BaseBoxProps } from './Box.astro';
 
-export interface Props {
+export interface Props extends Pick<BaseBoxProps, 'hideSurfaces'> {
   gap?: number;
   class?: string;
   cellSize?: number;
@@ -12,7 +12,7 @@ export interface Props {
   rows: Array<Array<[Color, ...Color[]]>>; // Pixel Rows -> Columns -> Frames+
 }
 
-const { gap = 4, cellSize = 24, transparentColor = 0xffffffff, rows, class: className } = Astro.props;
+const { gap = 4, cellSize = 24, transparentColor = 0xffffffff, rows, class: className, hideSurfaces } = Astro.props;
 
 const rowsWithVisibleCells = rows.map(
   (row) => row.map((c, j) => [c, j] as const).filter(([c]) => c[0] !== transparentColor), // TODO: animate frames
@@ -67,6 +67,7 @@ const baseSectionProps: BoxProps = {
                 class="grid-section-row-cell"
                 style={{ left: `${columnIndex * (cellSize + gap)}px` }}
                 skipStyleVars={true}
+                hideSurfaces={hideSurfaces}
               />
             ))}
           </div>

@@ -1,14 +1,15 @@
 ---
-import { getBoxStyleVars, type BoxProps } from './box-properties';
+import { getBoxStyleVars, type BoxProps, type BoxSurfaceColors } from './box-properties';
 
-interface BaseBoxProps {
+export interface BaseBoxProps {
   style?: Record<string, string>;
   class?: string;
+  hideSurfaces?: { [key in keyof BoxSurfaceColors]?: boolean };
 }
 
 export type Props = (BaseBoxProps & { skipStyleVars: true }) | (BaseBoxProps & { skipStyleVars?: false } & BoxProps);
 
-const { class: className, style: boxStyle, skipStyleVars = false } = Astro.props;
+const { class: className, style: boxStyle, hideSurfaces = {}, skipStyleVars = false } = Astro.props;
 
 // There are quite a lot of vars, and they get injected into all children, so to save up space, inject them manually
 // instead of using the `define:vars` prop.
@@ -16,9 +17,11 @@ const style = {
   ...boxStyle,
   ...(skipStyleVars ? {} : getBoxStyleVars(Astro.props as BoxProps)),
 };
+
+const hideSurfacesClasses = Object.keys(hideSurfaces).map((surface) => `box-sides-hide-${surface}`);
 ---
 
-<i class:list={['box', className]} style={style}>
+<i class:list={['box', className, ...hideSurfacesClasses]} style={style}>
   <i class="box-sides-x"></i>
   <i class="box-sides-y"></i>
   <i class="box-sides-z"></i>
@@ -69,6 +72,18 @@ const style = {
     }
 
     &-sides {
+      $self: &;
+      &-hide {
+        &-top #{$self}-y::before,
+        &-bottom #{$self}-y::after,
+        &-front #{$self}-z::before,
+        &-back #{$self}-z::after,
+        &-left #{$self}-x::before,
+        &-right #{$self}-x::after {
+          content: none;
+        }
+      }
+
       &-x,
       &-y,
       &-z {

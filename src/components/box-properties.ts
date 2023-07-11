@@ -1,6 +1,6 @@
 import { convertRGBAToHSLA, darkenHSLAColor, lightenHSLAColor, normalizeColor, type Color, type HSLA } from '../colors';
 
-interface BoxSurfaceColors {
+export interface BoxSurfaceColors {
   top: Color;
   bottom: Color;
   front: Color;
