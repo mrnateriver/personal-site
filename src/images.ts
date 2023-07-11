@@ -2,6 +2,48 @@ import * as fs from 'fs/promises';
 
 import type { Color } from './colors';
 
+export type ImagePixelFrames =
+  | [frame0: Color]
+  | [frame0: Color, frame1: Color]
+  | [frame0: Color, frame1: Color, frame2: Color]
+  | [frame0: Color, frame1: Color, frame2: Color, frame3: Color]
+  | [frame0: Color, frame1: Color, frame2: Color, frame3: Color, frame4: Color]
+  | [frame0: Color, frame1: Color, frame2: Color, frame3: Color, frame4: Color, frame5: Color]
+  | [frame0: Color, frame1: Color, frame2: Color, frame3: Color, frame4: Color, frame5: Color, frame6: Color]
+  | [
+      frame0: Color,
+      frame1: Color,
+      frame2: Color,
+      frame3: Color,
+      frame4: Color,
+      frame5: Color,
+      frame6: Color,
+      frame7: Color,
+    ]
+  | [
+      frame0: Color,
+      frame1: Color,
+      frame2: Color,
+      frame3: Color,
+      frame4: Color,
+      frame5: Color,
+      frame6: Color,
+      frame7: Color,
+      frame8: Color,
+    ]
+  | [
+      frame0: Color,
+      frame1: Color,
+      frame2: Color,
+      frame3: Color,
+      frame4: Color,
+      frame5: Color,
+      frame6: Color,
+      frame7: Color,
+      frame8: Color,
+      frame9: Color,
+    ];
+
 /**
  * Parses a BMP image file and returns the pixel colors.
  *

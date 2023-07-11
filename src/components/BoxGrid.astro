@@ -1,5 +1,6 @@
 ---
 import type { Color } from '../colors';
+import type { ImagePixelFrames } from '../images';
 
 import { getBoxStyleVars, type BoxProps } from './box-properties';
 import Box, { type BaseBoxProps } from './Box.astro';
@@ -9,10 +10,21 @@ export interface Props extends Pick<BaseBoxProps, 'hideSurfaces'> {
   class?: string;
   cellSize?: number;
   transparentColor?: Color;
-  rows: Array<Array<[Color, ...Color[]]>>; // Pixel Rows -> Columns -> Frames+
+  animationFrameMs?: number;
+  animationDelayMs?: number;
+  rows: ImagePixelFrames[][]; // Pixel Rows -> Columns -> Frames+
 }
 
-const { gap = 4, cellSize = 24, transparentColor = 0xffffffff, rows, class: className, hideSurfaces } = Astro.props;
+const {
+  gap = 4,
+  cellSize = 24,
+  transparentColor = 0xffffffff,
+  rows,
+  class: className,
+  hideSurfaces,
+  animationFrameMs = 3000,
+  animationDelayMs = 0,
+} = Astro.props;
 
 const rowsWithVisibleCells = rows.map(
   (row) => row.map((c, j) => [c, j] as const).filter(([c]) => c[0] !== transparentColor), // TODO: animate frames
@@ -40,6 +52,8 @@ const style = {
   '--cell-size': `${cellSize}px`,
   '--rows-count': rows.length,
   '--columns-count': rows[0]?.length ?? 0,
+  '--animation-frame-ms': `${animationFrameMs}ms`,
+  '--animation-delay-ms': `${animationDelayMs}ms`,
 } as const;
 
 const baseSectionProps: BoxProps = {
@@ -53,29 +67,76 @@ const baseSectionProps: BoxProps = {
 <div class:list={['grid', className]} style={style}>
   {
     Array.from(rowsByColors.entries()).map(([surfaceColor, rows]) => (
-      <div
-        class="grid-section"
-        style={getBoxStyleVars({
-          ...baseSectionProps,
-          surfaceColor: { all: surfaceColor, front: 0x003030ff /* FIXME: TEMP! */ },
-        })}
-      >
+      <div class="grid-section" style={getBoxStyleVars({ ...baseSectionProps, surfaceColor })}>
         {Array.from(rows.entries()).map(([rowIndex, cells]) => (
           <div class="grid-section-row" style={{ top: `${rowIndex * (cellSize + gap)}px` }}>
-            {cells.map((columnIndex) => (
-              <Box
-                class="grid-section-row-cell"
-                style={{ left: `${columnIndex * (cellSize + gap)}px` }}
-                skipStyleVars={true}
-                hideSurfaces={hideSurfaces}
-              />
-            ))}
+            {cells.map(
+              (
+                columnIndex,
+                // TODO: class name based on number of frames!
+              ) => (
+                <Box
+                  class="grid-section-row-cell frame-animate-5"
+                  style={{ left: `${columnIndex * (cellSize + gap)}px` }}
+                  skipStyleVars={true}
+                  hideSurfaces={hideSurfaces}
+                />
+              ),
+            )}
           </div>
         ))}
       </div>
     ))
   }
 </div>
+
+<style lang="scss" is:global>
+  $max-animation-frames: 10;
+  $surface-color-var-names: [[ 'bottom', 'back'], [ 'top', 'front']];
+
+  @mixin frame($stage, $rotation) {
+    $surface-var-name-0: nth(nth($surface-color-var-names, $stage % 2 + 1), 1);
+    $surface-var-name-1: nth(nth($surface-color-var-names, $stage % 2 + 1), 2);
+
+    --surface-#{$surface-var-name-0}-color: var(--frame-color-#{$stage + 1});
+    --surface-#{$surface-var-name-0}-color-dark: var(--frame-color-#{$stage + 1});
+    --surface-#{$surface-var-name-0}-color-light: var(--frame-color-#{$stage + 1});
+    --surface-#{$surface-var-name-0}-color-medium: var(--frame-color-#{$stage + 1});
+    --surface-#{$surface-var-name-1}-color: var(--frame-color-#{$stage + 1});
+    --surface-#{$surface-var-name-1}-color-dark: var(--frame-color-#{$stage + 1});
+    --surface-#{$surface-var-name-1}-color-light: var(--frame-color-#{$stage + 1});
+    --surface-#{$surface-var-name-1}-color-medium: var(--frame-color-#{$stage + 1});
+    transform: rotateX($rotation * 180deg);
+  }
+
+  @for $i from 1 through $max-animation-frames {
+    @keyframes frame-color-animation-#{$i + 1} {
+      $increment: 100% / ($i * 2);
+
+      @for $stage from 1 through $i {
+        #{($stage - 1) * 2 * $increment} {
+          @include frame($stage, ($stage - 1));
+        }
+        #{($stage * 2) * $increment} {
+          @include frame($stage, $stage);
+        }
+      }
+    }
+  }
+
+  .box.frame-animate {
+    @for $i from 1 through $max-animation-frames {
+      &-#{$i + 1} {
+        animation: frame-color-animation-#{$i +
+          1}
+          calc(var(--animation-frame-ms) * $i)
+          forwards
+          cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        animation-delay: var(--animation-delay-ms);
+      }
+    }
+  }
+</style>
 
 <style lang="scss">
   .grid {

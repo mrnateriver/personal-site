@@ -1,6 +1,5 @@
 ---
-import type { Color } from '../colors';
-import { readBmpImage } from '../images';
+import { readBmpImage, type ImagePixelFrames } from '../images';
 
 import BoxGrid, { type Props as BoxGridProps } from './BoxGrid.astro';
 
@@ -11,7 +10,7 @@ export interface Props extends Pick<BoxGridProps, 'hideSurfaces'> {
 
 const { class: className, imagePath, hideSurfaces } = Astro.props;
 
-const imagePixels = (await readBmpImage(imagePath)).map((r) => r.map((p) => [p] as [Color, ...Color[]]));
+const imagePixels = (await readBmpImage(imagePath)).map((r) => r.map((p) => [p] as ImagePixelFrames));
 ---
 
 <BoxGrid class={className} rows={imagePixels} hideSurfaces={hideSurfaces} />
