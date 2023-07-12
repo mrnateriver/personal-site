@@ -192,9 +192,15 @@ export function convertHSLAToRGBA(color: HSLA): RGBA {
 export function convertRGBATo32Bit(color: RGBA): number {
   const { r, g, b, a } = color;
 
-  return (
-    ((Math.round(r * 255) << 24) | (Math.round(g * 255) << 16) | (Math.round(b * 255) << 8) | Math.round(a * 255)) >>> 0
-  );
+  return ((r << 24) | (g << 16) | (b << 8) | Math.round(a * 255)) >>> 0;
+}
+
+export function normalizeAndStringifyColor(color: Color): string {
+  const normalized = normalizeColor(color);
+  if (!normalized) {
+    throw new Error(`Unsupported color format: ${color}`);
+  }
+  return `#${convertRGBATo32Bit(normalized).toString(16).padStart(8, '0')}`;
 }
 
 export function lightenHSLAColor(color: HSLA, amount: number): HSLA {
