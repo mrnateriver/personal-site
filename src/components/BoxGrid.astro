@@ -1,23 +1,42 @@
 ---
-import type { Color } from '../colors';
+import { normalizeAndStringifyColor, type Color } from '../colors';
 import type { ImagePixelFrames } from '../images';
 
 import { getBoxStyleVars, type BoxProps } from './box-properties';
 import Box, { type BaseBoxProps } from './Box.astro';
 
 export interface Props extends Pick<BaseBoxProps, 'hideSurfaces'> {
-  gap?: number;
   class?: string;
-  cellSize?: number;
+  /**
+   * Gap between boxes in `px` unit.
+   * @default 4
+   */
+  gapPx?: number;
+  /**
+   * Size of each box in `px` unit.
+   * @default 24
+   */
+  cellSizePx?: number;
+  /**
+   * Which color should be treated as transparent.
+   * The first frame is checked against this color, and if it's transparent, the whole pixel is skipped.
+   * @default 0xffffffff
+   */
   transparentColor?: Color;
+  /**
+   * @default 3000
+   */
   animationFrameMs?: number;
+  /**
+   * @default 0
+   */
   animationDelayMs?: number;
   rows: ImagePixelFrames[][]; // Pixel Rows -> Columns -> Frames+
 }
 
 const {
-  gap = 4,
-  cellSize = 24,
+  gapPx = 4,
+  cellSizePx = 24,
   transparentColor = 0xffffffff,
   rows,
   class: className,
@@ -26,15 +45,37 @@ const {
   animationDelayMs = 0,
 } = Astro.props;
 
-const rowsWithVisibleCells = rows.map(
-  (row) => row.map((c, j) => [c, j] as const).filter(([c]) => c[0] !== transparentColor), // TODO: animate frames
-);
+let rowLength = -1;
+for (const row of rows) {
+  if (rowLength >= 0 && row.length !== rowLength) {
+    throw new Error('All rows must have the same length');
+  }
+  rowLength = row.length;
+}
+
+const rowsWithVisibleCells = rows
+  .map((row) => row.map((c, j) => [c, j] as const).filter(([c]) => c[0] !== transparentColor))
+  .filter((row) => row.length > 0);
 
 const rowsByColors = new Map<Color, Map<number, number[]>>(); // Color -> Row Index -> Column Index[]
+const cellsFrames = new Map<number, { count: number; styles: Record<string, unknown> }>(); // Row Index * Row Length + Column Index -> Frame Index[]
 
 rowsWithVisibleCells.forEach((row, i) => {
   for (const entry of row) {
-    const [[color], column] = entry; // TODO: animate frames
+    const [colors, column] = entry;
+    const color = colors[0];
+
+    if (colors.length > 1) {
+      const cellIndex = i * rowLength + column;
+      cellsFrames.set(cellIndex, {
+        count: colors.length,
+        styles: Object.fromEntries(
+          colors
+            .slice(1)
+            .map((color, frameIndex) => [`--frame-color-${frameIndex + 2}`, normalizeAndStringifyColor(color)]),
+        ),
+      });
+    }
 
     if (!rowsByColors.has(color)) {
       rowsByColors.set(color, new Map([[i, []]]));
@@ -48,8 +89,8 @@ rowsWithVisibleCells.forEach((row, i) => {
 });
 
 const style = {
-  '--gap': `${gap}px`,
-  '--cell-size': `${cellSize}px`,
+  '--gap': `${gapPx}px`,
+  '--cell-size': `${cellSizePx}px`,
   '--rows-count': rows.length,
   '--columns-count': rows[0]?.length ?? 0,
   '--animation-frame-ms': `${animationFrameMs}ms`,
@@ -58,9 +99,9 @@ const style = {
 
 const baseSectionProps: BoxProps = {
   surfaceColor: 0x00000000,
-  wx: cellSize,
-  wy: cellSize,
-  wz: cellSize,
+  wx: cellSizePx,
+  wy: cellSizePx,
+  wz: cellSizePx,
 };
 ---
 
@@ -69,20 +110,18 @@ const baseSectionProps: BoxProps = {
     Array.from(rowsByColors.entries()).map(([surfaceColor, rows]) => (
       <div class="grid-section" style={getBoxStyleVars({ ...baseSectionProps, surfaceColor })}>
         {Array.from(rows.entries()).map(([rowIndex, cells]) => (
-          <div class="grid-section-row" style={{ top: `${rowIndex * (cellSize + gap)}px` }}>
-            {cells.map(
-              (
-                columnIndex,
-                // TODO: class name based on number of frames!
-              ) => (
+          <div class="grid-section-row" style={{ top: `${rowIndex * (cellSizePx + gapPx)}px` }}>
+            {cells.map((columnIndex) => {
+              const frames = cellsFrames.get(rowIndex * rowLength + columnIndex);
+              return (
                 <Box
-                  class="grid-section-row-cell frame-animate-5"
-                  style={{ left: `${columnIndex * (cellSize + gap)}px` }}
+                  class={`grid-section-row-cell ${frames?.count ? `frame-animate-${frames.count}` : ''}`}
+                  style={{ left: `${columnIndex * (cellSizePx + gapPx)}px`, ...frames?.styles }}
                   skipStyleVars={true}
                   hideSurfaces={hideSurfaces}
                 />
-              ),
-            )}
+              );
+            })}
           </div>
         ))}
       </div>
@@ -91,34 +130,44 @@ const baseSectionProps: BoxProps = {
 </div>
 
 <style lang="scss" is:global>
+  @use 'sass:math';
+  @use 'sass:list';
+
   $max-animation-frames: 10;
-  $surface-color-var-names: [[ 'bottom', 'back'], [ 'top', 'front']];
+  $surface-color-var-names: [[ 'top', 'front'], [ 'bottom', 'back']];
 
-  @mixin frame($stage, $rotation) {
-    $surface-var-name-0: nth(nth($surface-color-var-names, $stage % 2 + 1), 1);
-    $surface-var-name-1: nth(nth($surface-color-var-names, $stage % 2 + 1), 2);
+  @mixin vars($frameIndex) {
+    $surface-var-name-0: list.nth(list.nth($surface-color-var-names, $frameIndex % 2 + 1 /* indices are 1-based */), 1);
+    $surface-var-name-1: list.nth(list.nth($surface-color-var-names, $frameIndex % 2 + 1 /* indices are 1-based */), 2);
 
-    --surface-#{$surface-var-name-0}-color: var(--frame-color-#{$stage + 1});
-    --surface-#{$surface-var-name-0}-color-dark: var(--frame-color-#{$stage + 1});
-    --surface-#{$surface-var-name-0}-color-light: var(--frame-color-#{$stage + 1});
-    --surface-#{$surface-var-name-0}-color-medium: var(--frame-color-#{$stage + 1});
-    --surface-#{$surface-var-name-1}-color: var(--frame-color-#{$stage + 1});
-    --surface-#{$surface-var-name-1}-color-dark: var(--frame-color-#{$stage + 1});
-    --surface-#{$surface-var-name-1}-color-light: var(--frame-color-#{$stage + 1});
-    --surface-#{$surface-var-name-1}-color-medium: var(--frame-color-#{$stage + 1});
+    --surface-#{$surface-var-name-0}-color: var(--frame-color-#{$frameIndex + 1});
+    --surface-#{$surface-var-name-0}-color-dark: var(--frame-color-#{$frameIndex + 1});
+    --surface-#{$surface-var-name-0}-color-light: var(--frame-color-#{$frameIndex + 1});
+    --surface-#{$surface-var-name-0}-color-medium: var(--frame-color-#{$frameIndex + 1});
+    --surface-#{$surface-var-name-1}-color: var(--frame-color-#{$frameIndex + 1});
+    --surface-#{$surface-var-name-1}-color-dark: var(--frame-color-#{$frameIndex + 1});
+    --surface-#{$surface-var-name-1}-color-light: var(--frame-color-#{$frameIndex + 1});
+    --surface-#{$surface-var-name-1}-color-medium: var(--frame-color-#{$frameIndex + 1});
+  }
+
+  @mixin frame($frameIndex, $rotation) {
+    @include vars($frameIndex);
     transform: rotateX($rotation * 180deg);
   }
 
-  @for $i from 1 through $max-animation-frames {
-    @keyframes frame-color-animation-#{$i + 1} {
-      $increment: 100% / ($i * 2);
+  @for $frameCount from 1 to $max-animation-frames {
+    @keyframes frame-color-animation-#{$frameCount + 1} {
+      $increment: math.div(100%, $frameCount * 2 - 1);
 
-      @for $stage from 1 through $i {
-        #{($stage - 1) * 2 * $increment} {
-          @include frame($stage, ($stage - 1));
+      @for $stage from 0 to $frameCount {
+        #{$stage * 2 * $increment} {
+          @if $stage > 0 {
+            @include vars($stage);
+          }
+          @include frame($stage + 1, $stage);
         }
-        #{($stage * 2) * $increment} {
-          @include frame($stage, $stage);
+        #{($stage * 2 + 1) * $increment} {
+          @include frame($stage + 1, $stage + 1);
         }
       }
     }

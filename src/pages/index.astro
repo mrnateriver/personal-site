@@ -3,6 +3,7 @@
 
 // import Card from '../components/Card.astro';
 import BoxImage from '../components/BoxImage.astro';
+import type { BitmapImagePath } from '../images';
 import Layout from '../layouts/Layout.astro';
 
 // fs.readdirSync('src/pages').forEach((file) => {
@@ -10,11 +11,18 @@ import Layout from '../layouts/Layout.astro';
 // });
 
 const hideSurfaces = { right: true };
+
+const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangaroo_${i + 1}.bmp` as BitmapImagePath);
 ---
 
 <Layout title="Hi mom">
   <main>
-    <BoxImage imagePath="src/assets/kangaroo.bmp" hideSurfaces={hideSurfaces} />
+    <BoxImage
+      framesImagesPaths={framesImagesPaths}
+      hideSurfaces={hideSurfaces}
+      animationFrameMs={2000}
+      animationDelayMs={2000}
+    />
   </main>
 </Layout>
 
@@ -28,9 +36,9 @@ const hideSurfaces = { right: true };
     // FIXME: TEMP!
     perspective: 1000000px;
     perspective-origin: 300px 300px;
-    // transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
+    transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
     transform-origin: center center;
-    animation: 2s 2s image-rotation forwards ease-in-out;
+    // animation: 2s 2s image-rotation forwards ease-in-out;
     // animation: shift-perspective 10s forwards ease-in-out;
     // transition: perspective 2s ease-in-out;
   }

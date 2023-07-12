@@ -3,7 +3,7 @@ import { readBmpImage, type BitmapImagePath, type ImagePixelFrames } from '../im
 
 import BoxGrid, { type Props as BoxGridProps } from './BoxGrid.astro';
 
-interface BaseProps extends Pick<BoxGridProps, 'hideSurfaces'> {
+interface BaseProps extends Pick<BoxGridProps, 'hideSurfaces' | 'animationFrameMs' | 'animationDelayMs'> {
   class?: string;
 }
 
@@ -18,7 +18,7 @@ export type Props = BaseProps &
   );
 
 const props = Astro.props;
-const { class: className, hideSurfaces } = props;
+const { class: className, hideSurfaces, animationFrameMs, animationDelayMs } = props;
 
 let imagePixels: ImagePixelFrames[][];
 if ('imagePath' in props) {
@@ -37,6 +37,12 @@ if ('imagePath' in props) {
 }
 ---
 
-<BoxGrid class={className} rows={imagePixels} hideSurfaces={hideSurfaces} />
+<BoxGrid
+  class={className}
+  rows={imagePixels}
+  hideSurfaces={hideSurfaces}
+  animationDelayMs={animationDelayMs}
+  animationFrameMs={animationFrameMs}
+/>
 
 <style></style>
