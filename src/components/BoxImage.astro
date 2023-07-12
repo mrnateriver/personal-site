@@ -1,16 +1,40 @@
 ---
-import { readBmpImage, type ImagePixelFrames } from '../images';
+import { readBmpImage, type BitmapImagePath, type ImagePixelFrames } from '../images';
 
 import BoxGrid, { type Props as BoxGridProps } from './BoxGrid.astro';
 
-export interface Props extends Pick<BoxGridProps, 'hideSurfaces'> {
+interface BaseProps extends Pick<BoxGridProps, 'hideSurfaces'> {
   class?: string;
-  imagePath: `${string}.bmp`;
 }
 
-const { class: className, imagePath, hideSurfaces } = Astro.props;
+export type Props = BaseProps &
+  (
+    | {
+        imagePath: BitmapImagePath;
+      }
+    | {
+        framesImagesPaths: BitmapImagePath[];
+      }
+  );
 
-const imagePixels = (await readBmpImage(imagePath)).map((r) => r.map((p) => [p] as ImagePixelFrames));
+const props = Astro.props;
+const { class: className, hideSurfaces } = props;
+
+let imagePixels: ImagePixelFrames[][];
+if ('imagePath' in props) {
+  imagePixels = (await readBmpImage(props.imagePath)).map((r) => r.map((p) => [p] as ImagePixelFrames));
+} else {
+  const frames = await Promise.all(props.framesImagesPaths.map(readBmpImage));
+
+  const [firstFrame, ...otherFrames] = frames;
+  if (!otherFrames.every((f) => f.length === firstFrame.length && f[0].length === firstFrame[0].length)) {
+    throw new Error('All frames must have the same dimensions');
+  }
+
+  imagePixels = firstFrame.map((row, y) =>
+    row.map((_, x) => Array.from(new Set(frames.map((f) => f[y][x]))) as ImagePixelFrames),
+  );
+}
 ---
 
 <BoxGrid class={className} rows={imagePixels} hideSurfaces={hideSurfaces} />

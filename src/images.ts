@@ -2,6 +2,8 @@ import * as fs from 'fs/promises';
 
 import type { Color } from './colors';
 
+export type BitmapImagePath = `${string}.bmp`;
+
 export type ImagePixelFrames =
   | [frame0: Color]
   | [frame0: Color, frame1: Color]
