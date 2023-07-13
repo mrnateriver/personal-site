@@ -36,22 +36,14 @@ export function getBoxStyleVars(props: BoxProps): Record<string, string> {
   const surfaceLeftColor = convertRGBAToHSLA(normalizeColor(typedColors.left) ?? normalizedAll ?? defaultColor);
   const surfaceRightColor = convertRGBAToHSLA(normalizeColor(typedColors.right) ?? normalizedAll ?? defaultColor);
 
-  const surfaceTopColorDark =
-    typeof typedColors.top === 'undefined' ? darkenHSLAColor(surfaceTopColor, 15) : surfaceTopColor;
-  const surfaceTopColorLight =
-    typeof typedColors.top === 'undefined' ? lightenHSLAColor(surfaceTopColor, 10) : surfaceTopColor;
-  const surfaceBottomColorDark =
-    typeof typedColors.bottom === 'undefined' ? darkenHSLAColor(surfaceBottomColor, 10) : surfaceBottomColor;
-  const surfaceFrontColorDark =
-    typeof typedColors.front === 'undefined' ? darkenHSLAColor(surfaceFrontColor, 10) : surfaceFrontColor;
-  const surfaceLeftColorDark =
-    typeof typedColors.left === 'undefined' ? darkenHSLAColor(surfaceLeftColor, 15) : surfaceLeftColor;
-  const surfaceLeftColorMedium =
-    typeof typedColors.left === 'undefined' ? darkenHSLAColor(surfaceLeftColor, 10) : surfaceLeftColor;
-  const surfaceRightColorDark =
-    typeof typedColors.right === 'undefined' ? darkenHSLAColor(surfaceRightColor, 15) : surfaceRightColor;
-  const surfaceRightColorMedium =
-    typeof typedColors.right === 'undefined' ? darkenHSLAColor(surfaceRightColor, 10) : surfaceRightColor;
+  const surfaceTopColorDark = darkenHSLAColor(surfaceTopColor, 15);
+  const surfaceTopColorLight = lightenHSLAColor(surfaceTopColor, 10);
+  const surfaceBottomColorDark = darkenHSLAColor(surfaceBottomColor, 10);
+  const surfaceFrontColorDark = darkenHSLAColor(surfaceFrontColor, 10);
+  const surfaceLeftColorDark = darkenHSLAColor(surfaceLeftColor, 15);
+  const surfaceLeftColorMedium = darkenHSLAColor(surfaceLeftColor, 10);
+  const surfaceRightColorDark = darkenHSLAColor(surfaceRightColor, 15);
+  const surfaceRightColorMedium = darkenHSLAColor(surfaceRightColor, 10);
 
   const colors: Record<string, HSLA | string> = {
     surfaceTopColor,
