@@ -1,5 +1,5 @@
 ---
-import { normalizeAndStringifyColor, type Color } from '../colors';
+import { convertRGBAToHSLA, normalizeColor, type Color } from '../colors';
 import type { ImagePixelFrames } from '../images';
 
 import { getBoxStyleVars, type BoxProps } from './box-properties';
@@ -72,7 +72,19 @@ rowsWithVisibleCells.forEach((row, i) => {
         styles: Object.fromEntries(
           colors
             .slice(1)
-            .map((color, frameIndex) => [`--frame-color-${frameIndex + 2}`, normalizeAndStringifyColor(color)]),
+            .map((color, frameIndex) => {
+              const normalized = normalizeColor(color);
+              if (!normalized) {
+                throw new Error(`Invalid color: ${color}`);
+              }
+              const hsla = convertRGBAToHSLA(normalized);
+              const hsColor = `${hsla.h} ${hsla.s}%`;
+              return [
+                [`--f-${frameIndex + 2}`, hsColor],
+                [`--f-${frameIndex + 2}-l`, `${hsla.l}%`],
+              ];
+            })
+            .flat(),
         ),
       });
     }
@@ -134,20 +146,16 @@ const baseSectionProps: BoxProps = {
   @use 'sass:list';
 
   $max-animation-frames: 10;
-  $surface-color-var-names: [[ 'top', 'front'], [ 'bottom', 'back']];
+  $surface-color-var-names: [[ 't', 'f'], [ 'b', 'bk']];
 
   @mixin vars($frameIndex) {
     $surface-var-name-0: list.nth(list.nth($surface-color-var-names, $frameIndex % 2 + 1 /* indices are 1-based */), 1);
     $surface-var-name-1: list.nth(list.nth($surface-color-var-names, $frameIndex % 2 + 1 /* indices are 1-based */), 2);
 
-    --surface-#{$surface-var-name-0}-color: var(--frame-color-#{$frameIndex + 1});
-    --surface-#{$surface-var-name-0}-color-dark: var(--frame-color-#{$frameIndex + 1});
-    --surface-#{$surface-var-name-0}-color-light: var(--frame-color-#{$frameIndex + 1});
-    --surface-#{$surface-var-name-0}-color-medium: var(--frame-color-#{$frameIndex + 1});
-    --surface-#{$surface-var-name-1}-color: var(--frame-color-#{$frameIndex + 1});
-    --surface-#{$surface-var-name-1}-color-dark: var(--frame-color-#{$frameIndex + 1});
-    --surface-#{$surface-var-name-1}-color-light: var(--frame-color-#{$frameIndex + 1});
-    --surface-#{$surface-var-name-1}-color-medium: var(--frame-color-#{$frameIndex + 1});
+    --s#{$surface-var-name-0}: var(--f-#{$frameIndex + 1});
+    --s#{$surface-var-name-1}: var(--f-#{$frameIndex + 1});
+    --s#{$surface-var-name-0}-l: var(--f-#{$frameIndex + 1}-l);
+    --s#{$surface-var-name-1}-l: var(--f-#{$frameIndex + 1}-l);
   }
 
   @mixin frame($frameIndex, $rotation) {

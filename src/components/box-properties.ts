@@ -1,4 +1,4 @@
-import { convertRGBAToHSLA, darkenHSLAColor, lightenHSLAColor, normalizeColor, type Color, type HSLA } from '../colors';
+import { convertRGBAToHSLA, normalizeColor, type Color, type HSLA } from '../colors';
 
 export interface BoxSurfaceColors {
   top: Color;
@@ -36,34 +36,18 @@ export function getBoxStyleVars(props: BoxProps): Record<string, string> {
   const surfaceLeftColor = convertRGBAToHSLA(normalizeColor(typedColors.left) ?? normalizedAll ?? defaultColor);
   const surfaceRightColor = convertRGBAToHSLA(normalizeColor(typedColors.right) ?? normalizedAll ?? defaultColor);
 
-  const surfaceTopColorDark = darkenHSLAColor(surfaceTopColor, 15);
-  const surfaceTopColorLight = lightenHSLAColor(surfaceTopColor, 10);
-  const surfaceBottomColorDark = darkenHSLAColor(surfaceBottomColor, 10);
-  const surfaceFrontColorDark = darkenHSLAColor(surfaceFrontColor, 10);
-  const surfaceLeftColorDark = darkenHSLAColor(surfaceLeftColor, 15);
-  const surfaceLeftColorMedium = darkenHSLAColor(surfaceLeftColor, 10);
-  const surfaceRightColorDark = darkenHSLAColor(surfaceRightColor, 15);
-  const surfaceRightColorMedium = darkenHSLAColor(surfaceRightColor, 10);
-
   const colors: Record<string, HSLA | string> = {
     surfaceTopColor,
-    surfaceTopColorDark,
-    surfaceTopColorLight,
-    surfaceBottomColorDark,
+    surfaceBottomColor,
     surfaceFrontColor,
-    surfaceFrontColorDark,
     surfaceBackColor,
     surfaceLeftColor,
-    surfaceLeftColorDark,
-    surfaceLeftColorMedium,
     surfaceRightColor,
-    surfaceRightColorDark,
-    surfaceRightColorMedium,
   };
 
   for (const key in colors) {
-    const { h, s, l, a } = colors[key] as HSLA;
-    colors[key] = `hsla(${h}, ${s}%, ${l}%, ${a})`;
+    const { h, s } = colors[key] as HSLA;
+    colors[key] = `${h} ${s}%`;
   }
 
   // There are quite a lot of vars, and they get injected into all children, so to save up space, inject them manually
@@ -73,18 +57,17 @@ export function getBoxStyleVars(props: BoxProps): Record<string, string> {
     '--wx': `${wx}px`,
     '--wy': `${wy}px`,
     '--wz': `${wz}px`,
-    '--surface-top-color': typedHslaColors.surfaceTopColor,
-    '--surface-top-color-dark': typedHslaColors.surfaceTopColorDark,
-    '--surface-top-color-light': typedHslaColors.surfaceTopColorLight,
-    '--surface-bottom-color-dark': typedHslaColors.surfaceBottomColorDark,
-    '--surface-front-color': typedHslaColors.surfaceFrontColor,
-    '--surface-front-color-dark': typedHslaColors.surfaceFrontColorDark,
-    '--surface-back-color': typedHslaColors.surfaceBackColor,
-    '--surface-left-color': typedHslaColors.surfaceLeftColor,
-    '--surface-left-color-dark': typedHslaColors.surfaceLeftColorDark,
-    '--surface-left-color-medium': typedHslaColors.surfaceLeftColorMedium,
-    '--surface-right-color': typedHslaColors.surfaceRightColor,
-    '--surface-right-color-dark': typedHslaColors.surfaceRightColorDark,
-    '--surface-right-color-medium': typedHslaColors.surfaceRightColorMedium,
+    '--st': typedHslaColors.surfaceTopColor,
+    '--st-l': `${surfaceTopColor.l}%`,
+    '--sb': typedHslaColors.surfaceBottomColor,
+    '--sb-l': `${surfaceBottomColor.l}%`,
+    '--sf': typedHslaColors.surfaceFrontColor,
+    '--sf-l': `${surfaceFrontColor.l}%`,
+    '--sbk': typedHslaColors.surfaceBackColor,
+    '--sbk-l': `${surfaceBackColor.l}%`,
+    '--sl': typedHslaColors.surfaceLeftColor,
+    '--sl-l': `${surfaceLeftColor.l}%`,
+    '--sr': typedHslaColors.surfaceRightColor,
+    '--sr-l': `${surfaceRightColor.l}%`,
   };
 }

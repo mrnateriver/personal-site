@@ -140,7 +140,12 @@ export function convertRGBAToHSLA(color: RGBA): HSLA {
   s = s * 100;
   l = l * 100;
 
-  return { h, s, l, a };
+  return {
+    h: Math.round(h * 1000) / 1000,
+    s: Math.round(s * 1000) / 1000,
+    l: Math.round(l * 1000) / 1000,
+    a: Math.round(a * 1000) / 1000,
+  };
 }
 
 export function convertHSLAToRGBA(color: HSLA): RGBA {

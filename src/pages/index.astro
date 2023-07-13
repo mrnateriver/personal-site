@@ -20,8 +20,8 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
     <BoxImage
       framesImagesPaths={framesImagesPaths}
       hideSurfaces={hideSurfaces}
-      animationFrameMs={2000}
-      animationDelayMs={2000}
+      animationFrameMs={1500}
+      animationDelayMs={500}
     />
   </main>
 </Layout>
@@ -36,9 +36,9 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
     // FIXME: TEMP!
     perspective: 1000000px;
     perspective-origin: 300px 300px;
-    transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
+    // transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
     transform-origin: center center;
-    // animation: 2s 2s image-rotation forwards ease-in-out;
+    animation: 2s image-rotation forwards ease-in-out;
     // animation: shift-perspective 10s forwards ease-in-out;
     // transition: perspective 2s ease-in-out;
   }
