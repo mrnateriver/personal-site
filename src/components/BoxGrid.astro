@@ -9,7 +9,7 @@ export interface Props extends Pick<BaseBoxProps, 'hideSurfaces'> {
   class?: string;
   /**
    * Gap between boxes in `px` unit.
-   * @default 4
+   * @default 2
    */
   gapPx?: number;
   /**
@@ -35,7 +35,7 @@ export interface Props extends Pick<BaseBoxProps, 'hideSurfaces'> {
 }
 
 const {
-  gapPx = 4,
+  gapPx = 2,
   cellSizePx = 24,
   transparentColor = 0xffffffff,
   rows,
@@ -188,7 +188,7 @@ const baseSectionProps: BoxProps = {
           1}
           calc(var(--animation-frame-ms) * $i)
           forwards
-          cubic-bezier(0.68, -0.55, 0.27, 1.55);
+          var(--overshoot-function);
         animation-delay: var(--animation-delay-ms);
       }
     }

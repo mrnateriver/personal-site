@@ -1,14 +1,7 @@
 ---
-// import * as fs from 'fs';
-
-// import Card from '../components/Card.astro';
 import BoxImage from '../components/BoxImage.astro';
 import type { BitmapImagePath } from '../images';
 import Layout from '../layouts/Layout.astro';
-
-// fs.readdirSync('src/pages').forEach((file) => {
-//   console.log(file);
-// });
 
 const hideSurfaces = { right: true };
 
@@ -17,38 +10,56 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
 
 <Layout title="Hi mom">
   <main>
-    <BoxImage
-      framesImagesPaths={framesImagesPaths}
-      hideSurfaces={hideSurfaces}
-      animationFrameMs={1500}
-      animationDelayMs={500}
-    />
+    <div id="image-kangaroo-container" class="image-container">
+      <BoxImage
+        class="image-kangaroo"
+        framesImagesPaths={framesImagesPaths}
+        hideSurfaces={hideSurfaces}
+        animationFrameMs={1500}
+        animationDelayMs={500}
+      />
+    </div>
   </main>
 </Layout>
 
-<style lang="scss">
-  main {
-    // TODO: temporary!
-    position: relative;
-    overflow: visible;
-    transform-style: preserve-3d;
+<script src="./index-interactive.ts"></script>
 
-    // FIXME: TEMP!
-    perspective: 1000000px;
-    perspective-origin: 300px 300px;
-    // transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
-    transform-origin: center center;
-    animation: 2s image-rotation forwards ease-in-out;
-    // animation: shift-perspective 10s forwards ease-in-out;
-    // transition: perspective 2s ease-in-out;
+<style lang="scss">
+  @use 'sass:list';
+
+  .image {
+    &-container {
+      --rocking-offset: 10px;
+
+      display: inline-block;
+      position: relative;
+      overflow: visible;
+      transform-style: preserve-3d;
+
+      // FIXME: TEMP!
+      perspective: 1000000px;
+      perspective-origin: 300px 300px;
+      // transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
+      transform-origin: center center;
+      // animation: 2s image-rotation forwards ease-in-out;
+      animation: image-rotation 2s forwards ease-in-out; // , tilt-n-move-shaking 20s infinite ease-in-out;
+      // animation: shift-perspective 10s forwards ease-in-out;
+      transition: transform 1s ease-in-out;
+    }
+
+    &-kangaroo {
+      animation: image-rocking 20s infinite cubic-bezier(0.65, 0.05, 0.36, 1);
+    }
   }
 
-  @keyframes shift-perspective {
-    0% {
-      perspective: 1000000px;
-    }
-    100% {
-      perspective: 2000px;
+  @keyframes image-rocking {
+    $pos: [[0, 0], [1, 0], [-1, 1], [1, -1], [1, 1], [-1, -1], [-1, 0], [1, 0], [0, 0]];
+    @for $i from 0 through 8 {
+      #{$i * 12.5%} {
+        $x: list.nth(list.nth($pos, $i + 1), 1);
+        $y: list.nth(list.nth($pos, $i + 1), 2);
+        transform: translate(calc($x * var(--rocking-offset)), calc($y * var(--rocking-offset)));
+      }
     }
   }
 

@@ -31,19 +31,13 @@
   "rules": {
     "semi": ["error", "always"],
     "no-console": "warn",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "import/order": [
       "error",
       {
         "newlines-between": "always",
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          "sibling",
-          "index"
-        ],
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
         "alphabetize": {
           "order": "asc",
           "caseInsensitive": true
