@@ -7,6 +7,11 @@ if (main && image) {
   const xRange = [-24, 24] as const;
   const yRange = [0, 64] as const;
 
+  const { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;
+  let { left: mainX, top: mainY, width: mainWidth, height: mainHeight } = image.getBoundingClientRect();
+  mainHeight /= 2;
+  mainWidth /= 2;
+
   function setRotation(x: number, y: number): void {
     main.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(0deg)`;
   }
@@ -15,11 +20,6 @@ if (main && image) {
     main.removeEventListener('animationend', onMainRotationEnd);
     main.style.animation = 'none';
     setRotation(-16, 32);
-
-    const { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;
-    let { left: mainX, top: mainY, width: mainWidth, height: mainHeight } = image.getBoundingClientRect();
-    mainHeight /= 2;
-    mainWidth /= 2;
 
     const auditedMouseMove = auditTime<[number, number]>((next) => {
       function updateKangarooRotation(event: MouseEvent): void {
@@ -49,5 +49,6 @@ if (main && image) {
       setRotation(...args);
     });
   }
-  main.addEventListener('animationend', onMainRotationEnd);
+
+  setTimeout(onMainRotationEnd, 3000); // Ideally an `animationend` event would be used here, but it proved to be unreliable with animation delays
 }
