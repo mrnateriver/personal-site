@@ -1,14 +1,15 @@
 ---
+import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxImage from '../components/BoxImage.astro';
 import type { BitmapImagePath } from '../images';
-import Layout from '../layouts/Layout.astro';
+import IndexLayout from '../layouts/IndexLayout.astro';
 
 const hideSurfaces = { right: true };
 
 const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangaroo_${i + 1}.bmp` as BitmapImagePath);
 ---
 
-<Layout title="Hi mom">
+<IndexLayout title="Hi mom">
   <main>
     <div id="image-kangaroo-container" class="image-container">
       <BoxImage
@@ -18,9 +19,11 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
         animationFrameMs={1500}
         animationDelayMs={500}
       />
+
+      <Acknowledgments class="image-acks" />
     </div>
   </main>
-</Layout>
+</IndexLayout>
 
 <script src="./index-interactive.ts"></script>
 
@@ -42,7 +45,7 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
       // transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
       transform-origin: center center;
       // animation: 2s image-rotation forwards ease-in-out;
-      animation: 1s image-rotation 2s forwards ease-in-out; // , tilt-n-move-shaking 20s infinite ease-in-out;
+      animation: image-rotation 2s forwards ease-in-out; // , tilt-n-move-shaking 20s infinite ease-in-out;
       // animation: shift-perspective 10s forwards ease-in-out;
       transition: transform 1s ease-in-out;
     }
@@ -52,13 +55,17 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
     }
   }
 
+  .image-acks {
+    margin-top: 32px; // TODO: magic constant
+  }
+
   @keyframes image-rocking {
     $pos: [[0, 0], [1, 0], [-1, 1], [1, -1], [1, 1], [-1, -1], [-1, 0], [1, 0], [0, 0]];
     @for $i from 0 through 8 {
       #{$i * 12.5%} {
         $x: list.nth(list.nth($pos, $i + 1), 1);
         $y: list.nth(list.nth($pos, $i + 1), 2);
-        transform: translate(calc($x * var(--rocking-offset)), calc($y * var(--rocking-offset)));
+        transform: translate(calc($x * var(--rocking-offset)), calc($y * var(--rocking-offset))) translateZ(-64px);
       }
     }
   }

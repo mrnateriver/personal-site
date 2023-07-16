@@ -1,0 +1,105 @@
+---
+const { class: className } = Astro.props;
+---
+
+<div class:list={['ack', className]}>
+  <a class="ack-entry ack-astro" href="https://astro.build">
+    <div class="ack-text"><p>Made just with CSS using</p></div>
+    <div class="ack-logo">
+      <img src="src/assets/astro-logo-light.svg" />
+    </div>
+  </a>
+  <a class="ack-entry ack-github" href="https://github.com/mrnateriver/personal-site">
+    <div class="ack-text"><p>Source code</p></div>
+    <div class="ack-logo">
+      <img src="src/assets/github-mark-white.svg" />
+    </div>
+  </a>
+</div>
+
+<style lang="scss">
+  .ack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-entry {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      position: relative;
+      color: white;
+      padding: 8px 0; // TODO: remove magic numbers
+      margin-bottom: 8px; // TODO: remove magic numbers
+      gap: 16px; // TODO: remove magic numbers
+
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        transition: all 200ms ease-in-out;
+        height: 0;
+        width: 0;
+      }
+
+      &::before {
+        bottom: 0;
+        left: 0;
+      }
+      &::after {
+        right: 0;
+        top: 0;
+      }
+
+      &:hover {
+        $corner-size: 16px; // TODO: remove magic numbers
+        $border-style: 2pt solid pink; // TODO: color variable? border width?
+
+        &::before {
+          border-left: $border-style;
+          border-bottom: $border-style;
+        }
+        &::after {
+          border-right: $border-style;
+          border-top: $border-style;
+        }
+
+        &::before,
+        &::after {
+          height: $corner-size;
+          width: $corner-size;
+        }
+      }
+    }
+
+    &-text {
+      width: 140px; // TODO: remove magic numbers
+      display: flex;
+      justify-content: flex-end;
+
+      p {
+        margin: 0;
+        text-align: right;
+        font-weight: bold;
+      }
+    }
+
+    &-logo {
+      width: 120px; // TODO: remove magic numbers
+    }
+
+    &-astro {
+      img {
+        width: 100px; // TODO: remove magic numbers
+      }
+    }
+
+    &-github {
+      img {
+        width: 32px; // TODO: remove magic numbers
+      }
+    }
+  }
+</style>
