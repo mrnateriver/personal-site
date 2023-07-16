@@ -7,10 +7,14 @@ if (main && image) {
   const xRange = [-24, 24] as const;
   const yRange = [0, 64] as const;
 
-  const { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;
+  let { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;
   let { left: mainX, top: mainY, width: mainWidth, height: mainHeight } = image.getBoundingClientRect();
   mainHeight /= 2;
   mainWidth /= 2;
+
+  window.addEventListener('resize', () => {
+    ({ innerWidth: viewportWidth, innerHeight: viewportHeight } = window);
+  });
 
   function setRotation(x: number, y: number): void {
     main.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(0deg)`;
