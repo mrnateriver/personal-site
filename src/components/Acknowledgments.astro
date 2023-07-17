@@ -18,6 +18,24 @@ const { class: className } = Astro.props;
 </div>
 
 <style lang="scss">
+  @keyframes selection-grow {
+    0% {
+      border-width: var(--corner-border-width);
+      height: 0;
+      width: 0;
+    }
+    50% {
+      border-width: var(--corner-border-width);
+      width: var(--corner-size);
+      height: 0;
+    }
+    100% {
+      border-width: var(--corner-border-width);
+      width: var(--corner-size);
+      height: var(--corner-size);
+    }
+  }
+
   .ack {
     display: flex;
     flex-direction: column;
@@ -39,7 +57,7 @@ const { class: className } = Astro.props;
         content: '';
         display: block;
         position: absolute;
-        transition: all 200ms ease-in-out;
+        transition: all 300ms ease-in-out;
         height: 0;
         width: 0;
       }
@@ -54,22 +72,28 @@ const { class: className } = Astro.props;
       }
 
       &:hover {
-        $corner-size: 16px; // TODO: remove magic numbers
-        $border-style: 2pt solid pink; // TODO: color variable? border width?
+        --corner-size: 32px; // TODO: remove magic numbers
+        --corner-border-color: pink;
+        --corner-border-width: 2pt; // TODO: color variable? border width?
 
         &::before {
-          border-left: $border-style;
-          border-bottom: $border-style;
+          border-left-style: solid;
+          border-bottom-style: solid;
+          border-left-color: var(--corner-border-color);
+          border-bottom-color: var(--corner-border-color);
         }
         &::after {
-          border-right: $border-style;
-          border-top: $border-style;
+          border-right-style: solid;
+          border-top-style: solid;
+          border-right-color: var(--corner-border-color);
+          border-top-color: var(--corner-border-color);
         }
 
         &::before,
         &::after {
-          height: $corner-size;
-          width: $corner-size;
+          // height: $corner-size;
+          // width: $corner-size;
+          animation: selection-grow 500ms forwards ease-in-out;
         }
       }
     }
