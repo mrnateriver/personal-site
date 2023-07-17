@@ -74,5 +74,6 @@ if (main && image) {
     // });
   }
 
-  setTimeout(onMainRotationEnd, 3000); // Ideally an `animationend` event would be used here, but it proved to be unreliable with animation delays
+  // setTimeout(onMainRotationEnd, 3000); // Ideally an `animationend` event would be used here, but it proved to be unreliable with animation delays
+  onMainRotationEnd();
 }
