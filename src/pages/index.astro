@@ -22,6 +22,11 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
 
       <Acknowledgments class="image-acks" />
     </div>
+
+    <div id="label-container" class="label-container">
+      <BoxImage class="label-blog" imagePath="src/assets/label_blog.bmp" />
+      <BoxImage class="label-resume" imagePath="src/assets/label_resume.bmp" />
+    </div>
   </main>
 </IndexLayout>
 
@@ -29,6 +34,12 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
 
 <style lang="scss">
   @use 'sass:list';
+
+  main {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 
   .image {
     &-container {
@@ -47,7 +58,7 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
       // animation: 2s image-rotation forwards ease-in-out;
       animation: image-rotation 2s forwards ease-in-out; // , tilt-n-move-shaking 20s infinite ease-in-out;
       // animation: shift-perspective 10s forwards ease-in-out;
-      transition: transform 1s ease-in-out;
+      // transition: transform 1s ease-in-out;
     }
 
     &-kangaroo {
@@ -57,6 +68,30 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
 
   .image-acks {
     margin-top: 32px; // TODO: magic constant
+  }
+
+  .label {
+    &-container {
+      display: flex;
+      flex-flow: column;
+      gap: 64px;
+      perspective: 1000000px;
+      transform-style: preserve-3d;
+      transform-origin: center center;
+      // transition: transform 1s ease-in-out;
+    }
+
+    &-blog,
+    &-resume {
+      perspective: 1000000px;
+      transform-style: preserve-3d;
+      transform-origin: center center;
+      transform: scale(0.8);
+    }
+
+    &-resume {
+      transform: scale(0.8) translateZ(100px);
+    }
   }
 
   @keyframes image-rocking {
