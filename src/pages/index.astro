@@ -1,10 +1,11 @@
 ---
 import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxImage from '../components/BoxImage.astro';
+import SectionLink from '../components/SectionLink.astro';
 // import type { BitmapImagePath } from '../images';
 import IndexLayout from '../layouts/IndexLayout.astro';
 
-const hideSurfaces = { right: true, back: true };
+const hideSurfaces = { right: true, back: true, bottom: true };
 
 // const framesImagesPaths = Array.from({ length: 1 }, (_, i) => `src/assets/kangaroo_${i + 1}.bmp` as BitmapImagePath);
 ---
@@ -24,8 +25,14 @@ const hideSurfaces = { right: true, back: true };
     </div>
 
     <div id="label-container" class="label-container">
-      <BoxImage class="label-blog" imagePath="src/assets/label_blog.bmp" />
-      <BoxImage class="label-resume" imagePath="src/assets/label_resume.bmp" />
+      <!-- TODO: links -->
+      <SectionLink class="label-blog" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
+        <BoxImage imagePath="src/assets/label_blog.bmp" />
+      </SectionLink>
+
+      <SectionLink class="label-resume" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
+        <BoxImage imagePath="src/assets/label_resume.bmp" />
+      </SectionLink>
     </div>
   </main>
 </IndexLayout>
@@ -74,6 +81,7 @@ const hideSurfaces = { right: true, back: true };
     &-container {
       display: flex;
       flex-flow: column;
+      align-items: flex-start;
       gap: 64px;
       perspective: 1000000px;
       transform-style: preserve-3d;

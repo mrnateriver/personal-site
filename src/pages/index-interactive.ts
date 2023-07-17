@@ -3,7 +3,7 @@ const image = main.querySelector('.image-kangaroo') as HTMLElement;
 const labels = document.querySelector('#label-container') as HTMLElement;
 
 if (main && image) {
-  const xRange = [-24, 24] as const;
+  const xRange = [0, 24] as const;
   const yRange = [0, 48] as const;
 
   let { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;

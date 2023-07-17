@@ -1,0 +1,84 @@
+---
+export interface Props {
+  class?: string;
+  href: string;
+  borderWidthPx?: number;
+  borderSizePx?: number;
+}
+
+const { class: className, href, borderWidthPx = 2, borderSizePx = 32 } = Astro.props;
+---
+
+<a class={className} href={href}>
+  <slot />
+</a>
+
+<style lang="scss" define:vars={{ 'border-width-px': `${borderWidthPx}px`, 'border-size-px': `${borderSizePx}px` }}>
+  @keyframes selection-grow {
+    0% {
+      border-width: var(--corner-border-width);
+      height: 0;
+      width: 0;
+    }
+    50% {
+      border-width: var(--corner-border-width);
+      width: var(--corner-size);
+      height: 0;
+    }
+    100% {
+      border-width: var(--corner-border-width);
+      width: var(--corner-size);
+      height: var(--corner-size);
+    }
+  }
+
+  a {
+    --corner-size: var(--border-size-px);
+
+    transform-style: preserve-3d;
+    display: inline-block;
+    position: relative;
+
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      transition: all 300ms ease-in-out;
+      height: 0;
+      width: 0;
+    }
+
+    &::before {
+      bottom: calc(-1 * var(--corner-size));
+      left: calc(-1 * var(--corner-size));
+    }
+    &::after {
+      right: calc(-1 * var(--corner-size));
+      top: calc(-1 * var(--corner-size));
+    }
+
+    &:hover {
+      --corner-border-color: cyan; // TODO: color variable?
+      --corner-border-width: var(--border-width-px);
+
+      &::before {
+        border-left-style: solid;
+        border-bottom-style: solid;
+        border-left-color: var(--corner-border-color);
+        border-bottom-color: var(--corner-border-color);
+      }
+      &::after {
+        border-right-style: solid;
+        border-top-style: solid;
+        border-right-color: var(--corner-border-color);
+        border-top-color: var(--corner-border-color);
+      }
+
+      &::before,
+      &::after {
+        animation: selection-grow 500ms forwards ease-in-out;
+      }
+    }
+  }
+</style>

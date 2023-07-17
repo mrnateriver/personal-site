@@ -1,20 +1,21 @@
 ---
+import SectionLink from './SectionLink.astro';
 const { class: className } = Astro.props;
 ---
 
 <div class:list={['ack', className]}>
-  <a class="ack-entry ack-astro" href="https://astro.build">
+  <SectionLink class="ack-entry ack-astro" href="https://astro.build">
     <div class="ack-text"><p>Made mostly with CSS using</p></div>
     <div class="ack-logo">
       <img src="src/assets/astro-logo-light.svg" />
     </div>
-  </a>
-  <a class="ack-entry ack-github" href="https://github.com/mrnateriver/personal-site">
+  </SectionLink>
+  <SectionLink class="ack-entry ack-github" href="https://github.com/mrnateriver/personal-site">
     <div class="ack-text"><p>Source code</p></div>
     <div class="ack-logo">
       <img src="src/assets/github-mark-white.svg" />
     </div>
-  </a>
+  </SectionLink>
 </div>
 
 <style lang="scss">
