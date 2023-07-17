@@ -1,12 +1,12 @@
 ---
 import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxImage from '../components/BoxImage.astro';
-import type { BitmapImagePath } from '../images';
+// import type { BitmapImagePath } from '../images';
 import IndexLayout from '../layouts/IndexLayout.astro';
 
-const hideSurfaces = { right: true };
+const hideSurfaces = { right: true, back: true };
 
-const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangaroo_${i + 1}.bmp` as BitmapImagePath);
+// const framesImagesPaths = Array.from({ length: 1 }, (_, i) => `src/assets/kangaroo_${i + 1}.bmp` as BitmapImagePath);
 ---
 
 <IndexLayout title="Hi mom">
@@ -14,7 +14,7 @@ const framesImagesPaths = Array.from({ length: 4 }, (_, i) => `src/assets/kangar
     <div id="image-kangaroo-container" class="image-container">
       <BoxImage
         class="image-kangaroo"
-        framesImagesPaths={framesImagesPaths}
+        imagePath="src/assets/kangaroo_4.bmp"
         hideSurfaces={hideSurfaces}
         animationFrameMs={1500}
         animationDelayMs={500}
