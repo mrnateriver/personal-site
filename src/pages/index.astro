@@ -27,11 +27,11 @@ const hideSurfaces = { right: true, back: true, bottom: true };
     <div id="label-container" class="label-container">
       <!-- TODO: links -->
       <SectionLink class="label-blog" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
-        <BoxImage imagePath="src/assets/label_blog.bmp" />
+        <BoxImage imagePath="src/assets/label_blog.bmp" hideSurfaces={hideSurfaces} />
       </SectionLink>
 
       <SectionLink class="label-resume" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
-        <BoxImage imagePath="src/assets/label_resume.bmp" />
+        <BoxImage imagePath="src/assets/label_resume.bmp" hideSurfaces={hideSurfaces} />
       </SectionLink>
     </div>
   </main>
