@@ -75,18 +75,18 @@ const hideSurfacesClasses = Object.keys(hideSurfaces).map((surface) => `box-side
 
         &::before {
           transform: rotateX(-90deg) translateY(calc(var(--wz) / -2));
-          background-image: linear-gradient(to bottom, hsl(var(--st) calc(var(--st-l) - 15%)), transparent),
-            linear-gradient(to right, hsl(var(--st) calc(var(--st-l) - 15%)), transparent),
-            linear-gradient(to bottom, hsl(var(--st) var(--st-l)), hsl(var(--st) calc(var(--st-l) + 10%)));
+          background-image: linear-gradient(to bottom, hsl(var(--st) calc(var(--st-l) - 10%)), transparent),
+            linear-gradient(to right, hsl(var(--st) calc(var(--st-l) - 10%)), transparent),
+            linear-gradient(to top, hsl(var(--st) var(--st-l)), hsl(var(--st) calc(var(--st-l) + 5%)));
           background-size: 1px 100%, 100% 1px, auto;
           background-repeat: no-repeat;
         }
 
         &::after {
           transform: translateY(var(--wy)) rotateX(-90deg) translateY(calc(var(--wz) / -2));
-          background-image: linear-gradient(to top, hsl(var(--sb) calc(var(--sb-l) - 15%)), transparent),
-            linear-gradient(to top, hsl(var(--sb) var(--sb-l)), hsl(var(--sb) calc(var(--sb-l) + 10%))),
-            linear-gradient(to right, hsl(var(--sb) calc(var(--sb-l) - 15%)), hsl(var(--sb) var(--sb-l)));
+          background-image: linear-gradient(to top, hsl(var(--sb) calc(var(--sb-l) - 10%)), transparent),
+            linear-gradient(to top, hsl(var(--sb) var(--sb-l)), hsl(var(--sb) calc(var(--sb-l) + 5%))),
+            linear-gradient(to left, hsl(var(--sb) calc(var(--sb-l) - 10%)), hsl(var(--sb) var(--sb-l)));
           background-size: 1px 100%, auto calc(100% - 1px), auto;
           background-repeat: no-repeat;
         }
@@ -97,6 +97,8 @@ const hideSurfacesClasses = Object.keys(hideSurfaces).map((surface) => `box-side
         &::after {
           height: var(--wy);
           width: var(--wx);
+          background-size: auto calc(var(--total-rows) * 100%);
+          background-position-y: calc(var(--ri) * 100% / var(--total-rows));
         }
 
         &::before {
@@ -104,7 +106,7 @@ const hideSurfacesClasses = Object.keys(hideSurfaces).map((surface) => `box-side
           background-image: linear-gradient(
             to bottom,
             hsl(var(--sf) var(--sf-l)),
-            hsl(var(--sf) calc(var(--sf-l) - 10%))
+            hsl(var(--sf) calc(var(--sf-l) - 15%))
           );
         }
 
@@ -113,7 +115,7 @@ const hideSurfacesClasses = Object.keys(hideSurfaces).map((surface) => `box-side
           background-image: linear-gradient(
             to top,
             hsl(var(--sbk) var(--sbk-l)),
-            hsl(var(--sbk) calc(var(--sbk-l) - 10%))
+            hsl(var(--sbk) calc(var(--sbk-l) - 15%))
           );
         }
       }
@@ -123,21 +125,22 @@ const hideSurfacesClasses = Object.keys(hideSurfaces).map((surface) => `box-side
         &::after {
           height: var(--wy);
           width: var(--wz);
-          background-size: 1px 100%, auto auto;
+          background-size: 1px 100%, auto calc(var(--total-rows) * 100%);
+          background-position-y: calc(var(--ri) * 100% / var(--total-rows));
           background-repeat: no-repeat;
           transform-origin: left center;
         }
 
         &::before {
           transform: translateZ(calc(var(--wz) / 2)) rotateY(90deg);
-          background-image: linear-gradient(to bottom, hsl(var(--sl) calc(var(--sl-l) - 15%)), transparent),
-            linear-gradient(to bottom, hsl(var(--sl) var(--sl-l)), hsl(var(--sl) calc(var(--sl-l) - 10%)));
+          background-image: linear-gradient(to bottom, hsl(var(--sl) calc(var(--sl-l) - 10%)), transparent),
+            linear-gradient(to bottom, hsl(var(--sl) var(--sl-l)), hsl(var(--sl) calc(var(--sl-l) - 15%)));
         }
 
         &::after {
           transform: translateZ(calc(var(--wz) / 2)) translateX(var(--wx)) rotateY(90deg);
-          background-image: linear-gradient(to bottom, hsl(var(--sr) calc(var(--sr-l) - 15%)), transparent),
-            linear-gradient(to bottom, hsl(var(--sr) var(--sr-l)), hsl(var(--sr) calc(var(--sr-l) - 10%)));
+          background-image: linear-gradient(to bottom, hsl(var(--sr) calc(var(--sr-l) - 10%)), transparent),
+            linear-gradient(to bottom, hsl(var(--sr) var(--sr-l)), hsl(var(--sr) calc(var(--sr-l) - 15%)));
         }
       }
     }

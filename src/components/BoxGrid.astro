@@ -107,6 +107,7 @@ const style = {
   '--columns-count': rows[0]?.length ?? 0,
   '--animation-frame-ms': `${animationFrameMs}ms`,
   '--animation-delay-ms': `${animationDelayMs}ms`,
+  '--total-rows': rows.length,
 } as const;
 
 const baseSectionProps: BoxProps = {
@@ -122,7 +123,7 @@ const baseSectionProps: BoxProps = {
     Array.from(rowsByColors.entries()).map(([surfaceColor, rows]) => (
       <div class="grid-section" style={getBoxStyleVars({ ...baseSectionProps, surfaceColor })}>
         {Array.from(rows.entries()).map(([rowIndex, cells]) => (
-          <div class="grid-section-row" style={{ top: `${rowIndex * (cellSizePx + gapPx)}px` }}>
+          <div class="grid-section-row" style={{ '--ri': rowIndex, top: `${rowIndex * (cellSizePx + gapPx)}px` }}>
             {cells.map((columnIndex) => {
               const frames = cellsFrames.get(rowIndex * rowLength + columnIndex);
               return (
