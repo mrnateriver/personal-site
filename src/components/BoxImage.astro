@@ -37,13 +37,36 @@ if ('imagePath' in props) {
 }
 ---
 
-<BoxGrid
-  class={className}
-  rows={imagePixels}
-  hideSurfaces={hideSurfaces}
-  animationDelayMs={animationDelayMs}
-  animationFrameMs={animationFrameMs}
-  gapPx={gapPx}
-/>
+<div class="box-image-container">
+  <BoxGrid
+    class={className}
+    rows={imagePixels}
+    hideSurfaces={hideSurfaces}
+    animationDelayMs={animationDelayMs}
+    animationFrameMs={animationFrameMs}
+    gapPx={gapPx}
+  />
 
-<style></style>
+  <div class="box-image-shadow"></div>
+</div>
+
+<style lang="scss">
+  .box-image {
+    &-container {
+      transform-style: preserve-3d;
+    }
+
+    &-shadow {
+      // TODO: make generic!
+      background: #00000061; // TODO: rgba()
+      filter: blur(3vmin);
+      transform: rotateX(90deg) translateZ(-580px) translateY(-580px) rotateZ(10deg); // TODO: couple to image dimensions
+      position: absolute;
+      top: -30%;
+      border-radius: 100%;
+      left: 10%;
+      right: 10%;
+      bottom: 0;
+    }
+  }
+</style>

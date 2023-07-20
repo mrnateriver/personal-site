@@ -97,8 +97,8 @@ const hideSurfacesClasses = Object.keys(hideSurfaces).map((surface) => `box-side
         &::after {
           height: var(--wy);
           width: var(--wx);
-          background-size: auto calc(var(--total-rows) * 100%);
-          background-position-y: calc(var(--ri) * 100% / var(--total-rows));
+          background-size: auto calc(var(--total-rows, 1) * 100%);
+          background-position-y: calc(var(--ri, 1) * 100% / var(--total-rows, 1));
         }
 
         &::before {
