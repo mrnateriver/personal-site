@@ -4,13 +4,13 @@ const { class: className } = Astro.props;
 ---
 
 <div class:list={['ack', className]}>
-  <SectionLink class="ack-entry ack-astro" href="https://astro.build">
+  <SectionLink class="ack-entry ack-astro" href="https://astro.build" borderOffsetPx={8}>
     <div class="ack-text"><p>Made mostly with CSS using</p></div>
     <div class="ack-logo">
       <img src="src/assets/astro-logo-light.svg" />
     </div>
   </SectionLink>
-  <SectionLink class="ack-entry ack-github" href="https://github.com/mrnateriver/personal-site">
+  <SectionLink class="ack-entry ack-github" href="https://github.com/mrnateriver/personal-site" borderOffsetPx={0}>
     <div class="ack-text"><p>Source code</p></div>
     <div class="ack-logo">
       <img src="src/assets/github-mark-white.svg" />
@@ -19,24 +19,6 @@ const { class: className } = Astro.props;
 </div>
 
 <style lang="scss">
-  @keyframes selection-grow {
-    0% {
-      border-width: var(--corner-border-width);
-      height: 0;
-      width: 0;
-    }
-    50% {
-      border-width: var(--corner-border-width);
-      width: var(--corner-size);
-      height: 0;
-    }
-    100% {
-      border-width: var(--corner-border-width);
-      width: var(--corner-size);
-      height: var(--corner-size);
-    }
-  }
-
   .ack {
     display: flex;
     flex-direction: column;
@@ -52,51 +34,6 @@ const { class: className } = Astro.props;
       padding: 8px 0; // TODO: remove magic numbers
       margin-bottom: 8px; // TODO: remove magic numbers
       gap: 16px; // TODO: remove magic numbers
-
-      &::before,
-      &::after {
-        content: '';
-        display: block;
-        position: absolute;
-        transition: all 300ms ease-in-out;
-        height: 0;
-        width: 0;
-      }
-
-      &::before {
-        bottom: 0;
-        left: 0;
-      }
-      &::after {
-        right: 0;
-        top: 0;
-      }
-
-      &:hover {
-        --corner-size: 32px; // TODO: remove magic numbers
-        --corner-border-color: cyan;
-        --corner-border-width: 2pt; // TODO: color variable? border width?
-
-        &::before {
-          border-left-style: solid;
-          border-bottom-style: solid;
-          border-left-color: var(--corner-border-color);
-          border-bottom-color: var(--corner-border-color);
-        }
-        &::after {
-          border-right-style: solid;
-          border-top-style: solid;
-          border-right-color: var(--corner-border-color);
-          border-top-color: var(--corner-border-color);
-        }
-
-        &::before,
-        &::after {
-          // height: $corner-size;
-          // width: $corner-size;
-          animation: selection-grow 500ms forwards ease-in-out;
-        }
-      }
     }
 
     &-text {

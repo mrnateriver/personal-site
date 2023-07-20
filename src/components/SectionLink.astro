@@ -4,37 +4,43 @@ export interface Props {
   href: string;
   borderWidthPx?: number;
   borderSizePx?: number;
+  borderOffsetPx?: number;
 }
 
-const { class: className, href, borderWidthPx = 2, borderSizePx = 32 } = Astro.props;
+const { class: className, href, borderWidthPx = 2, borderSizePx = 32, borderOffsetPx = borderSizePx } = Astro.props;
 ---
 
 <a class={className} href={href}>
   <slot />
 </a>
 
-<style lang="scss" define:vars={{ 'border-width-px': `${borderWidthPx}px`, 'border-size-px': `${borderSizePx}px` }}>
+<style
+  lang="scss"
+  define:vars={{
+    'border-width-px': `${borderWidthPx}px`,
+    'border-size-px': `${borderSizePx}px`,
+    'border-offset-px': `${borderOffsetPx}px`,
+  }}
+>
   @keyframes selection-grow {
     0% {
-      border-width: var(--corner-border-width);
+      border-width: var(--border-width-px);
       height: 0;
       width: 0;
     }
     50% {
-      border-width: var(--corner-border-width);
-      width: var(--corner-size);
+      border-width: var(--border-width-px);
+      width: var(--border-size-px);
       height: 0;
     }
     100% {
-      border-width: var(--corner-border-width);
-      width: var(--corner-size);
-      height: var(--corner-size);
+      border-width: var(--border-width-px);
+      width: var(--border-size-px);
+      height: var(--border-size-px);
     }
   }
 
   a {
-    --corner-size: var(--border-size-px);
-
     transform-style: preserve-3d;
     display: inline-block;
     position: relative;
@@ -50,17 +56,16 @@ const { class: className, href, borderWidthPx = 2, borderSizePx = 32 } = Astro.p
     }
 
     &::before {
-      bottom: calc(-1 * var(--corner-size));
-      left: calc(-1 * var(--corner-size));
+      bottom: calc(-1 * var(--border-offset-px));
+      left: calc(-1 * var(--border-offset-px));
     }
     &::after {
-      right: calc(-1 * var(--corner-size));
-      top: calc(-1 * var(--corner-size));
+      right: calc(-1 * var(--border-offset-px));
+      top: calc(-1 * var(--border-offset-px));
     }
 
     &:hover {
       --corner-border-color: cyan; // TODO: color variable?
-      --corner-border-width: var(--border-width-px);
 
       &::before {
         border-left-style: solid;
@@ -77,7 +82,7 @@ const { class: className, href, borderWidthPx = 2, borderSizePx = 32 } = Astro.p
 
       &::before,
       &::after {
-        animation: selection-grow 500ms forwards ease-in-out;
+        animation: selection-grow 200ms forwards ease-in-out;
       }
     }
   }
