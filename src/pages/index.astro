@@ -27,11 +27,11 @@ const hideSurfaces = { right: true, back: true, bottom: true };
     <div id="label-container" class="label-container">
       <!-- TODO: links -->
       <SectionLink class="label-blog" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
-        <BoxImage imagePath="src/assets/label_blog.bmp" hideSurfaces={hideSurfaces} />
+        <BoxImage imagePath="src/assets/label_blog.bmp" hideSurfaces={hideSurfaces} cellSizePx={18} />
       </SectionLink>
 
       <SectionLink class="label-resume" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
-        <BoxImage imagePath="src/assets/label_resume.bmp" hideSurfaces={hideSurfaces} />
+        <BoxImage imagePath="src/assets/label_resume.bmp" hideSurfaces={hideSurfaces} cellSizePx={18} />
       </SectionLink>
     </div>
   </main>
@@ -94,11 +94,10 @@ const hideSurfaces = { right: true, back: true, bottom: true };
       perspective: 1000000px;
       transform-style: preserve-3d;
       transform-origin: center center;
-      transform: scale(0.8);
     }
 
     &-resume {
-      transform: scale(0.8) translateZ(100px);
+      transform: translateZ(100px);
     }
   }
 
