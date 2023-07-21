@@ -31,6 +31,10 @@ export function normalizeColor(color?: Color): RGBA | undefined {
   }
 
   if (typeof color === 'string') {
+    if (color in namedColors) {
+      return normalizeColor(namedColors[color]);
+    }
+
     if (color.startsWith('#')) {
       // #rgb
       if (color.length === 4) {
@@ -59,10 +63,6 @@ export function normalizeColor(color?: Color): RGBA | undefined {
       if (color.startsWith('hsl')) {
         const [h, s, l, a] = parseColorParens(color);
         return convertHSLAToRGBA({ h, s, l, a: a ?? 1 });
-      }
-
-      if (color in namedColors) {
-        return normalizeColor(namedColors[color]);
       }
     }
   }
@@ -254,7 +254,7 @@ const namedColors: Record<string, number> = {
   cornflowerblue: 0x6495edff,
   cornsilk: 0xfff8dcff,
   crimson: 0xdc143cff,
-  cyan: 0x00fffff,
+  cyan: 0x00ffffff,
   darkblue: 0x00008bff,
   darkcyan: 0x008b8bff,
   darkgoldenrod: 0xb8860bff,
