@@ -103,11 +103,10 @@ rowsWithVisibleCells.forEach((row, i) => {
 const style = {
   '--gap': `${gapPx}px`,
   '--cell-size': `${cellSizePx}px`,
-  '--rows-count': rows.length,
+  '--rows-count': rowsWithVisibleCells.length,
   '--columns-count': rows[0]?.length ?? 0,
   '--animation-frame-ms': `${animationFrameMs}ms`,
   '--animation-delay-ms': `${animationDelayMs}ms`,
-  '--total-rows': rows.length,
 } as const;
 
 const baseSectionProps: BoxProps = {
@@ -182,7 +181,7 @@ const baseSectionProps: BoxProps = {
     }
   }
 
-  .box.frame-animate {
+  .grid-section-row-cell.frame-animate {
     @for $i from 1 through $max-animation-frames {
       &-#{$i + 1} {
         animation: frame-color-animation-#{$i +
@@ -218,6 +217,20 @@ const baseSectionProps: BoxProps = {
           position: absolute;
         }
       }
+    }
+
+    &::after {
+      content: '';
+      filter: blur(5vmin);
+      transform: rotateX(90deg) translateZ(calc(-1 * (var(--cell-size) + var(--gap)) * (var(--rows-count) - 1)))
+        translateY(calc(-1 * (var(--cell-size) + var(--gap)) * (var(--rows-count) - 1)));
+      background: rgb(0 0 0 / 20%);
+      border-radius: 100%;
+      position: fixed;
+      top: -30%;
+      left: 10%;
+      right: 10%;
+      bottom: 0;
     }
   }
 </style>

@@ -3,7 +3,8 @@ import { readBmpImage, type BitmapImagePath, type ImagePixelFrames } from '../im
 
 import BoxGrid, { type Props as BoxGridProps } from './BoxGrid.astro';
 
-interface BaseProps extends Pick<BoxGridProps, 'gapPx' | 'hideSurfaces' | 'animationFrameMs' | 'animationDelayMs'> {
+interface BaseProps
+  extends Pick<BoxGridProps, 'gapPx' | 'cellSizePx' | 'hideSurfaces' | 'animationFrameMs' | 'animationDelayMs'> {
   class?: string;
 }
 
@@ -18,7 +19,7 @@ export type Props = BaseProps &
   );
 
 const props = Astro.props;
-const { class: className, hideSurfaces, animationFrameMs, animationDelayMs, gapPx } = props;
+const { class: className, hideSurfaces, animationFrameMs, animationDelayMs, gapPx, cellSizePx } = props;
 
 let imagePixels: ImagePixelFrames[][];
 if ('imagePath' in props) {
@@ -37,36 +38,12 @@ if ('imagePath' in props) {
 }
 ---
 
-<div class="box-image-container">
-  <BoxGrid
-    class={className}
-    rows={imagePixels}
-    hideSurfaces={hideSurfaces}
-    animationDelayMs={animationDelayMs}
-    animationFrameMs={animationFrameMs}
-    gapPx={gapPx}
-  />
-
-  <div class="box-image-shadow"></div>
-</div>
-
-<style lang="scss">
-  .box-image {
-    &-container {
-      transform-style: preserve-3d;
-    }
-
-    &-shadow {
-      // TODO: make generic!
-      background: #00000061; // TODO: rgba()
-      filter: blur(3vmin);
-      transform: rotateX(90deg) translateZ(-580px) translateY(-580px) rotateZ(10deg); // TODO: couple to image dimensions
-      position: absolute;
-      top: -30%;
-      border-radius: 100%;
-      left: 10%;
-      right: 10%;
-      bottom: 0;
-    }
-  }
-</style>
+<BoxGrid
+  class={className}
+  rows={imagePixels}
+  hideSurfaces={hideSurfaces}
+  animationDelayMs={animationDelayMs}
+  animationFrameMs={animationFrameMs}
+  cellSizePx={cellSizePx}
+  gapPx={gapPx}
+/>

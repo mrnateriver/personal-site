@@ -97,8 +97,8 @@ const hideSurfacesClasses = Object.keys(hideSurfaces).map((surface) => `box-side
         &::after {
           height: var(--wy);
           width: var(--wx);
-          background-size: auto calc(var(--total-rows, 1) * 100%);
-          background-position-y: calc(var(--ri, 1) * 100% / var(--total-rows, 1));
+          background-size: auto calc(var(--rows-count, 1) * 100%);
+          background-position-y: calc(var(--ri, 1) * 100% / var(--rows-count, 1));
         }
 
         &::before {
@@ -125,8 +125,8 @@ const hideSurfacesClasses = Object.keys(hideSurfaces).map((surface) => `box-side
         &::after {
           height: var(--wy);
           width: var(--wz);
-          background-size: 1px 100%, auto calc(var(--total-rows) * 100%);
-          background-position-y: calc(var(--ri) * 100% / var(--total-rows));
+          background-size: 1px 100%, auto calc(var(--rows-count) * 100%);
+          background-position-y: calc(var(--ri) * 100% / var(--rows-count));
           background-repeat: no-repeat;
           transform-origin: left center;
         }
