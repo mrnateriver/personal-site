@@ -188,7 +188,7 @@ const baseSectionProps: BoxProps = {
           1}
           calc(var(--animation-frame-ms) * $i)
           forwards
-          var(--overshoot-function);
+          cubic-bezier(0.68, -0.55, 0.27, 1.55);
         animation-delay: var(--animation-delay-ms);
       }
     }
