@@ -20,10 +20,9 @@ if (main && image) {
     labels.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(0deg)`;
   }
 
-  function onMainRotationEnd(): void {
-    main.removeEventListener('animationend', onMainRotationEnd);
     main.style.animation = 'none';
     setRotation(-16, 32);
+
     function updateKangarooRotation(event: MouseEvent): void {
       const { clientX, clientY } = event;
 
@@ -45,35 +44,4 @@ if (main && image) {
     }
 
     document.addEventListener('mousemove', updateKangarooRotation, { passive: true });
-    // const auditedMouseMove = auditTime<[number, number]>((next) => {
-    //   function updateKangarooRotation(event: MouseEvent): void {
-    //     const { clientX, clientY } = event;
-
-    //     let x: number;
-    //     if (clientX < mainX + mainWidth) {
-    //       x = -Math.abs(yRange[0]) * ((mainX + mainWidth - clientX) / (mainX + mainWidth));
-    //     } else {
-    //       x = ((clientX - mainWidth - mainX) / (viewportWidth - mainWidth - mainX)) * yRange[1];
-    //     }
-
-    //     let y: number;
-    //     if (clientY < mainY + mainHeight) {
-    //       y = -Math.abs(xRange[0]) * ((mainY + mainHeight - clientY) / (mainY + mainHeight));
-    //     } else {
-    //       y = ((clientY - mainHeight - mainY) / (viewportHeight - mainHeight - mainY)) * xRange[1];
-    //     }
-
-    //     next([-y, x]);
-    //   }
-
-    //   document.addEventListener('mousemove', updateKangarooRotation, { passive: true });
-    // }, 1000);
-
-    // auditedMouseMove((args) => {
-    //   setRotation(...args);
-    // });
-  }
-
-  // setTimeout(onMainRotationEnd, 3000); // Ideally an `animationend` event would be used here, but it proved to be unreliable with animation delays
-  onMainRotationEnd();
 }
