@@ -1,13 +1,22 @@
 ---
+import { normalizeAndStringifyColor, type Color } from '../colors';
 export interface Props {
   class?: string;
   href: string;
   borderWidthPx?: number;
   borderSizePx?: number;
   borderOffsetPx?: number;
+  borderColor?: Color;
 }
 
-const { class: className, href, borderWidthPx = 2, borderSizePx = 32, borderOffsetPx = borderSizePx } = Astro.props;
+const {
+  class: className,
+  href,
+  borderWidthPx = 2,
+  borderSizePx = 32,
+  borderOffsetPx = borderSizePx,
+  borderColor = 'cyan',
+} = Astro.props;
 ---
 
 <a class={className} href={href}>
@@ -20,6 +29,7 @@ const { class: className, href, borderWidthPx = 2, borderSizePx = 32, borderOffs
     'border-width-px': `${borderWidthPx}px`,
     'border-size-px': `${borderSizePx}px`,
     'border-offset-px': `${borderOffsetPx}px`,
+    'border-color': normalizeAndStringifyColor(borderColor),
   }}
 >
   @keyframes selection-grow {
@@ -65,19 +75,17 @@ const { class: className, href, borderWidthPx = 2, borderSizePx = 32, borderOffs
     }
 
     &:hover {
-      --corner-border-color: cyan; // TODO: color variable?
-
       &::before {
         border-left-style: solid;
         border-bottom-style: solid;
-        border-left-color: var(--corner-border-color);
-        border-bottom-color: var(--corner-border-color);
+        border-left-color: var(--border-color);
+        border-bottom-color: var(--border-color);
       }
       &::after {
         border-right-style: solid;
         border-top-style: solid;
-        border-right-color: var(--corner-border-color);
-        border-top-color: var(--corner-border-color);
+        border-right-color: var(--border-color);
+        border-top-color: var(--border-color);
       }
 
       &::before,
