@@ -1,6 +1,6 @@
 const main = document.querySelector('#image-kangaroo-container') as HTMLElement;
 const image = main.querySelector('.image-kangaroo') as HTMLElement;
-const labels = document.querySelector('#label-container') as HTMLElement;
+const labels = document.querySelector('#labels-container') as HTMLElement;
 
 if (main && image) {
   const xRange = [0, 24] as const;
@@ -16,32 +16,32 @@ if (main && image) {
   });
 
   function setRotation(x: number, y: number): void {
-    main.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(0deg)`;
-    labels.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(0deg)`;
+    main.style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
+    labels.style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
   }
 
-    main.style.animation = 'none';
-    setRotation(-16, 32);
+  main.style.animation = 'none';
+  setRotation(-16, 32);
 
-    function updateKangarooRotation(event: MouseEvent): void {
-      const { clientX, clientY } = event;
+  function updateKangarooRotation(event: MouseEvent): void {
+    const { clientX, clientY } = event;
 
-      let x: number;
-      if (clientX < mainX + mainWidth) {
-        x = -Math.abs(yRange[0]) * ((mainX + mainWidth - clientX) / (mainX + mainWidth));
-      } else {
-        x = ((clientX - mainWidth - mainX) / (viewportWidth - mainWidth - mainX)) * yRange[1];
-      }
-
-      let y: number;
-      if (clientY < mainY + mainHeight) {
-        y = -Math.abs(xRange[0]) * ((mainY + mainHeight - clientY) / (mainY + mainHeight));
-      } else {
-        y = ((clientY - mainHeight - mainY) / (viewportHeight - mainHeight - mainY)) * xRange[1];
-      }
-
-      setRotation(...[-y, x]);
+    let x: number;
+    if (clientX < mainX + mainWidth) {
+      x = -Math.abs(yRange[0]) * ((mainX + mainWidth - clientX) / (mainX + mainWidth));
+    } else {
+      x = ((clientX - mainWidth - mainX) / (viewportWidth - mainWidth - mainX)) * yRange[1];
     }
 
-    document.addEventListener('mousemove', updateKangarooRotation, { passive: true });
+    let y: number;
+    if (clientY < mainY + mainHeight) {
+      y = -Math.abs(xRange[0]) * ((mainY + mainHeight - clientY) / (mainY + mainHeight));
+    } else {
+      y = ((clientY - mainHeight - mainY) / (viewportHeight - mainHeight - mainY)) * xRange[1];
+    }
+
+    setRotation(...[-y, x]);
+  }
+
+  document.addEventListener('mousemove', updateKangarooRotation, { passive: true });
 }

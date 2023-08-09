@@ -17,6 +17,7 @@ const hideSurfaces = { right: true, back: true, bottom: true };
         class="image-kangaroo"
         imagePath="src/assets/kangaroo_4.bmp"
         hideSurfaces={hideSurfaces}
+        cellSizePx={16}
         animationFrameMs={1500}
         animationDelayMs={500}
       />
@@ -24,13 +25,13 @@ const hideSurfaces = { right: true, back: true, bottom: true };
       <Acknowledgments class="image-acks" />
     </div>
 
-    <div id="label-container" class="label-container">
+    <div id="labels-container" class="labels-container">
       <!-- TODO: links -->
-      <SectionLink class="label-blog" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
+      <SectionLink class="labels-blog" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
         <BoxImage imagePath="src/assets/label_blog.bmp" hideSurfaces={hideSurfaces} cellSizePx={18} />
       </SectionLink>
 
-      <SectionLink class="label-resume" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
+      <SectionLink class="labels-resume" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
         <BoxImage imagePath="src/assets/label_resume.bmp" hideSurfaces={hideSurfaces} cellSizePx={18} />
       </SectionLink>
     </div>
@@ -77,12 +78,12 @@ const hideSurfaces = { right: true, back: true, bottom: true };
     margin-top: 32px; // TODO: magic constant
   }
 
-  .label {
+  .labels {
     &-container {
       display: flex;
       flex-flow: column;
       align-items: flex-start;
-      gap: 64px;
+      gap: 32px;
       perspective: 1000000px;
       transform-style: preserve-3d;
       transform-origin: center center;
@@ -97,7 +98,7 @@ const hideSurfaces = { right: true, back: true, bottom: true };
     }
 
     &-resume {
-      transform: translateZ(100px);
+      transform: translateZ(150px);
     }
   }
 
@@ -107,17 +108,17 @@ const hideSurfaces = { right: true, back: true, bottom: true };
       #{$i * 12.5%} {
         $x: list.nth(list.nth($pos, $i + 1), 1);
         $y: list.nth(list.nth($pos, $i + 1), 2);
-        transform: translate(calc($x * var(--rocking-offset)), calc($y * var(--rocking-offset))) translateZ(-64px);
+        transform: translate(calc($x * var(--rocking-offset)), calc($y * var(--rocking-offset)));
       }
     }
   }
 
   @keyframes image-rotation {
     0% {
-      transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+      transform: rotateX(0deg) rotateY(0deg);
     }
     100% {
-      transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
+      transform: rotateX(-16deg) rotateY(32deg);
     }
   }
 </style>
