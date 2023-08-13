@@ -112,8 +112,8 @@ rowsWithVisibleCells.forEach((row, i) => {
       if (nextPixel[1] === columnIndex + 1) {
         cellsHiddenSurfaces.set(cellIndex, { ...cellsHiddenSurfaces.get(cellIndex), right: true });
       }
-  }
-});
+    }
+  });
 });
 
 const style = {
@@ -234,20 +234,6 @@ const baseSectionProps: BoxProps = {
           position: absolute;
         }
       }
-    }
-
-    &::after {
-      content: '';
-      filter: blur(5vmin);
-      transform: rotateX(90deg) translateZ(calc(-1 * (var(--cell-size) + var(--gap)) * (var(--rows-count) - 1)))
-        translateY(calc(-1 * (var(--cell-size) + var(--gap)) * (var(--rows-count) - 1)));
-      background: rgb(0 0 0 / 20%);
-      border-radius: 100%;
-      position: fixed;
-      top: -30%;
-      left: 10%;
-      right: 10%;
-      bottom: 0;
     }
   }
 </style>
