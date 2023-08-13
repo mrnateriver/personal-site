@@ -19,12 +19,28 @@ const style = {
 };
 
 const hideSurfacesClasses = Object.keys(hideSurfaces).map((surface) => `box-sides-hide-${surface}`);
+const boxSurfacesElements = ['x', 'y', 'z']
+  .map((axis) => {
+    let render = false;
+    switch (axis) {
+      case 'x':
+        render = !hideSurfaces.left || !hideSurfaces.right;
+        break;
+      case 'y':
+        render = !hideSurfaces.top || !hideSurfaces.bottom;
+        break;
+      case 'z':
+        render = !hideSurfaces.front || !hideSurfaces.back;
+        break;
+    }
+    return [axis, render] as const;
+  })
+  .filter(([, render]) => render)
+  .map(([axis]) => `box-sides-${axis}`);
 ---
 
 <i class:list={['box', className, ...hideSurfacesClasses]} style={style}>
-  <i class="box-sides-x"></i>
-  <i class="box-sides-y"></i>
-  <i class="box-sides-z"></i>
+  {boxSurfacesElements.map((surface) => <i class={surface} />)}
 </i>
 
 <style lang="scss">

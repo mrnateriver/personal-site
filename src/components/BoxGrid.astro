@@ -54,19 +54,21 @@ for (const row of rows) {
 }
 
 const rowsWithVisibleCells = rows
-  .map((row) => row.map((c, j) => [c, j] as const).filter(([c]) => c[0] !== transparentColor))
+  .map((row) => row.map((color, rowIndex) => [color, rowIndex] as const).filter(([c]) => c[0] !== transparentColor))
   .filter((row) => row.length > 0);
 
 const rowsByColors = new Map<Color, Map<number, number[]>>(); // Color -> Row Index -> Column Index[]
+const cellsHiddenSurfaces = new Map<number, Partial<BaseBoxProps['hideSurfaces']>>(); // Cell Index -> Hidden Surfaces, if any
 const cellsFrames = new Map<number, { count: number; styles: Record<string, unknown> }>(); // Row Index * Row Length + Column Index -> Frame Index[]
 
 rowsWithVisibleCells.forEach((row, i) => {
-  for (const entry of row) {
-    const [colors, column] = entry;
+  row.forEach((pixel, pixelRowIndex) => {
+    const [colors, columnIndex] = pixel;
     const color = colors[0];
 
+    const cellIndex = i * rowLength + columnIndex;
+
     if (colors.length > 1) {
-      const cellIndex = i * rowLength + column;
       cellsFrames.set(cellIndex, {
         count: colors.length,
         styles: Object.fromEntries(
@@ -96,8 +98,22 @@ rowsWithVisibleCells.forEach((row, i) => {
       rowsByColors.get(color)?.set(i, []);
     }
 
-    rowsByColors.get(color)?.get(i)?.push(column);
+    rowsByColors.get(color)?.get(i)?.push(columnIndex);
+
+    if (pixelRowIndex > 0) {
+      const prevPixel = row[pixelRowIndex - 1];
+      if (prevPixel[1] === columnIndex - 1) {
+        cellsHiddenSurfaces.set(cellIndex, { ...cellsHiddenSurfaces.get(cellIndex), left: true });
+      }
+    }
+
+    if (pixelRowIndex < row.length - 1) {
+      const nextPixel = row[pixelRowIndex + 1];
+      if (nextPixel[1] === columnIndex + 1) {
+        cellsHiddenSurfaces.set(cellIndex, { ...cellsHiddenSurfaces.get(cellIndex), right: true });
+      }
   }
+});
 });
 
 const style = {
@@ -124,13 +140,14 @@ const baseSectionProps: BoxProps = {
         {Array.from(rows.entries()).map(([rowIndex, cells]) => (
           <div class="grid-section-row" style={{ '--ri': rowIndex, top: `${rowIndex * (cellSizePx + gapPx)}px` }}>
             {cells.map((columnIndex) => {
-              const frames = cellsFrames.get(rowIndex * rowLength + columnIndex);
+              const cellIndex = rowIndex * rowLength + columnIndex;
+              const frames = cellsFrames.get(cellIndex);
               return (
                 <Box
                   class={`grid-section-row-cell ${frames?.count ? `frame-animate-${frames.count}` : ''}`}
                   style={{ left: `${columnIndex * (cellSizePx + gapPx)}px`, ...frames?.styles }}
+                  hideSurfaces={{ ...hideSurfaces, ...cellsHiddenSurfaces.get(cellIndex) }}
                   skipStyleVars={true}
-                  hideSurfaces={hideSurfaces}
                 />
               );
             })}
