@@ -1,4 +1,5 @@
 ---
+import type { Color } from '../colors';
 import { readBmpImage, type BitmapImagePath, type ImagePixelFrames } from '../images';
 
 import BoxGrid, { type Props as BoxGridProps } from './BoxGrid.astro';
@@ -6,6 +7,7 @@ import BoxGrid, { type Props as BoxGridProps } from './BoxGrid.astro';
 interface BaseProps
   extends Pick<BoxGridProps, 'gapPx' | 'cellSizePx' | 'hideSurfaces' | 'animationFrameMs' | 'animationDelayMs'> {
   class?: string;
+  cellsColor?: Color;
 }
 
 export type Props = BaseProps &
@@ -19,11 +21,13 @@ export type Props = BaseProps &
   );
 
 const props = Astro.props;
-const { class: className, hideSurfaces, animationFrameMs, animationDelayMs, gapPx, cellSizePx } = props;
+const { class: className, cellsColor, hideSurfaces, animationFrameMs, animationDelayMs, gapPx, cellSizePx } = props;
 
 let imagePixels: ImagePixelFrames[][];
 if ('imagePath' in props) {
-  imagePixels = (await readBmpImage(props.imagePath)).map((r) => r.map((p) => [p] as ImagePixelFrames));
+  imagePixels = (await readBmpImage(props.imagePath)).map((r) =>
+    r.map((p) => [(p === 0xffffffff ? null : cellsColor) ?? p] as ImagePixelFrames),
+  );
 } else {
   const frames = await Promise.all(props.framesImagesPaths.map(readBmpImage));
 
@@ -33,7 +37,7 @@ if ('imagePath' in props) {
   }
 
   imagePixels = firstFrame.map((row, y) =>
-    row.map((_, x) => Array.from(new Set(frames.map((f) => f[y][x]))) as ImagePixelFrames),
+    row.map((_, x) => frames.map((f) => cellsColor ?? f[y][x]) as ImagePixelFrames),
   );
 }
 ---
