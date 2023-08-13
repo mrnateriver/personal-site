@@ -91,19 +91,19 @@ const boxSurfacesElements = ['x', 'y', 'z']
 
         &::before {
           transform: rotateX(-90deg) translateY(calc(var(--wz) / -2));
-          background-image: linear-gradient(to bottom, hsl(var(--st) calc(var(--st-l) - 10%)), transparent),
-            linear-gradient(to right, hsl(var(--st) calc(var(--st-l) - 10%)), transparent),
-            linear-gradient(to top, hsl(var(--st) var(--st-l)), hsl(var(--st) calc(var(--st-l) + 5%)));
-          background-size: 1px 100%, 100% 1px, auto;
+          background-image: linear-gradient(to top, hsl(var(--st) var(--st-l)), hsl(var(--st) calc(var(--st-l) + 5%)));
+          background-size: auto;
           background-repeat: no-repeat;
         }
 
         &::after {
           transform: translateY(var(--wy)) rotateX(-90deg) translateY(calc(var(--wz) / -2));
-          background-image: linear-gradient(to top, hsl(var(--sb) calc(var(--sb-l) - 10%)), transparent),
-            linear-gradient(to top, hsl(var(--sb) var(--sb-l)), hsl(var(--sb) calc(var(--sb-l) + 5%))),
-            linear-gradient(to left, hsl(var(--sb) calc(var(--sb-l) - 10%)), hsl(var(--sb) var(--sb-l)));
-          background-size: 1px 100%, auto calc(100% - 1px), auto;
+          background-image: linear-gradient(
+            to left,
+            hsl(var(--sb) calc(var(--sb-l) - 10%)),
+            hsl(var(--sb) var(--sb-l))
+          );
+          background-size: auto;
           background-repeat: no-repeat;
         }
       }
@@ -141,7 +141,7 @@ const boxSurfacesElements = ['x', 'y', 'z']
         &::after {
           height: var(--wy);
           width: var(--wz);
-          background-size: 1px 100%, auto calc(var(--rows-count) * 100%);
+          background-size: auto calc(var(--rows-count) * 100%);
           background-position-y: calc(var(--ri) * 100% / var(--rows-count));
           background-repeat: no-repeat;
           transform-origin: left center;
@@ -149,14 +149,20 @@ const boxSurfacesElements = ['x', 'y', 'z']
 
         &::before {
           transform: translateZ(calc(var(--wz) / 2)) rotateY(90deg);
-          background-image: linear-gradient(to bottom, hsl(var(--sl) calc(var(--sl-l) - 10%)), transparent),
-            linear-gradient(to bottom, hsl(var(--sl) var(--sl-l)), hsl(var(--sl) calc(var(--sl-l) - 15%)));
+          background-image: linear-gradient(
+            to bottom,
+            hsl(var(--sl) var(--sl-l)),
+            hsl(var(--sl) calc(var(--sl-l) - 15%))
+          );
         }
 
         &::after {
           transform: translateZ(calc(var(--wz) / 2)) translateX(var(--wx)) rotateY(90deg);
-          background-image: linear-gradient(to bottom, hsl(var(--sr) calc(var(--sr-l) - 10%)), transparent),
-            linear-gradient(to bottom, hsl(var(--sr) var(--sr-l)), hsl(var(--sr) calc(var(--sr-l) - 15%)));
+          background-image: linear-gradient(
+            to bottom,
+            hsl(var(--sr) var(--sr-l)),
+            hsl(var(--sr) calc(var(--sr-l) - 15%))
+          );
         }
       }
     }
