@@ -1,0 +1,48 @@
+@mixin variables() {
+  @include fonts();
+  @include dimensions();
+
+  @include palette-light();
+  @media (prefers-color-scheme: dark) {
+    @include palette-dark();
+  }
+}
+
+@mixin fonts() {
+  --font-size-xs: 10px; // caption
+  --font-size-sm: 12px; // small
+  --font-size-md: 14px; // p
+  --font-size-lg: 16px; // h5
+  --font-size-xl: 18px; // h4
+  --font-size-xxl: 20px; // h3
+  --font-size-xxxl: 24px; // h2
+  --font-size-xxxxl: 32px; // h1
+}
+
+@mixin dimensions() {
+  --padding-xs: 4px;
+  --padding-sm: 8px;
+  --padding-md: 12px;
+  --padding-lg: 16px;
+  --padding-xlg: 24px;
+}
+
+@mixin palette-light() {
+  --color-background: #fafafa;
+  --color-surface: white;
+  --color-text-primary: black;
+  --color-text-secondary: gray;
+  --color-text-tertiary: darkgray;
+  --color-text-anchor: #5091d7;
+  --color-text-anchor-visited: darkorange;
+}
+
+@mixin palette-dark() {
+  --color-background: #0c0c0c;
+  --color-surface: #121212;
+  --color-text-primary: white;
+  --color-text-secondary: #d5d5d5;
+  --color-text-tertiary: darkgray;
+  --color-text-anchor: #0e96df;
+  --color-text-anchor-visited: darkorange;
+}

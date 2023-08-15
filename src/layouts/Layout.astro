@@ -1,4 +1,6 @@
 ---
+import '../styles/global.scss';
+
 export interface Props {
   title: string;
 }
@@ -13,10 +15,7 @@ const { title } = Astro.props;
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;700;900&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet" />
 
     <!-- TODO: ! -->
     <meta name="description" content="Astro description" />
@@ -29,21 +28,3 @@ const { title } = Astro.props;
     <slot />
   </body>
 </html>
-<style lang="scss" is:global>
-  html {
-    height: 100%;
-    color: white;
-    font-family: 'Montserrat', sans-serif;
-    color-scheme: dark;
-    background-image: radial-gradient(#052524, black);
-    background-size: 100% 50%;
-  }
-
-  body {
-    height: 100%;
-    background-image: url('src/assets/dot-pattern.svg');
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-  }
-</style>

@@ -1,0 +1,20 @@
+@import 'variables';
+@import 'reset';
+
+html {
+  @include variables();
+  font-family: 'Bungee', cursive;
+  color-scheme: light dark;
+  color: var(--color-text-primary);
+  background: var(--color-background);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+// TODO: set styles for all headers using SCSS loops
+h1 {
+  font-size: var(--font-size-xxxxl);
+}
