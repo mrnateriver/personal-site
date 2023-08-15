@@ -1,124 +1,239 @@
 ---
-import Acknowledgments from '../components/Acknowledgments.astro';
+// import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxImage from '../components/BoxImage.astro';
 import SectionLink from '../components/SectionLink.astro';
-// import type { BitmapImagePath } from '../images';
-import IndexLayout from '../layouts/IndexLayout.astro';
+import IndexLayout from '../layouts/Layout.astro';
 
-const hideSurfaces = { right: true, back: true, bottom: true };
+const hideSurfacesLabels = { right: true, back: true, bottom: true };
+const hideSurfacesShadows = { right: true, left: true, back: true, bottom: true, top: true };
 
-// const framesImagesPaths = Array.from({ length: 1 }, (_, i) => `src/assets/kangaroo_${i + 1}.bmp` as BitmapImagePath);
+const labelsColor = 'var(--color-text-anchor)';
+const labelsColorShadow = 'var(--labels-shadow-color)';
+
+const commonLabelsProps = {
+  cellSizePx: 16,
+  gapPx: 0,
+};
 ---
 
 <IndexLayout title="Hi mom">
   <main>
-    <div id="image-kangaroo-container" class="image-container">
-      <BoxImage
-        class="image-kangaroo"
-        imagePath="src/assets/kangaroo_4.bmp"
-        hideSurfaces={hideSurfaces}
-        cellSizePx={16}
-        animationFrameMs={1500}
-        animationDelayMs={500}
-      />
+    <section class="labels-container">
+      <!-- TODO: accessibility for boximages -->
+      <h1>
+        <BoxImage
+          imagePath="src/assets/label_author.bmp"
+          hideSurfaces={hideSurfacesShadows}
+          cellsColor={labelsColorShadow}
+          hideGradient={true}
+          {...commonLabelsProps}
+        />
+      </h1>
 
-      <Acknowledgments class="image-acks" />
-    </div>
+      <div class="labels-links">
+        <div class="labels-shadows">
+          <BoxImage
+            imagePath="src/assets/label_blog.bmp"
+            hideSurfaces={hideSurfacesShadows}
+            cellsColor={labelsColorShadow}
+            hideGradient={true}
+            {...commonLabelsProps}
+          />
+          <BoxImage
+            imagePath="src/assets/label_resume.bmp"
+            hideSurfaces={hideSurfacesShadows}
+            cellsColor={labelsColorShadow}
+            hideGradient={true}
+            {...commonLabelsProps}
+          />
+        </div>
 
-    <div id="labels-container" class="labels-container">
-      <!-- TODO: links -->
-      <SectionLink class="labels-blog" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
-        <BoxImage imagePath="src/assets/label_blog.bmp" hideSurfaces={hideSurfaces} cellSizePx={18} />
-      </SectionLink>
+        <SectionLink
+          class="labels-blog"
+          href="https://google.com"
+          borderWidth="var(--padding-md)"
+          borderOffset="var(--padding-xlg)"
+          borderSize="calc(4 * var(--padding-lg))"
+        >
+          <BoxImage
+            imagePath="src/assets/label_blog.bmp"
+            hideSurfaces={hideSurfacesLabels}
+            cellsColor={labelsColor}
+            {...commonLabelsProps}
+          />
+        </SectionLink>
 
-      <SectionLink class="labels-resume" href="https://google.com" borderWidthPx={6} borderSizePx={64}>
-        <BoxImage imagePath="src/assets/label_resume.bmp" hideSurfaces={hideSurfaces} cellSizePx={18} />
-      </SectionLink>
-    </div>
+        <SectionLink
+          class="labels-resume"
+          href="https://google.com"
+          borderWidth="var(--padding-md)"
+          borderOffset="var(--padding-xlg)"
+          borderSize="calc(4 * var(--padding-lg))"
+        >
+          <BoxImage
+            imagePath="src/assets/label_resume.bmp"
+            hideSurfaces={hideSurfacesLabels}
+            cellsColor={labelsColor}
+            {...commonLabelsProps}
+          />
+        </SectionLink>
+      </div>
+    </section>
   </main>
 </IndexLayout>
 
 <script src="./index-interactive.ts"></script>
 
+<style lang="scss" is:global>
+  html,
+  body {
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+</style>
+
 <style lang="scss">
   @use 'sass:list';
 
   main {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-  }
+    height: 100%;
+    display: grid;
+    place-items: center;
+    transform-style: preserve-3d;
+    transform-origin: center;
+    animation: 2s forwards main-rotation cubic-bezier(0.65, 0.05, 0.36, 1);
+    // transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(-40vh);
 
-  .image {
-    &-container {
-      --rocking-offset: 10px;
-
-      display: inline-block;
-      position: relative;
-      overflow: visible;
-      transform-style: preserve-3d;
-
-      // FIXME: TEMP!
-      perspective: 1000000px;
-      perspective-origin: 300px 300px;
-      // transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
-      transform-origin: center center;
-      // animation: 2s image-rotation forwards ease-in-out;
-      // animation: image-rotation 2s forwards ease-in-out; // , tilt-n-move-shaking 20s infinite ease-in-out;
-      // animation: shift-perspective 10s forwards ease-in-out;
-      // transition: transform 1s ease-in-out;
+    @keyframes main-rotation {
+      0% {
+        transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(-40vh);
+      }
+      100% {
+        transform: rotateX(-20deg) rotateY(30deg) translateZ(-40vw) translateY(0) translateX(20vw);
+      }
     }
 
-    &-kangaroo {
-      animation: image-rocking 20s infinite cubic-bezier(0.65, 0.05, 0.36, 1);
-    }
-  }
-
-  .image-acks {
-    margin-top: 32px; // TODO: magic constant
-  }
-
-  .labels {
-    &-container {
-      display: flex;
-      flex-flow: column;
-      align-items: flex-start;
-      gap: 32px;
-      perspective: 1000000px;
-      transform-style: preserve-3d;
-      transform-origin: center center;
-      // transition: transform 1s ease-in-out;
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      height: 200vh;
+      width: 200vw;
+      left: -50vw;
+      top: -100vh;
     }
 
-    &-blog,
-    &-resume {
-      perspective: 1000000px;
-      transform-style: preserve-3d;
-      transform-origin: center center;
+    &::before {
+      background: var(--color-surface);
     }
 
-    &-resume {
-      transform: translateZ(150px);
+    &::after {
+      transform-origin: center bottom;
+      transform: rotateY(180deg) rotateX(90deg);
+      background: linear-gradient(var(--color-surface), var(--color-surface) 90%, var(--color-background));
     }
-  }
 
-  @keyframes image-rocking {
-    $pos: [[0, 0], [1, 0], [-1, 1], [1, -1], [1, 1], [-1, -1], [-1, 0], [1, 0], [0, 0]];
-    @for $i from 0 through 8 {
-      #{$i * 12.5%} {
-        $x: list.nth(list.nth($pos, $i + 1), 1);
-        $y: list.nth(list.nth($pos, $i + 1), 2);
-        transform: translate(calc($x * var(--rocking-offset)), calc($y * var(--rocking-offset)));
+    .labels {
+      &-container {
+        transform-style: preserve-3d;
+        transform: translateZ(8px) translateY(calc(50vh - 50% - var(--padding-xlg) - var(--padding-sm)));
+
+        --labels-shadow-color: rgba(0, 0, 0, 0.1);
+        @media (prefers-color-scheme: dark) {
+          --labels-shadow-color: rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+          margin-bottom: var(--padding-lg);
+        }
+      }
+
+      &-shadows,
+      &-links {
+        display: flex;
+        flex-flow: column;
+        align-items: flex-start;
+        transform-style: preserve-3d;
+        position: relative;
+        gap: var(--padding-lg);
+      }
+
+      &-shadows {
+        position: absolute;
+      }
+
+      &-blog {
+        transform: translateZ(100px);
+      }
+
+      &-resume {
+        transform: translateZ(200px);
       }
     }
   }
 
-  @keyframes image-rotation {
-    0% {
-      transform: rotateX(0deg) rotateY(0deg);
-    }
-    100% {
-      transform: rotateX(-16deg) rotateY(32deg);
-    }
-  }
+  // .walls-container {
+  //   transform-style: preserve-3d;
+
+  //   &::before,
+  //   &::after {
+  //     content: '';
+  //     background: linear-gradient(rgba(0, 0, 0, 0.5), white);
+  //     position: absolute;
+  //     height: 100vh;
+  //     width: 100vw;
+  //   }
+
+  //   &::before {
+  //     transform-origin: center bottom;
+  //   }
+  //   &::after {
+  //     transform-origin: center top;
+  //     transform: rotateX(-90deg) translateY(100%);
+  //   }
+  // }
+
+  // .image {
+  //   &-container {
+  //     --rocking-offset: 10px;
+
+  //     display: inline-block;
+  //     position: relative;
+  //     overflow: visible;
+  //     transform-style: preserve-3d;
+
+  //     // FIXME: TEMP!
+  //     perspective: 1000000px;
+  //     perspective-origin: 300px 300px;
+  //     // transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
+  //     transform-origin: center center;
+  //     // animation: 2s image-rotation forwards ease-in-out;
+  //     // animation: image-rotation 2s forwards ease-in-out; // , tilt-n-move-shaking 20s infinite ease-in-out;
+  //     // animation: shift-perspective 10s forwards ease-in-out;
+  //     // transition: transform 1s ease-in-out;
+  //   }
+
+  //   &-acks {
+  //     position: absolute;
+  //   }
+
+  //   &-kangaroo {
+  //     animation: image-rocking 20s infinite cubic-bezier(0.65, 0.05, 0.36, 1);
+  //   }
+  // }
+
+  // .image-acks {
+  //   margin-top: 32px; // TODO: magic constant
+  // }
+
+  // @keyframes image-rocking {
+  //   $pos: [[0, 0], [1, 0], [-1, 1], [1, -1], [1, 1], [-1, -1], [-1, 0], [1, 0], [0, 0]];
+  //   @for $i from 0 through 8 {
+  //     #{$i * 12.5%} {
+  //       $x: list.nth(list.nth($pos, $i + 1), 1);
+  //       $y: list.nth(list.nth($pos, $i + 1), 2);
+  //       transform: translate(calc($x * var(--rocking-offset)), calc($y * var(--rocking-offset)));
+  //     }
+  //   }
+  // }
 </style>

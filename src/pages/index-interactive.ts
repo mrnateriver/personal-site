@@ -1,6 +1,7 @@
 const main = document.querySelector('#image-kangaroo-container') as HTMLElement;
 const image = main.querySelector('.image-kangaroo') as HTMLElement;
 const labels = document.querySelector('#labels-container') as HTMLElement;
+const walls = document.querySelector('#walls-container') as HTMLElement;
 
 if (main && image) {
   const xRange = [0, 24] as const;
@@ -17,6 +18,7 @@ if (main && image) {
 
   function setRotation(x: number, y: number): void {
     main.style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
+    walls.style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
     labels.style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
   }
 
