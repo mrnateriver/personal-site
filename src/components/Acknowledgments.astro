@@ -1,70 +1,63 @@
 ---
+import AstroLogo from './AstroLogo.astro';
+import GitHubLogo from './GitHubLogo.astro';
 import SectionLink from './SectionLink.astro';
 const { class: className } = Astro.props;
 ---
 
-<section class:list={['ack', className]}>
-  <SectionLink class="ack-entry ack-astro" href="https://astro.build" borderOffset={8}>
-    <div class="ack-text"><p>Made mostly with CSS using</p></div>
-    <div class="ack-logo">
-      <img src="src/assets/astro-logo-light.svg" />
-    </div>
-  </SectionLink>
-  <SectionLink class="ack-entry ack-github" href="https://github.com/mrnateriver/personal-site" borderOffset={0}>
-    <div class="ack-text"><p>Source code</p></div>
-    <div class="ack-logo">
-      <img src="src/assets/github-mark-white.svg" />
-    </div>
-  </SectionLink>
+<section class={className}>
+  <p class="copyrights">© {new Date().getFullYear()} Evgenii</p>
+  <div class="stack">
+    <SectionLink
+      class="stack-entry stack-astro"
+      href="https://astro.build"
+      borderOffset={0}
+      borderSize={8}
+      borderWidth={4}
+    >
+      <p>Made with CSS and</p>
+      <AstroLogo color="var(--color-text-primary)" width={75} height={25} />
+    </SectionLink>
+    <SectionLink
+      class="stack-entry stack-github"
+      href="https://github.com/mrnateriver/personal-site"
+      borderOffset={0}
+      borderSize={8}
+      borderWidth={4}
+    >
+      <p>Source code</p>
+      <GitHubLogo color="var(--color-text-primary)" width={20} height={20} />
+    </SectionLink>
+  </div>
 </section>
 
 <style lang="scss">
-  .ack {
+  .stack {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
+    gap: var(--padding-lg);
+    font-size: var(--font-size-sm);
 
     &-entry {
       display: flex;
       align-items: center;
       justify-content: center;
-      text-decoration: none;
+      text-align: right;
       position: relative;
-      color: white;
-      padding: 8px 0; // TODO: remove magic numbers
-      margin-bottom: 8px; // TODO: remove magic numbers
-      gap: 16px; // TODO: remove magic numbers
+      gap: var(--padding-md);
+      padding: 0 var(--padding-lg);
+      color: var(--color-text-primary);
+      height: var(--font-size-xxxxl);
     }
+  }
 
-    &-text {
-      width: 150px; // TODO: remove magic numbers
-      display: flex;
-      justify-content: flex-end;
-
-      p {
-        margin: 0;
-        line-height: 1;
-        text-align: right;
-        font-weight: bold;
-      }
-    }
-
-    &-logo {
-      display: flex;
-      align-items: center;
-      width: 110px; // TODO: remove magic numbers
-    }
-
-    &-astro {
-      img {
-        width: 100px; // TODO: remove magic numbers
-      }
-    }
-
-    &-github {
-      img {
-        width: 32px; // TODO: remove magic numbers
-      }
-    }
+  .copyrights {
+    font-weight: normal;
+    text-align: center;
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--padding-lg);
+    color: var(--color-text-tertiary);
   }
 </style>

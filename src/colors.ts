@@ -38,7 +38,7 @@ export function normalizeColor(color?: Color): CssColor | undefined {
       return normalizeColor(namedColors[color]);
     }
 
-    if (isCssVariable(color)) {
+    if (isCssVariable(color) || color.toLowerCase() === 'currentcolor') {
       return color;
     }
 

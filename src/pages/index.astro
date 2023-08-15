@@ -1,5 +1,5 @@
 ---
-// import Acknowledgments from '../components/Acknowledgments.astro';
+import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxImage from '../components/BoxImage.astro';
 import SectionLink from '../components/SectionLink.astro';
 import IndexLayout from '../layouts/Layout.astro';
@@ -17,6 +17,8 @@ const commonLabelsProps = {
 ---
 
 <IndexLayout title="Hi mom">
+  <Acknowledgments class="acks" />
+
   <main>
     <section class="labels-container">
       <!-- TODO: accessibility for boximages -->
@@ -82,8 +84,6 @@ const commonLabelsProps = {
   </main>
 </IndexLayout>
 
-<script src="./index-interactive.ts"></script>
-
 <style lang="scss" is:global>
   html,
   body {
@@ -94,6 +94,14 @@ const commonLabelsProps = {
 
 <style lang="scss">
   @use 'sass:list';
+
+  .acks {
+    position: fixed;
+    bottom: var(--padding-md);
+    z-index: 1;
+    right: 0;
+    left: 0;
+  }
 
   main {
     height: 100%;
@@ -211,58 +219,4 @@ const commonLabelsProps = {
       }
     }
   }
-
-  // .walls-container {
-  //   transform-style: preserve-3d;
-
-  //   &::before,
-  //   &::after {
-  //     content: '';
-  //     background: linear-gradient(rgba(0, 0, 0, 0.5), white);
-  //     position: absolute;
-  //     height: 100vh;
-  //     width: 100vw;
-  //   }
-
-  //   &::before {
-  //     transform-origin: center bottom;
-  //   }
-  //   &::after {
-  //     transform-origin: center top;
-  //     transform: rotateX(-90deg) translateY(100%);
-  //   }
-  // }
-
-  // .image {
-  //   &-container {
-  //     --rocking-offset: 10px;
-
-  //     display: inline-block;
-  //     position: relative;
-  //     overflow: visible;
-  //     transform-style: preserve-3d;
-
-  //     // FIXME: TEMP!
-  //     perspective: 1000000px;
-  //     perspective-origin: 300px 300px;
-  //     // transform: rotateX(-16deg) rotateY(32deg) rotateZ(0deg);
-  //     transform-origin: center center;
-  //     // animation: 2s image-rotation forwards ease-in-out;
-  //     // animation: image-rotation 2s forwards ease-in-out; // , tilt-n-move-shaking 20s infinite ease-in-out;
-  //     // animation: shift-perspective 10s forwards ease-in-out;
-  //     // transition: transform 1s ease-in-out;
-  //   }
-
-  //   &-acks {
-  //     position: absolute;
-  //   }
-
-  //   &-kangaroo {
-  //     animation: image-rocking 20s infinite cubic-bezier(0.65, 0.05, 0.36, 1);
-  //   }
-  // }
-
-  // .image-acks {
-  //   margin-top: 32px; // TODO: magic constant
-  // }
 </style>
