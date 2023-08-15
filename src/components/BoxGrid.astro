@@ -31,6 +31,18 @@ export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient
    * @default 0
    */
   animationDelayMs?: number;
+  /**
+   * @default false
+   */
+  waveDisabled?: boolean;
+  /**
+   * @default 2
+   */
+  waveGapOffset?: number;
+  /**
+   * @default 5000
+   */
+  waveAnimationDelayMs?: number;
   rows: ImagePixelFrames[][]; // Pixel Rows -> Columns -> Frames+
 }
 
@@ -44,6 +56,9 @@ const {
   hideGradient,
   animationFrameMs = 3000,
   animationDelayMs = 0,
+  waveDisabled = false,
+  waveGapOffset = 2,
+  waveAnimationDelayMs = 5000,
 } = Astro.props;
 
 let rowLength = -1;
@@ -103,7 +118,7 @@ rowsWithVisibleCells.forEach((row, i) => {
 
     rowsByColors.get(color)?.get(i)?.push(columnIndex);
 
-    if (gapPx === 0) {
+    if (gapPx === 0 && waveDisabled) {
       if (pixelRowIndex > 0) {
         const prevPixel = row[pixelRowIndex - 1];
         if (prevPixel[1] === columnIndex - 1) {
@@ -128,6 +143,7 @@ const style = {
   '--columns-count': rowLength,
   '--animation-frame-ms': `${animationFrameMs}ms`,
   '--animation-delay-ms': `${animationDelayMs}ms`,
+  '--wave-animation-delay-ms': `${waveAnimationDelayMs}ms`,
 } as const;
 
 const baseSectionProps: BoxProps = {
@@ -140,23 +156,36 @@ const baseSectionProps: BoxProps = {
   {
     Array.from(rowsByColors.entries()).map(([surfaceColor, rows]) => (
       <div class="grid-section" style={getBoxStyleVars({ ...baseSectionProps, surfaceColor })}>
-        {Array.from(rows.entries()).map(([rowIndex, cells]) => (
-          <div class="grid-section-row" style={{ '--ri': rowIndex, top: `${rowIndex * (cellSizePx + gapPx)}px` }}>
-            {cells.map((columnIndex) => {
-              const cellIndex = rowIndex * rowLength + columnIndex;
-              const frames = cellsFrames.get(cellIndex);
-              return (
-                <Box
-                  class={`grid-section-row-cell ${frames?.count ? `frame-animate-${frames.count}` : ''}`}
-                  style={{ left: `${columnIndex * (cellSizePx + gapPx)}px`, ...frames?.styles }}
-                  hideSurfaces={{ ...hideSurfaces, ...cellsHiddenSurfaces.get(cellIndex) }}
-                  hideGradient={hideGradient}
-                  skipStyleVars={true}
-                />
-              );
-            })}
-          </div>
-        ))}
+        {Array.from(rows.entries()).map(([rowIndex, cells]) => {
+          const cellSize = cellSizePx + gapPx;
+          return (
+            <div
+              class={`grid-section-row ${waveDisabled ? '' : 'grid-section-row-wave'}`}
+              style={{ '--ri': rowIndex, top: `${rowIndex * cellSize}px` }}
+            >
+              {cells.map((columnIndex) => {
+                const cellIndex = rowIndex * rowLength + columnIndex;
+                const frames = cellsFrames.get(cellIndex);
+                const x = columnIndex * cellSize;
+                const w =
+                  (rowLength / 2) * cellSize -
+                  (rowLength / 2) * (cellSize + waveGapOffset) +
+                  columnIndex * (cellSize + waveGapOffset);
+                return (
+                  <Fragment>
+                    <Box
+                      class={`grid-section-row-cell ${frames?.count ? `frame-animate-${frames.count}` : ''}`}
+                      style={{ '--x': `${x}px`, '--w': `${w}px`, ...frames?.styles }}
+                      hideSurfaces={{ ...hideSurfaces, ...cellsHiddenSurfaces.get(cellIndex) }}
+                      hideGradient={hideGradient}
+                      skipStyleVars={true}
+                    />
+                  </Fragment>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     ))
   }
@@ -214,6 +243,28 @@ const baseSectionProps: BoxProps = {
   }
 </style>
 
+<style lang="scss" is:global>
+  @keyframes wave {
+    0% {
+      left: var(--x);
+    }
+    5% {
+      left: var(--w);
+    }
+    10%,
+    100% {
+      left: var(--x);
+    }
+  }
+
+  .grid-section-row {
+    &-wave &-cell {
+      animation: wave 10s infinite ease-in-out;
+      animation-delay: calc(var(--wave-animation-delay-ms) + var(--ri) * 100ms);
+    }
+  }
+</style>
+
 <style lang="scss">
   .grid {
     height: calc(var(--rows-count) * var(--cell-size) + (var(--rows-count) - 1) * var(--gap));
@@ -234,6 +285,7 @@ const baseSectionProps: BoxProps = {
 
         &-cell {
           position: absolute;
+          left: var(--x);
         }
       }
     }
