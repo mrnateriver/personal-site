@@ -102,14 +102,13 @@ const commonLabelsProps = {
     transform-style: preserve-3d;
     transform-origin: center;
     animation: 2s forwards main-rotation cubic-bezier(0.65, 0.05, 0.36, 1);
-    // transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(-40vh);
 
     @keyframes main-rotation {
       0% {
         transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(-40vh);
       }
       100% {
-        transform: rotateX(-20deg) rotateY(30deg) translateZ(-40vw) translateY(0) translateX(20vw);
+        transform: rotateX(-20deg) rotateY(30deg) translateZ(-40vw) translateY(calc(-50vh + 20vw)) translateX(20vw);
       }
     }
 
