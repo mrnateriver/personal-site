@@ -1,38 +1,45 @@
 import type * as CSS from 'csstype';
 
-export type Color = number | CSS.DataType.Color;
+import { isCssVariable, type CssVariable } from './styles';
 
-export interface RGBA {
+export type CssColor = CssVariable | CSS.DataType.Color;
+export type Color = number | CssColor;
+
+interface RGBA {
   r: number; // 0 - 255
   g: number; // 0 - 255
   b: number; // 0 - 255
   a: number; // 0 - 1
 }
 
-export interface HSLA {
+interface HSLA {
   h: number; // 0 - 360
   s: number; // 0 - 100
   l: number; // 0 - 100
   a: number; // 0 - 1
 }
 
-export function normalizeColor(color?: Color): RGBA | undefined {
+export function normalizeColor(color?: Color): CssColor | undefined {
   if (typeof color === 'undefined') {
     return undefined;
   }
 
   if (typeof color === 'number') {
-    return {
+    return stringifyColor({
       r: (color >> 24) & 0xff,
       g: (color >> 16) & 0xff,
       b: (color >> 8) & 0xff,
       a: (color & 0xff) / 255,
-    };
+    });
   }
 
   if (typeof color === 'string') {
     if (color in namedColors) {
       return normalizeColor(namedColors[color]);
+    }
+
+    if (isCssVariable(color)) {
+      return color;
     }
 
     if (color.startsWith('#')) {
@@ -41,7 +48,7 @@ export function normalizeColor(color?: Color): RGBA | undefined {
         const r = parseInt(color[1], 16);
         const g = parseInt(color[2], 16);
         const b = parseInt(color[3], 16);
-        return { r: r * 17, g: g * 17, b: b * 17, a: 1 };
+        return stringifyColor({ r: r * 17, g: g * 17, b: b * 17, a: 1 });
       }
 
       // #rrggbb / #rrggbbaa
@@ -50,19 +57,19 @@ export function normalizeColor(color?: Color): RGBA | undefined {
         const g = parseInt(color.slice(3, 5), 16);
         const b = parseInt(color.slice(5, 7), 16);
         const a = color.length > 7 ? parseInt(color.slice(7, 9), 16) : 255;
-        return { r, g, b, a: a / 255 };
+        return stringifyColor({ r, g, b, a: a / 255 });
       }
     } else {
       // rgb(r, g, b) / rgba(r, g, b, a) / rgba(r g b a) / rgb(r g b) / rgba(r g b / a)
       if (color.startsWith('rgb')) {
         const [r, g, b, a] = parseColorParens(color);
-        return { r, g, b, a: a ?? 1 };
+        return stringifyColor({ r, g, b, a: a ?? 1 });
       }
 
       // hsl(h, s, l) / hsla(h, s, l, a) / hsla(h s l a) / hsl(h s l) / hsla(h s l / a)
       if (color.startsWith('hsl')) {
         const [h, s, l, a] = parseColorParens(color);
-        return convertHSLAToRGBA({ h, s, l, a: a ?? 1 });
+        return stringifyColor(convertHSLAToRGBA({ h, s, l, a: a ?? 1 }));
       }
     }
   }
@@ -88,67 +95,17 @@ function parseColorParens(color: string): [number, number, number, number] {
     .map((x, i) => (i === 3 ? (alphaCoef ? 1 : 0.01) : 1) * parseFloat(x)) as ReturnType<typeof parseColorParens>;
 }
 
-/**
- * @link https://css-tricks.com/converting-color-spaces-in-javascript/
- */
-export function convertRGBAToHSLA(color: RGBA): HSLA {
-  let { r, g, b, a } = color;
-
-  // Make r, g, and b fractions of 1
-  r /= 255;
-  g /= 255;
-  b /= 255;
-
-  // Find greatest and smallest channel values
-  const cmin = Math.min(r, g, b);
-  const cmax = Math.max(r, g, b);
-  const delta = cmax - cmin;
-
-  let h = 0;
-  let s = 0;
-  let l = 0;
-
-  // Calculate hue
-  if (delta === 0) {
-    // No difference
-    h = 0;
-  } else if (cmax === r) {
-    // Red is max
-    h = ((g - b) / delta) % 6;
-  } else if (cmax === g) {
-    // Green is max
-    h = (b - r) / delta + 2;
-  } else {
-    // Blue is max
-    h = (r - g) / delta + 4;
-  }
-
-  h = Math.round(h * 60);
-
-  // Make negative hues positive behind 360°
-  if (h < 0) {
-    h += 360;
-  }
-
-  // Calculate lightness
-  l = (cmax + cmin) / 2;
-
-  // Calculate saturation
-  s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-
-  // Multiply l and s by 100
-  s = s * 100;
-  l = l * 100;
-
-  return {
-    h: Math.round(h * 1000) / 1000,
-    s: Math.round(s * 1000) / 1000,
-    l: Math.round(l * 1000) / 1000,
-    a: Math.round(a * 1000) / 1000,
-  };
+function stringifyColor(color: RGBA): string {
+  return `#${convertRGBATo32Bit(color).toString(16).padStart(8, '0')}`;
 }
 
-export function convertHSLAToRGBA(color: HSLA): RGBA {
+function convertRGBATo32Bit(color: RGBA): number {
+  const { r, g, b, a } = color;
+
+  return ((r << 24) | (g << 16) | (b << 8) | Math.round(a * 255)) >>> 0;
+}
+
+function convertHSLAToRGBA(color: HSLA): RGBA {
   let { h, s, l, a } = color;
 
   // Must be fractions of 1
@@ -192,32 +149,6 @@ export function convertHSLAToRGBA(color: HSLA): RGBA {
   b = Math.round((b + m) * 255);
 
   return { r, g, b, a };
-}
-
-export function convertRGBATo32Bit(color: RGBA): number {
-  const { r, g, b, a } = color;
-
-  return ((r << 24) | (g << 16) | (b << 8) | Math.round(a * 255)) >>> 0;
-}
-
-export function normalizeAndStringifyColor(color: Color): string {
-  const normalized = normalizeColor(color);
-  if (!normalized) {
-    throw new Error(`Unsupported color format: ${color}`);
-  }
-  return `#${convertRGBATo32Bit(normalized).toString(16).padStart(8, '0')}`;
-}
-
-export function lightenHSLAColor(color: HSLA, amount: number): HSLA {
-  const newColor = { ...color };
-  newColor.l = Math.min(newColor.l + amount, 100);
-  return newColor;
-}
-
-export function darkenHSLAColor(color: HSLA, amount: number): HSLA {
-  const newColor = { ...color };
-  newColor.l = Math.max(newColor.l - amount, 0);
-  return newColor;
 }
 
 const namedColors: Record<string, number> = {

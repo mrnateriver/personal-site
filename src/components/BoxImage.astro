@@ -1,11 +1,14 @@
 ---
-import type { Color } from '../colors';
+import { normalizeColor, type Color } from '../colors';
 import { readBmpImage, type BitmapImagePath, type ImagePixelFrames } from '../images';
 
 import BoxGrid, { type Props as BoxGridProps } from './BoxGrid.astro';
 
 interface BaseProps
-  extends Pick<BoxGridProps, 'gapPx' | 'cellSizePx' | 'hideSurfaces' | 'animationFrameMs' | 'animationDelayMs'> {
+  extends Pick<
+    BoxGridProps,
+    'gapPx' | 'cellSizePx' | 'hideSurfaces' | 'hideGradient' | 'animationFrameMs' | 'animationDelayMs'
+  > {
   class?: string;
   cellsColor?: Color;
 }
@@ -21,12 +24,23 @@ export type Props = BaseProps &
   );
 
 const props = Astro.props;
-const { class: className, cellsColor, hideSurfaces, animationFrameMs, animationDelayMs, gapPx, cellSizePx } = props;
+const {
+  class: className,
+  cellsColor,
+  hideSurfaces,
+  hideGradient,
+  animationFrameMs,
+  animationDelayMs,
+  gapPx,
+  cellSizePx,
+} = props;
+
+const defaultTransparentColor = normalizeColor(0xffffffff);
 
 let imagePixels: ImagePixelFrames[][];
 if ('imagePath' in props) {
   imagePixels = (await readBmpImage(props.imagePath)).map((r) =>
-    r.map((p) => [(p === 0xffffffff ? null : cellsColor) ?? p] as ImagePixelFrames),
+    r.map((p) => [(normalizeColor(p) === defaultTransparentColor ? null : cellsColor) ?? p] as ImagePixelFrames),
   );
 } else {
   const frames = await Promise.all(props.framesImagesPaths.map(readBmpImage));
@@ -37,7 +51,12 @@ if ('imagePath' in props) {
   }
 
   imagePixels = firstFrame.map((row, y) =>
-    row.map((_, x) => frames.map((f) => cellsColor ?? f[y][x]) as ImagePixelFrames),
+    row.map(
+      (_, x) =>
+        frames.map(
+          (f) => (normalizeColor(f[y][x]) === defaultTransparentColor ? null : cellsColor) ?? f[y][x],
+        ) as ImagePixelFrames,
+    ),
   );
 }
 ---
@@ -46,6 +65,8 @@ if ('imagePath' in props) {
   class={className}
   rows={imagePixels}
   hideSurfaces={hideSurfaces}
+  hideGradient={hideGradient}
+  transparentColor={defaultTransparentColor}
   animationDelayMs={animationDelayMs}
   animationFrameMs={animationFrameMs}
   cellSizePx={cellSizePx}

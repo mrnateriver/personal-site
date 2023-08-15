@@ -1,4 +1,4 @@
-import { convertRGBAToHSLA, normalizeColor, type Color, type HSLA } from '../colors';
+import { normalizeColor, type Color, type CssColor } from '../colors';
 
 export interface BoxSurfaceColors {
   top: Color;
@@ -9,15 +9,28 @@ export interface BoxSurfaceColors {
   right: Color;
 }
 
-export interface BoxProps {
+export interface BoxDimensions {
   wx: number;
   wy: number;
   wz: number;
+}
+
+export interface BoxProps {
+  size: number | BoxDimensions;
   surfaceColor: Color | ({ all: Color } & Partial<BoxSurfaceColors>) | BoxSurfaceColors;
 }
 
 export function getBoxStyleVars(props: BoxProps): Record<string, string> {
-  const { wx, wy, wz } = props;
+  const { size } = props;
+
+  let wx: number, wy: number, wz: number;
+  if (typeof size === 'number') {
+    wx = wy = wz = size;
+  } else {
+    wx = size.wx;
+    wy = size.wy;
+    wz = size.wz;
+  }
 
   let surfaceColor = props.surfaceColor ?? { all: 'red' };
   if (typeof surfaceColor === 'number' || typeof surfaceColor === 'string') {
@@ -25,49 +38,31 @@ export function getBoxStyleVars(props: BoxProps): Record<string, string> {
   }
 
   const typedColors = surfaceColor as Record<string, Color>;
+  const colorVariables: Record<string, CssColor> = {};
 
-  const normalizedAll = typedColors.all ? normalizeColor(typedColors.all) : undefined;
-
-  const defaultColor = { r: 0, g: 0, b: 0, a: 1 };
-  const surfaceTopColor = convertRGBAToHSLA(normalizeColor(typedColors.top) ?? normalizedAll ?? defaultColor);
-  const surfaceBottomColor = convertRGBAToHSLA(normalizeColor(typedColors.bottom) ?? normalizedAll ?? defaultColor);
-  const surfaceFrontColor = convertRGBAToHSLA(normalizeColor(typedColors.front) ?? normalizedAll ?? defaultColor);
-  const surfaceBackColor = convertRGBAToHSLA(normalizeColor(typedColors.back) ?? normalizedAll ?? defaultColor);
-  const surfaceLeftColor = convertRGBAToHSLA(normalizeColor(typedColors.left) ?? normalizedAll ?? defaultColor);
-  const surfaceRightColor = convertRGBAToHSLA(normalizeColor(typedColors.right) ?? normalizedAll ?? defaultColor);
-
-  const colors: Record<string, HSLA | string> = {
-    surfaceTopColor,
-    surfaceBottomColor,
-    surfaceFrontColor,
-    surfaceBackColor,
-    surfaceLeftColor,
-    surfaceRightColor,
+  const setColor = (key: keyof typeof typedColors, varSuffix: string): void => {
+    const color = normalizeColor(typedColors[key]);
+    if (color) {
+      colorVariables[`--s${varSuffix}`] = color;
+    }
   };
 
-  for (const key in colors) {
-    const { h, s } = colors[key] as HSLA;
-    colors[key] = `${h} ${s}%`;
+  setColor('all', 'a');
+  setColor('top', 't');
+  setColor('bottom', 'b');
+  setColor('front', 'f');
+  setColor('back', 'bk');
+  setColor('left', 'l');
+  setColor('right', 'r');
+
+  if (Object.keys(colorVariables).length === 0) {
+    colorVariables['--sa'] = 'black';
   }
 
-  // There are quite a lot of vars, and they get injected into all children, so to save up space, inject them manually
-  // instead of using the `define:vars` prop.
-  const typedHslaColors = colors as Record<string, string>;
   return {
     '--wx': `${wx}px`,
     '--wy': `${wy}px`,
     '--wz': `${wz}px`,
-    '--st': typedHslaColors.surfaceTopColor,
-    '--st-l': `${surfaceTopColor.l}%`,
-    '--sb': typedHslaColors.surfaceBottomColor,
-    '--sb-l': `${surfaceBottomColor.l}%`,
-    '--sf': typedHslaColors.surfaceFrontColor,
-    '--sf-l': `${surfaceFrontColor.l}%`,
-    '--sbk': typedHslaColors.surfaceBackColor,
-    '--sbk-l': `${surfaceBackColor.l}%`,
-    '--sl': typedHslaColors.surfaceLeftColor,
-    '--sl-l': `${surfaceLeftColor.l}%`,
-    '--sr': typedHslaColors.surfaceRightColor,
-    '--sr-l': `${surfaceRightColor.l}%`,
+    ...colorVariables,
   };
 }

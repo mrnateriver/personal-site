@@ -1,11 +1,11 @@
 ---
-import { convertRGBAToHSLA, normalizeColor, type Color } from '../colors';
+import { normalizeColor, type Color } from '../colors';
 import type { ImagePixelFrames } from '../images';
 
 import { getBoxStyleVars, type BoxProps } from './box-properties';
 import Box, { type BaseBoxProps } from './Box.astro';
 
-export interface Props extends Pick<BaseBoxProps, 'hideSurfaces'> {
+export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient'> {
   class?: string;
   /**
    * Gap between boxes in `px` unit.
@@ -41,6 +41,7 @@ const {
   rows,
   class: className,
   hideSurfaces,
+  hideGradient,
   animationFrameMs = 3000,
   animationDelayMs = 0,
 } = Astro.props;
@@ -53,8 +54,14 @@ for (const row of rows) {
   rowLength = row.length;
 }
 
+const normalizedTransparentColor = normalizeColor(transparentColor);
+
 const rowsWithVisibleCells = rows
-  .map((row) => row.map((color, rowIndex) => [color, rowIndex] as const).filter(([c]) => c[0] !== transparentColor))
+  .map((row) =>
+    row
+      .map((color, rowIndex) => [color, rowIndex] as const)
+      .filter(([c]) => normalizeColor(c[0])! !== normalizedTransparentColor),
+  )
   .filter((row) => row.length > 0);
 
 const rowsByColors = new Map<Color, Map<number, number[]>>(); // Color -> Row Index -> Column Index[]
@@ -75,16 +82,12 @@ rowsWithVisibleCells.forEach((row, i) => {
           colors
             .slice(1)
             .map((color, frameIndex) => {
+              const res = [];
               const normalized = normalizeColor(color);
-              if (!normalized) {
-                throw new Error(`Invalid color: ${color}`);
+              if (normalized) {
+                res.push([`--f${frameIndex + 2}`, normalizeColor(color)]);
               }
-              const hsla = convertRGBAToHSLA(normalized);
-              const hsColor = `${hsla.h} ${hsla.s}%`;
-              return [
-                [`--f-${frameIndex + 2}`, hsColor],
-                [`--f-${frameIndex + 2}-l`, `${hsla.l}%`],
-              ];
+              return res;
             })
             .flat(),
         ),
@@ -100,17 +103,19 @@ rowsWithVisibleCells.forEach((row, i) => {
 
     rowsByColors.get(color)?.get(i)?.push(columnIndex);
 
-    if (pixelRowIndex > 0) {
-      const prevPixel = row[pixelRowIndex - 1];
-      if (prevPixel[1] === columnIndex - 1) {
-        cellsHiddenSurfaces.set(cellIndex, { ...cellsHiddenSurfaces.get(cellIndex), left: true });
+    if (gapPx === 0) {
+      if (pixelRowIndex > 0) {
+        const prevPixel = row[pixelRowIndex - 1];
+        if (prevPixel[1] === columnIndex - 1) {
+          cellsHiddenSurfaces.set(cellIndex, { ...cellsHiddenSurfaces.get(cellIndex), left: true });
+        }
       }
-    }
 
-    if (pixelRowIndex < row.length - 1) {
-      const nextPixel = row[pixelRowIndex + 1];
-      if (nextPixel[1] === columnIndex + 1) {
-        cellsHiddenSurfaces.set(cellIndex, { ...cellsHiddenSurfaces.get(cellIndex), right: true });
+      if (pixelRowIndex < row.length - 1) {
+        const nextPixel = row[pixelRowIndex + 1];
+        if (nextPixel[1] === columnIndex + 1) {
+          cellsHiddenSurfaces.set(cellIndex, { ...cellsHiddenSurfaces.get(cellIndex), right: true });
+        }
       }
     }
   });
@@ -120,16 +125,14 @@ const style = {
   '--gap': `${gapPx}px`,
   '--cell-size': `${cellSizePx}px`,
   '--rows-count': rowsWithVisibleCells.length,
-  '--columns-count': rows[0]?.length ?? 0,
+  '--columns-count': rowLength,
   '--animation-frame-ms': `${animationFrameMs}ms`,
   '--animation-delay-ms': `${animationDelayMs}ms`,
 } as const;
 
 const baseSectionProps: BoxProps = {
   surfaceColor: 0x00000000,
-  wx: cellSizePx,
-  wy: cellSizePx,
-  wz: cellSizePx,
+  size: cellSizePx,
 };
 ---
 
@@ -147,6 +150,7 @@ const baseSectionProps: BoxProps = {
                   class={`grid-section-row-cell ${frames?.count ? `frame-animate-${frames.count}` : ''}`}
                   style={{ left: `${columnIndex * (cellSizePx + gapPx)}px`, ...frames?.styles }}
                   hideSurfaces={{ ...hideSurfaces, ...cellsHiddenSurfaces.get(cellIndex) }}
+                  hideGradient={hideGradient}
                   skipStyleVars={true}
                 />
               );
@@ -169,10 +173,8 @@ const baseSectionProps: BoxProps = {
     $surface-var-name-0: list.nth(list.nth($surface-color-var-names, $frameIndex % 2 + 1 /* indices are 1-based */), 1);
     $surface-var-name-1: list.nth(list.nth($surface-color-var-names, $frameIndex % 2 + 1 /* indices are 1-based */), 2);
 
-    --s#{$surface-var-name-0}: var(--f-#{$frameIndex + 1});
-    --s#{$surface-var-name-1}: var(--f-#{$frameIndex + 1});
-    --s#{$surface-var-name-0}-l: var(--f-#{$frameIndex + 1}-l);
-    --s#{$surface-var-name-1}-l: var(--f-#{$frameIndex + 1}-l);
+    --s#{$surface-var-name-0}: var(--f#{$frameIndex + 1});
+    --s#{$surface-var-name-1}: var(--f#{$frameIndex + 1});
   }
 
   @mixin frame($frameIndex, $rotation) {
@@ -205,7 +207,7 @@ const baseSectionProps: BoxProps = {
           1}
           calc(var(--animation-frame-ms) * $i)
           forwards
-          cubic-bezier(0.68, -0.55, 0.27, 1.55);
+          cubic-bezier(0.68, -0.55, 0.27, 1.55); // TODO: single curve for all anims
         animation-delay: var(--animation-delay-ms);
       }
     }
