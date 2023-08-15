@@ -1,7 +1,6 @@
 @mixin variables() {
   @include fonts();
   @include dimensions();
-
   @include palette();
 }
 

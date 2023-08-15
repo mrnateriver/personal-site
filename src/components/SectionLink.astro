@@ -65,14 +65,14 @@ const { class: className, href, borderWidth = 2, borderSize = 32, borderOffset =
     &::before {
       bottom: calc(-1 * var(--border-offset));
       left: calc(-1 * var(--border-offset));
-      border-left-color: var(--border-color, var(--color-text-anchor));
-      border-bottom-color: var(--border-color, var(--color-text-anchor));
+      border-left-color: var(--border-color, var(--color-text-anchor-visited));
+      border-bottom-color: var(--border-color, var(--color-text-anchor-visited));
     }
     &::after {
       right: calc(-1 * var(--border-offset));
       top: calc(-1 * var(--border-offset));
-      border-right-color: var(--border-color, var(--color-text-anchor));
-      border-top-color: var(--border-color, var(--color-text-anchor));
+      border-right-color: var(--border-color, var(--color-text-anchor-visited));
+      border-top-color: var(--border-color, var(--color-text-anchor-visited));
     }
 
     &:visited {

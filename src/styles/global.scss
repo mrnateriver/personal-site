@@ -3,6 +3,7 @@
 
 html {
   @include variables();
+
   font-family: 'Bungee', cursive;
   color-scheme: light dark;
   color: var(--color-text-primary);
@@ -19,3 +20,12 @@ body {
 h1 {
   font-size: var(--font-size-xxxxl);
 }
+
+// --font-size-xs: 0.7rem; // caption
+// --font-size-sm: 0.85rem; // small
+// --font-size-md: 1rem; // p
+// --font-size-lg: 1.14rem; // h5
+// --font-size-xl: 1.28rem; // h4
+// --font-size-xxl: 1.42rem; // h3
+// --font-size-xxxl: 1.71rem; // h2
+// --font-size-xxxxl: 2.28rem; // h1
