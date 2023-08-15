@@ -3,20 +3,20 @@ import SectionLink from './SectionLink.astro';
 const { class: className } = Astro.props;
 ---
 
-<div class:list={['ack', className]}>
-  <SectionLink class="ack-entry ack-astro" href="https://astro.build" borderOffsetPx={8}>
+<section class:list={['ack', className]}>
+  <SectionLink class="ack-entry ack-astro" href="https://astro.build" borderOffset={8}>
     <div class="ack-text"><p>Made mostly with CSS using</p></div>
     <div class="ack-logo">
       <img src="src/assets/astro-logo-light.svg" />
     </div>
   </SectionLink>
-  <SectionLink class="ack-entry ack-github" href="https://github.com/mrnateriver/personal-site" borderOffsetPx={0}>
+  <SectionLink class="ack-entry ack-github" href="https://github.com/mrnateriver/personal-site" borderOffset={0}>
     <div class="ack-text"><p>Source code</p></div>
     <div class="ack-logo">
       <img src="src/assets/github-mark-white.svg" />
     </div>
   </SectionLink>
-</div>
+</section>
 
 <style lang="scss">
   .ack {
@@ -37,19 +37,22 @@ const { class: className } = Astro.props;
     }
 
     &-text {
-      width: 140px; // TODO: remove magic numbers
+      width: 150px; // TODO: remove magic numbers
       display: flex;
       justify-content: flex-end;
 
       p {
         margin: 0;
+        line-height: 1;
         text-align: right;
         font-weight: bold;
       }
     }
 
     &-logo {
-      width: 120px; // TODO: remove magic numbers
+      display: flex;
+      align-items: center;
+      width: 110px; // TODO: remove magic numbers
     }
 
     &-astro {
