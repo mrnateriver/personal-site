@@ -1,4 +1,5 @@
 import { normalizeColor, type Color, type CssColor } from '../colors';
+import { normalizeCssValue } from '../styles';
 
 export interface BoxSurfaceColors {
   top: Color;
@@ -10,26 +11,26 @@ export interface BoxSurfaceColors {
 }
 
 export interface BoxDimensions {
-  wx: number;
-  wy: number;
-  wz: number;
+  wx: string | number;
+  wy: string | number;
+  wz: string | number;
 }
 
 export interface BoxProps {
-  size: number | BoxDimensions;
+  size: string | number | BoxDimensions;
   surfaceColor: Color | ({ all: Color } & Partial<BoxSurfaceColors>) | BoxSurfaceColors;
 }
 
 export function getBoxStyleVars(props: BoxProps): Record<string, string> {
   const { size } = props;
 
-  let wx: number, wy: number, wz: number;
-  if (typeof size === 'number') {
-    wx = wy = wz = size;
+  let wx: string, wy: string, wz: string;
+  if (typeof size === 'number' || typeof size === 'string') {
+    wx = wy = wz = normalizeCssValue(size, 'px');
   } else {
-    wx = size.wx;
-    wy = size.wy;
-    wz = size.wz;
+    wx = normalizeCssValue(size.wx, 'px');
+    wy = normalizeCssValue(size.wy, 'px');
+    wz = normalizeCssValue(size.wz, 'px');
   }
 
   let surfaceColor = props.surfaceColor ?? { all: 'red' };
@@ -60,9 +61,9 @@ export function getBoxStyleVars(props: BoxProps): Record<string, string> {
   }
 
   return {
-    '--wx': `${wx}px`,
-    '--wy': `${wy}px`,
-    '--wz': `${wz}px`,
+    '--wx': wx,
+    '--wy': wy,
+    '--wz': wz,
     ...colorVariables,
   };
 }

@@ -9,10 +9,7 @@ export function isCalcExpression(value: unknown): value is CalcExpression {
   return typeof value === 'string' && /^calc\(.*?\)$/.test(value);
 }
 
-export function normalizePropertyValue(
-  value: CssVariable | CalcExpression | string | number,
-  defaultUnit?: string,
-): string {
+export function normalizeCssValue(value: CssVariable | CalcExpression | string | number, defaultUnit?: string): string {
   if (typeof value === 'number') {
     return `${value}${defaultUnit ?? ''}`;
   }

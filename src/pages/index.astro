@@ -11,8 +11,8 @@ const labelsColor = 'var(--color-text-anchor)';
 const labelsColorShadow = 'var(--labels-shadow-color)';
 
 const commonLabelsProps = {
-  cellSizePx: 16,
-  gapPx: 0,
+  cellSize: 'var(--labels-size)',
+  gap: 0,
 };
 ---
 
@@ -101,16 +101,34 @@ const commonLabelsProps = {
     place-items: center;
     transform-style: preserve-3d;
     transform-origin: center;
-    animation: 2s forwards main-rotation cubic-bezier(0.65, 0.05, 0.36, 1);
+    animation: 2s forwards main-rotation cubic-bezier(0.65, 0.05, 0.36, 1); // TODO: possibly a single common curve
+
+    --animation-end-offset-y: calc(-50vh + 20vw);
+
+    @media (max-width: 460px) or (max-height: 520px) {
+      --animation-end-offset-y: calc(-50vh + 30vw);
+    }
 
     @keyframes main-rotation {
       0% {
         transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(-40vh);
       }
       100% {
-        transform: rotateX(-20deg) rotateY(30deg) translateZ(-40vw) translateY(calc(-50vh + 20vw)) translateX(20vw);
+        transform: rotateX(-20deg) rotateY(30deg) translateZ(-40vw) translateY(var(--animation-end-offset-y))
+          translateX(20vw);
       }
     }
+
+    // @keyframes image-rocking {
+    //   $pos: [[0, 0], [1, 0], [-1, 1], [1, -1], [1, 1], [-1, -1], [-1, 0], [1, 0], [0, 0]];
+    //   @for $i from 0 through 8 {
+    //     #{$i * 12.5%} {
+    //       $x: list.nth(list.nth($pos, $i + 1), 1);
+    //       $y: list.nth(list.nth($pos, $i + 1), 2);
+    //       transform: translate(calc($x * var(--rocking-offset)), calc($y * var(--rocking-offset)));
+    //     }
+    //   }
+    // }
 
     &::before,
     &::after {
@@ -137,9 +155,25 @@ const commonLabelsProps = {
         transform-style: preserve-3d;
         transform: translateZ(8px) translateY(calc(50vh - 50% - var(--padding-xlg) - var(--padding-sm)));
 
+        --labels-size: 16px;
+        --labels-offset: 100px;
         --labels-shadow-color: rgba(0, 0, 0, 0.1);
+
         @media (prefers-color-scheme: dark) {
           --labels-shadow-color: rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) or (max-height: 600px) {
+          --labels-size: 12px;
+          --labels-offset: 50px;
+        }
+        @media (max-width: 460px) or (max-height: 460px) {
+          --labels-size: 10px;
+          --labels-offset: 0px;
+        }
+        @media (max-width: 280px) {
+          --labels-size: 8px;
+          --labels-offset: 0px;
         }
 
         h1 {
@@ -162,11 +196,11 @@ const commonLabelsProps = {
       }
 
       &-blog {
-        transform: translateZ(100px);
+        transform: translateZ(var(--labels-offset));
       }
 
       &-resume {
-        transform: translateZ(200px);
+        transform: translateZ(calc(2 * var(--labels-offset)));
       }
     }
   }
@@ -223,16 +257,5 @@ const commonLabelsProps = {
 
   // .image-acks {
   //   margin-top: 32px; // TODO: magic constant
-  // }
-
-  // @keyframes image-rocking {
-  //   $pos: [[0, 0], [1, 0], [-1, 1], [1, -1], [1, 1], [-1, -1], [-1, 0], [1, 0], [0, 0]];
-  //   @for $i from 0 through 8 {
-  //     #{$i * 12.5%} {
-  //       $x: list.nth(list.nth($pos, $i + 1), 1);
-  //       $y: list.nth(list.nth($pos, $i + 1), 2);
-  //       transform: translate(calc($x * var(--rocking-offset)), calc($y * var(--rocking-offset)));
-  //     }
-  //   }
   // }
 </style>

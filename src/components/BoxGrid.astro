@@ -1,6 +1,7 @@
 ---
 import { normalizeColor, type Color } from '../colors';
 import type { ImagePixelFrames } from '../images';
+import { normalizeCssValue } from '../styles';
 
 import { getBoxStyleVars, type BoxProps } from './box-properties';
 import Box, { type BaseBoxProps } from './Box.astro';
@@ -8,15 +9,15 @@ import Box, { type BaseBoxProps } from './Box.astro';
 export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient'> {
   class?: string;
   /**
-   * Gap between boxes in `px` unit.
+   * Gap between boxes.
    * @default 2
    */
-  gapPx?: number;
+  gap?: string | number;
   /**
-   * Size of each box in `px` unit.
-   * @default 24
+   * Size of each box.
+   * @default 24px
    */
-  cellSizePx?: number;
+  cellSize?: string | number;
   /**
    * Which color should be treated as transparent.
    * The first frame is checked against this color, and if it's transparent, the whole pixel is skipped.
@@ -36,9 +37,9 @@ export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient
    */
   waveDisabled?: boolean;
   /**
-   * @default 2
+   * @default 2px
    */
-  waveGapOffset?: number;
+  waveGapOffset?: string | number;
   /**
    * @default 5000
    */
@@ -47,8 +48,8 @@ export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient
 }
 
 const {
-  gapPx = 2,
-  cellSizePx = 24,
+  gap = 2,
+  cellSize = 24,
   transparentColor = 0xffffffff,
   rows,
   class: className,
@@ -60,6 +61,8 @@ const {
   waveGapOffset = 2,
   waveAnimationDelayMs = 5000,
 } = Astro.props;
+
+const normalizedGap = normalizeCssValue(gap, 'px');
 
 let rowLength = -1;
 for (const row of rows) {
@@ -118,7 +121,7 @@ rowsWithVisibleCells.forEach((row, i) => {
 
     rowsByColors.get(color)?.get(i)?.push(columnIndex);
 
-    if (gapPx === 0 && waveDisabled) {
+    if (normalizedGap === '0px' && waveDisabled) {
       if (pixelRowIndex > 0) {
         const prevPixel = row[pixelRowIndex - 1];
         if (prevPixel[1] === columnIndex - 1) {
@@ -137,8 +140,9 @@ rowsWithVisibleCells.forEach((row, i) => {
 });
 
 const style = {
-  '--gap': `${gapPx}px`,
-  '--cell-size': `${cellSizePx}px`,
+  '--gap': normalizedGap,
+  '--gap-wave': normalizeCssValue(waveGapOffset, 'px'),
+  '--cell-size': normalizeCssValue(cellSize, 'px'),
   '--rows-count': rowsWithVisibleCells.length,
   '--columns-count': rowLength,
   '--animation-frame-ms': `${animationFrameMs}ms`,
@@ -148,7 +152,7 @@ const style = {
 
 const baseSectionProps: BoxProps = {
   surfaceColor: 0x00000000,
-  size: cellSizePx,
+  size: cellSize,
 };
 ---
 
@@ -156,36 +160,24 @@ const baseSectionProps: BoxProps = {
   {
     Array.from(rowsByColors.entries()).map(([surfaceColor, rows]) => (
       <div class="grid-section" style={getBoxStyleVars({ ...baseSectionProps, surfaceColor })}>
-        {Array.from(rows.entries()).map(([rowIndex, cells]) => {
-          const cellSize = cellSizePx + gapPx;
-          return (
-            <div
-              class={`grid-section-row ${waveDisabled ? '' : 'grid-section-row-wave'}`}
-              style={{ '--ri': rowIndex, top: `${rowIndex * cellSize}px` }}
-            >
-              {cells.map((columnIndex) => {
-                const cellIndex = rowIndex * rowLength + columnIndex;
-                const frames = cellsFrames.get(cellIndex);
-                const x = columnIndex * cellSize;
-                const w =
-                  (rowLength / 2) * cellSize -
-                  (rowLength / 2) * (cellSize + waveGapOffset) +
-                  columnIndex * (cellSize + waveGapOffset);
-                return (
-                  <Fragment>
-                    <Box
-                      class={`grid-section-row-cell ${frames?.count ? `frame-animate-${frames.count}` : ''}`}
-                      style={{ '--x': `${x}px`, '--w': `${w}px`, ...frames?.styles }}
-                      hideSurfaces={{ ...hideSurfaces, ...cellsHiddenSurfaces.get(cellIndex) }}
-                      hideGradient={hideGradient}
-                      skipStyleVars={true}
-                    />
-                  </Fragment>
-                );
-              })}
-            </div>
-          );
-        })}
+        {Array.from(rows.entries()).map(([rowIndex, cells]) => (
+          <div class={`grid-section-row ${waveDisabled ? '' : 'grid-section-row-wave'}`} style={{ '--ri': rowIndex }}>
+            {cells.map((columnIndex) => {
+              const cellIndex = rowIndex * rowLength + columnIndex;
+              const frames = cellsFrames.get(cellIndex);
+
+              return (
+                <Box
+                  class={`grid-section-row-cell ${frames?.count ? `frame-animate-${frames.count}` : ''}`}
+                  style={{ '--ci': `${columnIndex}`, ...frames?.styles }}
+                  hideSurfaces={{ ...hideSurfaces, ...cellsHiddenSurfaces.get(cellIndex) }}
+                  hideGradient={hideGradient}
+                  skipStyleVars={true}
+                />
+              );
+            })}
+          </div>
+        ))}
       </div>
     ))
   }
@@ -243,7 +235,7 @@ const baseSectionProps: BoxProps = {
   }
 </style>
 
-<style lang="scss" is:global>
+<style lang="scss">
   @keyframes wave {
     0% {
       left: var(--x);
@@ -267,6 +259,8 @@ const baseSectionProps: BoxProps = {
 
 <style lang="scss">
   .grid {
+    --cell-extent: calc(var(--cell-size) + var(--gap));
+
     height: calc(var(--rows-count) * var(--cell-size) + (var(--rows-count) - 1) * var(--gap));
     width: calc(var(--columns-count) * var(--cell-size) + (var(--columns-count) - 1) * var(--gap));
     transform-style: preserve-3d;
@@ -279,11 +273,18 @@ const baseSectionProps: BoxProps = {
       top: 0;
 
       &-row {
+        top: calc(var(--ri) * var(--cell-extent));
         height: var(--cell-size);
         transform-style: preserve-3d;
         position: absolute;
 
         &-cell {
+          --wave-extent: calc(var(--cell-extent) + var(--gap-wave));
+          --x: calc(var(--ci) * var(--cell-extent));
+          --w: calc(
+            (var(--columns-count) / 2) * var(--cell-extent) - (var(--columns-count) / 2) * var(--wave-extent) +
+              var(--ci) * var(--wave-extent)
+          );
           position: absolute;
           left: var(--x);
         }

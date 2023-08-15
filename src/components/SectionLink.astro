@@ -1,6 +1,6 @@
 ---
 import { normalizeColor, type Color } from '../colors';
-import { normalizePropertyValue } from '../styles';
+import { normalizeCssValue } from '../styles';
 export interface Props {
   class?: string;
   href: string;
@@ -20,9 +20,9 @@ const { class: className, href, borderWidth = 2, borderSize = 32, borderOffset =
 <style
   lang="scss"
   define:vars={{
-    'border-width': normalizePropertyValue(borderWidth, 'px'),
-    'border-size': normalizePropertyValue(borderSize, 'px'),
-    'border-offset': normalizePropertyValue(borderOffset, 'px'),
+    'border-width': normalizeCssValue(borderWidth, 'px'),
+    'border-size': normalizeCssValue(borderSize, 'px'),
+    'border-offset': normalizeCssValue(borderOffset, 'px'),
     'border-color': normalizeColor(borderColor),
   }}
 >
@@ -45,6 +45,7 @@ const { class: className, href, borderWidth = 2, borderSize = 32, borderOffset =
   }
 
   a {
+    -webkit-tap-highlight-color: transparent;
     transform-style: preserve-3d;
     display: inline-block;
     position: relative;
