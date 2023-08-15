@@ -49,6 +49,7 @@ const { class: className, href, borderWidth = 2, borderSize = 32, borderOffset =
     transform-style: preserve-3d;
     display: inline-block;
     position: relative;
+    outline: none;
 
     &::before,
     &::after {
@@ -84,7 +85,8 @@ const { class: className, href, borderWidth = 2, borderSize = 32, borderOffset =
       }
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       &::before {
         border-left-style: solid;
         border-bottom-style: solid;
