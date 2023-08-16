@@ -1,19 +1,23 @@
 @mixin variables() {
-  @include fonts();
+  @include typography();
   @include dimensions();
   @include palette();
+  @include effects();
 }
 
-@mixin fonts() {
-  --font-size-base: 14px;
+@mixin typography() {
+  --font-family-header: 'Catamaran', sans-serif;
+  --font-family-paragraph: 'Source Sans 3', sans-serif;
+  --font-size-base: 20px;
+
   --font-size-xs: 0.7rem; // caption
   --font-size-sm: 0.85rem; // small
   --font-size-md: 1rem; // p
-  --font-size-lg: 1.14rem; // h5
-  --font-size-xl: 1.28rem; // h4
-  --font-size-xxl: 1.42rem; // h3
-  --font-size-xxxl: 1.71rem; // h2
-  --font-size-xxxxl: 2.28rem; // h1
+  --font-size-lg: 1.25rem; // h5
+  --font-size-xl: 1.75rem; // h4
+  --font-size-xxl: 2.25rem; // h3
+  --font-size-xxxl: 2.75rem; // h2
+  --font-size-xxxxl: 3.5rem; // h1
 }
 
 @mixin dimensions() {
@@ -50,4 +54,9 @@
     --color-text-anchor: #0e96df;
     --color-text-anchor-visited: darkorange;
   }
+}
+
+@mixin effects() {
+  --animation-curve-base: cubic-bezier(0.65, 0.05, 0.36, 1);
+  --animation-curve-playful: cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }

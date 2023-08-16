@@ -2,10 +2,11 @@
 import AstroLogo from './AstroLogo.astro';
 import GitHubLogo from './GitHubLogo.astro';
 import SectionLink from './SectionLink.astro';
+
 const { class: className } = Astro.props;
 ---
 
-<section class={className}>
+<section class:list={['acks-container', className]}>
   <p class="copyrights">© {new Date().getFullYear()} Evgenii</p>
   <div class="stack">
     <SectionLink
@@ -15,7 +16,7 @@ const { class: className } = Astro.props;
       borderSize={8}
       borderWidth={4}
     >
-      <p>Made with CSS and</p>
+      <span>Made with CSS and</span>
       <AstroLogo color="var(--color-text-primary)" width={75} height={25} />
     </SectionLink>
     <SectionLink
@@ -25,20 +26,25 @@ const { class: className } = Astro.props;
       borderSize={8}
       borderWidth={4}
     >
-      <p>Source code</p>
+      <span>Source code</span>
       <GitHubLogo color="var(--color-text-primary)" width={20} height={20} />
     </SectionLink>
   </div>
 </section>
 
 <style lang="scss">
+  .acks-container {
+    font-family: 'Handjet', cursive;
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+  }
+
   .stack {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     gap: var(--padding-lg);
-    font-size: var(--font-size-sm);
 
     &-entry {
       display: flex;
@@ -49,15 +55,14 @@ const { class: className } = Astro.props;
       gap: var(--padding-md);
       padding: 0 var(--padding-lg);
       color: var(--color-text-primary);
-      height: var(--font-size-xxxxl);
+      height: var(--font-size-xl);
     }
   }
 
   .copyrights {
     font-weight: normal;
     text-align: center;
-    font-size: var(--font-size-sm);
-    margin-bottom: var(--padding-lg);
+    margin-bottom: var(--padding-sm);
     color: var(--color-text-tertiary);
   }
 </style>
