@@ -1,6 +1,7 @@
 ---
 import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxImage from '../components/BoxImage.astro';
+import Ficus from '../components/Ficus.astro';
 import SectionLink from '../components/SectionLink.astro';
 import IndexLayout from '../layouts/Layout.astro';
 
@@ -83,6 +84,10 @@ const commonLabelsProps = {
           />
         </SectionLink>
       </div>
+    </section>
+
+    <section class="decorations-container">
+      <Ficus class="decorations-ficus" />
     </section>
   </main>
 </IndexLayout>
@@ -227,6 +232,23 @@ const commonLabelsProps = {
 
       &-resume {
         transform: translateZ(calc(2 * var(--labels-offset)));
+      }
+    }
+
+    .decorations {
+      &-container {
+        pointer-events: none;
+        transform-style: preserve-3d;
+        transform: translateZ(100px);
+        position: absolute;
+        width: 800px;
+        bottom: 0;
+      }
+
+      &-ficus {
+        position: absolute;
+        bottom: 0;
+        right: 0;
       }
     }
   }

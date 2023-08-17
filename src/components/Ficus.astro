@@ -1,0 +1,162 @@
+---
+---
+
+<div class="ficus">
+  <!-- <Box surfaceColor="white" size={{ wx: 32, wz: 32, wy: 128 }} /> -->
+  <img class="ficus-plant" src="src/assets/plant.png" />
+  <div class="ficus-pot">
+    <i class="ficus-pot-side-left"></i>
+    <i class="ficus-pot-side-right"></i>
+    <i class="ficus-pot-side-front"></i>
+    <i class="ficus-pot-side-back"></i>
+    <i class="ficus-pot-side-corner-left"></i>
+    <i class="ficus-pot-side-corner-right"></i>
+    <i class="ficus-pot-side-corner-front"></i>
+    <i class="ficus-pot-side-corner-back"></i>
+  </div>
+</div>
+
+<style lang="scss">
+  @use 'sass:math';
+  @use 'sass:list';
+
+  .ficus {
+    transform-style: preserve-3d;
+
+    &-cover {
+      transform-style: preserve-3d;
+      // transform: translateY() rotateX(90deg) translateZ(100px);
+      background: black;
+    }
+
+    &-plant {
+      transform: rotateY(-30deg);
+      position: absolute;
+      left: 0;
+      bottom: 128px;
+    }
+
+    &-pot {
+      // We have to use SCSS vars instead of native CSS properties because we need trigonometric functions for calculations
+      $pot-side-width: 36px;
+      $pot-side-height: 64px;
+      $pot-side-angle: 15deg;
+
+      transform-style: preserve-3d;
+      position: relative;
+      height: $pot-side-height;
+      width: $pot-side-width;
+
+      transform: rotateY(-30deg) rotateX(-30deg);
+
+      [class^='ficus-pot-side-'] {
+        display: block;
+        position: absolute;
+        transform-style: preserve-3d;
+        transform-origin: left bottom;
+        height: $pot-side-height;
+        width: $pot-side-width;
+      }
+
+      &-side {
+        &-left {
+          transform: rotateY(90deg) translateZ(0) rotateX($pot-side-angle);
+          background: yellow;
+        }
+        &-right {
+          transform: rotateY(90deg) translateZ($pot-side-width) rotateX(-$pot-side-angle);
+          background: blue;
+        }
+        &-back {
+          transform: translateZ(-$pot-side-width) rotateX($pot-side-angle);
+          background: green;
+        }
+        &-front {
+          transform: rotateX(-$pot-side-angle);
+          background: red;
+        }
+      }
+
+      /*
+      Top view:
+           A     B
+           |    ||
+      C   D|    ||
+      -----|----||E
+           | \  //
+      F    |  //H
+      ======//
+            G
+
+      Side view:
+      |D    E
+      |----/
+      |   /
+      |  /
+      |R/
+      |/
+
+      AD, CD - top lines of front and left sides corresp. if they were not rotated.
+      BE, HF - top lines of said planes after they are rotated to *angle R*.
+      GE - top line of the corner plane which we need to size and rotate.
+      DH - line between intersection of A and B and which is orthogonal to GE (bisector of E-D-G right angle + centroid of E-D-G triangle).
+
+      We know the angle R, we know the length of the vertical side, so we can find DE and DG (which are equal, btw) using trigonometry (tan(R) = DE/height -> DE = tan(R) * height).
+      Knowing DE and DG, we can find GE length using Pythagorean theorem.
+      Angle H-D-E is 45deg, D-H-E is 90 degrees, so we can use trigonometry again to find DH length from DE, since HE = GE/2.
+      DH is part of the triangle with vertical line of the pot's side, so we can use Pythagorean again to find required length of the corner plane (which will be the hypotenuse).
+      And finally, using the same trivial trigonometry, we can find the angle between the corner plane and the pot's side.
+      */
+      @function strip-units($number) {
+        @return math.div($number, ($number * 0 + 1));
+      }
+
+      $ad: strip-units($pot-side-width);
+      $ad-vertical: strip-units($pot-side-height);
+      $r: $pot-side-angle;
+
+      $de: math.tan($r) * $ad-vertical;
+      $dg: $de;
+      $ge: math.sqrt($de * $de + $dg * $dg);
+
+      $he: math.div($ge, 2);
+      $dh: math.sqrt($de * $de - $he * $he);
+
+      $corner-plane-width-half: $he + px;
+      $corner-plane-height: math.sqrt($dh * $dh + $ad-vertical * $ad-vertical) + px;
+      $corner-plane-angle: math.atan(math.div($dh, $ad-vertical));
+      $pot-diag-half: math.sqrt(($ad / 2) * ($ad / 2) + ($ad / 2) * ($ad / 2));
+
+      [class^='ficus-pot-side-corner-'] {
+        width: 0;
+        height: 0;
+        transform-origin: center bottom;
+        border-left: $corner-plane-width-half solid transparent;
+        border-right: $corner-plane-width-half solid transparent;
+        border-bottom: $corner-plane-height solid var(--corner-color); // We have to use bottom border and rotate the triangle, because otherwise its length changes from the top
+      }
+
+      &-side-corner {
+        $sides: left, back, right, front;
+        @for $i from 1 through 4 {
+          &-#{list.nth($sides, $i)} {
+            --corner-color: cyan;
+            transform: /* Flip upside down */ rotateZ(180deg)
+              /* Move back up after flipping */
+              translateY(calc(100% + 5px /* TODO: understand where does this offset come from */))
+              /* Center along the side */
+              translateX($he - $pot-side-width / 2)
+              /* Move to the center of the box */
+              translateZ(-$pot-side-width / 2)
+              /* Rotate along vertical axis */
+              rotateY(($i - 1) * 90deg + 45deg)
+              /* Rotate along horizontal axis */
+              rotateX($corner-plane-angle)
+              /* Shift a bit to compensate rotation and then into the cornet; needed because transform origin is at the top after flipping the shape */
+              translateZ($dh + $pot-diag-half + px);
+          }
+        }
+      }
+    }
+  }
+</style>
