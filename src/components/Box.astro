@@ -25,56 +25,18 @@ const style = {
   ...(skipStyleVars ? {} : getBoxStyleVars(Astro.props as BoxProps)),
 };
 
-const hideAxes = new Set(
-  ['x', 'y', 'z']
-    .map((axis) => {
-      let render = false;
-      switch (axis) {
-        case 'x':
-          render = !hideSurfaces.left || !hideSurfaces.right;
-          break;
-        case 'y':
-          render = !hideSurfaces.top || !hideSurfaces.bottom;
-          break;
-        case 'z':
-          render = !hideSurfaces.front || !hideSurfaces.back;
-          break;
-      }
-      return [axis, render] as const;
-    })
-    .filter(([, render]) => !render)
-    .map(([axis]) => axis),
-);
-
-const boxSurfacesElements = ['x', 'y', 'z'].filter((axis) => !hideAxes.has(axis)).map(([axis]) => `box-sides-${axis}`);
-
-const hideSurfacesClasses = Object.keys(hideSurfaces)
-  .map((surface) => {
-    switch (surface) {
-      case 'top':
-        return hideSurfaces.top && !hideAxes.has('y') ? 'box-sides-hide-top' : null;
-      case 'bottom':
-        return hideSurfaces.bottom && !hideAxes.has('y') ? 'box-sides-hide-bottom' : null;
-      case 'front':
-        return hideSurfaces.front && !hideAxes.has('z') ? 'box-sides-hide-front' : null;
-      case 'back':
-        return hideSurfaces.back && !hideAxes.has('z') ? 'box-sides-hide-back' : null;
-      case 'left':
-        return hideSurfaces.left && !hideAxes.has('x') ? 'box-sides-hide-left' : null;
-      case 'right':
-        return hideSurfaces.right && !hideAxes.has('x') ? 'box-sides-hide-right' : null;
-      default:
-        return null;
-    }
-  })
-  .filter(Boolean);
+const sides = (['left', 'right', 'top', 'bottom', 'front', 'back'] as Array<keyof typeof hideSurfaces>)
+  .filter((side) => !hideSurfaces[side])
+  .map((side) => `box-side-${side}`);
 ---
 
-<i class:list={['box', className, ...hideSurfacesClasses, hideGradient ? 'box-sides-hide-gradient' : '']} style={style}>
-  {boxSurfacesElements.map((surface) => <i class={surface} />)}
+<i class:list={['box', className, hideGradient ? 'box-side-hide-gradient' : '']} style={style}>
+  {sides.map((side) => <i class={side} />)}
 </i>
 
 <style lang="scss">
+  @use 'sass:list';
+
   .box {
     display: block;
     width: var(--wx);
@@ -83,139 +45,89 @@ const hideSurfacesClasses = Object.keys(hideSurfaces)
     transform-style: preserve-3d;
     overflow: visible;
 
-    [class^='box-sides-']::before,
-    [class^='box-sides-']::after {
-      content: '';
-      display: block;
+    [class^='box-side-'] {
+      transform-style: preserve-3d;
       position: absolute;
+      display: block;
       left: 0;
       top: 0;
     }
 
-    &-sides {
+    &-side {
       $self: &;
-
-      &-hide {
-        &-top #{$self}-y::before,
-        &-bottom #{$self}-y::after,
-        &-front #{$self}-z::before,
-        &-back #{$self}-z::after,
-        &-left #{$self}-x::before,
-        &-right #{$self}-x::after {
-          content: none;
-        }
-      }
-
-      &-hide-gradient {
-        #{$self}-y {
-          &::before {
-            background-image: linear-gradient(to right, var(--st, var(--sa)), var(--st, var(--sa)));
-          }
-
-          &::after {
-            background-image: linear-gradient(to right, var(--sb, var(--sa)), var(--sb, var(--sa)));
-          }
-        }
-
-        #{$self}-z {
-          &::before {
-            background-image: linear-gradient(to bottom, var(--sf, var(--sa)), var(--sf, var(--sa)));
-          }
-
-          &::after {
-            background-image: linear-gradient(to bottom, var(--sbk, var(--sa)), var(--sbk, var(--sa)));
-          }
-        }
-
-        #{$self}-x {
-          &::before {
-            background-image: linear-gradient(to bottom, var(--sl, var(--sa)), var(--sl, var(--sa)));
-          }
-
-          &::after {
-            background-image: linear-gradient(to bottom, var(--sr, var(--sa)), var(--sr, var(--sa)));
-          }
-        }
-      }
-
-      &-x,
-      &-y,
-      &-z {
-        transform-style: preserve-3d;
-        display: block;
-      }
-
+      $sides: left, right, top, bottom, front, back;
+      $colors: --sl, --sr, --st, --sb, --sf, --sbk;
       $lighten: rgba(255, 255, 255, 0.45);
       $darken: rgba(0, 0, 0, 0.15);
 
-      &-y {
-        &::before,
-        &::after {
-          transform-origin: center top;
-          height: var(--wz);
-          width: var(--wx);
-          background-size: calc(var(--columns-count, 1) * 100%) 100%;
-        }
-
-        &::before {
-          background-image: linear-gradient(to top right, transparent, $lighten),
-            linear-gradient(to right, var(--st, var(--sa)), var(--st, var(--sa)));
-          transform: rotateX(-90deg) translateY(calc(var(--wz) / -2));
-        }
-
-        &::after {
-          background-image: linear-gradient(to top right, transparent, $lighten),
-            linear-gradient(to right, var(--sb, var(--sa)), var(--sb, var(--sa)));
-          transform: translateY(var(--wy)) rotateX(-90deg) translateY(calc(var(--wz) / -2));
+      &-hide-gradient {
+        @for $i from 1 through 6 {
+          #{$self}-#{list.nth($sides, $i)} {
+            background-image: linear-gradient(
+              to right,
+              var(list.nth($colors, $i), var(--sa)),
+              var(list.nth($colors, $i), var(--sa))
+            );
+          }
         }
       }
 
-      &-z {
-        &::before,
-        &::after {
-          height: var(--wy);
-          width: var(--wx);
-          background-size: calc(var(--rows-count, 1) * 100%) calc(var(--columns-count, 1) * 100%);
-          background-position-y: calc(var(--ri, 1) * 100% / var(--rows-count, 1));
-        }
-
-        &::before {
-          transform: translateZ(calc(var(--wz) / 2));
-          background-image: linear-gradient(to bottom left, transparent, $darken),
-            linear-gradient(to top right, transparent, $lighten),
-            linear-gradient(to bottom, var(--sf, var(--sa)), var(--sf, var(--sa)));
-        }
-
-        &::after {
-          transform: translateZ(calc(-1 * var(--wz) + var(--wz) / 2));
-          background-image: linear-gradient(to bottom left, transparent, $darken),
-            linear-gradient(to top right, transparent, $lighten),
-            linear-gradient(to bottom, var(--sbk, var(--sa)), var(--sbk, var(--sa)));
-        }
+      &-top,
+      &-bottom {
+        height: var(--wz);
+        width: var(--wx);
+        transform-origin: center top;
+        background-size: calc(var(--columns-count, 1) * 100%) 100%;
+      }
+      &-top {
+        background-image: linear-gradient(to top right, transparent, $lighten),
+          linear-gradient(to right, var(--st, var(--sa)), var(--st, var(--sa)));
+        transform: rotateX(-90deg) translateY(calc(var(--wz) / -2));
+      }
+      &-bottom {
+        background-image: linear-gradient(to top right, transparent, $lighten),
+          linear-gradient(to right, var(--sb, var(--sa)), var(--sb, var(--sa)));
+        transform: translateY(var(--wy)) rotateX(-90deg) translateY(calc(var(--wz) / -2));
       }
 
-      &-x {
-        &::before,
-        &::after {
-          height: var(--wy);
-          width: var(--wz);
-          transform-origin: left center;
-          background-repeat: no-repeat;
-          background-size: 100% calc(var(--rows-count) * 100%);
-          background-position-y: calc(var(--ri) * 100% / var(--rows-count));
-        }
+      &-front,
+      &-back {
+        height: var(--wy);
+        width: var(--wx);
+        background-size: calc(var(--rows-count, 1) * 100%) calc(var(--columns-count, 1) * 100%);
+        background-position-y: calc(var(--ri, 1) * 100% / var(--rows-count, 1));
+      }
+      &-front {
+        transform: translateZ(calc(var(--wz) / 2));
+        background-image: linear-gradient(to bottom left, transparent, $darken),
+          linear-gradient(to top right, transparent, $lighten),
+          linear-gradient(to bottom, var(--sf, var(--sa)), var(--sf, var(--sa)));
+      }
+      &-back {
+        transform: translateZ(calc(-1 * var(--wz) + var(--wz) / 2));
+        background-image: linear-gradient(to bottom left, transparent, $darken),
+          linear-gradient(to top right, transparent, $lighten),
+          linear-gradient(to bottom, var(--sbk, var(--sa)), var(--sbk, var(--sa)));
+      }
 
-        &::before {
-          transform: translateZ(calc(var(--wz) / 2)) rotateY(90deg);
-          background-image: linear-gradient(to bottom right, transparent, $darken),
-            linear-gradient(to bottom, var(--sl, var(--sa)), var(--sl, var(--sa)));
-        }
-
-        &::after {
-          transform: translateZ(calc(var(--wz) / 2)) translateX(var(--wx)) rotateY(90deg);
-          background-image: linear-gradient(to bottom right, transparent, $darken),
-            linear-gradient(to bottom, var(--sr, var(--sa)), var(--sr, var(--sa)));
-        }
+      &-left,
+      &-right {
+        height: var(--wy);
+        width: var(--wz);
+        transform-origin: left center;
+        background-repeat: no-repeat;
+        background-size: 100% calc(var(--rows-count) * 100%);
+        background-position-y: calc(var(--ri) * 100% / var(--rows-count));
+      }
+      &-left {
+        transform: translateZ(calc(var(--wz) / 2)) rotateY(90deg);
+        background-image: linear-gradient(to bottom right, transparent, $darken),
+          linear-gradient(to bottom, var(--sl, var(--sa)), var(--sl, var(--sa)));
+      }
+      &-right {
+        transform: translateZ(calc(var(--wz) / 2)) translateX(var(--wx)) rotateY(90deg);
+        background-image: linear-gradient(to bottom right, transparent, $darken),
+          linear-gradient(to bottom, var(--sr, var(--sa)), var(--sr, var(--sa)));
       }
     }
   }

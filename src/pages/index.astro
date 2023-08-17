@@ -20,6 +20,9 @@ const commonLabelsProps = {
   <Acknowledgments class="acks" />
 
   <main>
+    <i class="main-wall main-wall-vertical"></i>
+    <i class="main-wall main-wall-horizontal"></i>
+
     <section class="labels-container">
       <!-- TODO: accessibility for boximages -->
       <h1>
@@ -155,24 +158,21 @@ const commonLabelsProps = {
       }
     }
 
-    &::before,
-    &::after {
-      content: '';
+    .main-wall {
       position: absolute;
       height: 200vh;
       width: 200vw;
       left: -50vw;
       top: -100vh;
-    }
 
-    &::before {
-      background: var(--color-surface);
-    }
-
-    &::after {
-      transform-origin: center bottom;
-      transform: rotateY(180deg) rotateX(90deg);
-      background: linear-gradient(var(--color-surface), var(--color-surface) 90%, var(--color-background));
+      &-vertical {
+        background: var(--color-surface);
+      }
+      &-horizontal {
+        transform-origin: center bottom;
+        transform: rotateY(180deg) rotateX(90deg);
+        background: linear-gradient(var(--color-surface), var(--color-surface) 90%, var(--color-background));
+      }
     }
 
     .labels {
