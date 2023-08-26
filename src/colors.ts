@@ -246,7 +246,7 @@ const namedColors: Record<string, number> = {
   lightyellow: 0xffffe0ff,
   limegreen: 0x32cd32ff,
   linen: 0xfaf0e6ff,
-  magenta: 0xff00fff,
+  magenta: 0xff00ffff,
   mediumaquamarine: 0x66cdaaff,
   mediumblue: 0x0000cdff,
   mediumorchid: 0xba55d3ff,
