@@ -38,8 +38,8 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
   @use 'sass:list';
 
   // We have to use SCSS vars instead of native CSS properties because we need trigonometric functions for calculations
-  $pot-side-width: 24px;
-  $pot-side-height: 64px;
+  $pot-side-width: 8px;
+  $pot-side-height: 16px;
   $pot-side-angle: 15deg;
 
   /*
@@ -98,6 +98,7 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
     width: $pot-side-width + $de * 2;
 
     &-plant {
+      width: $pot-side-width * 2.5;
       transform: translateX(50%) translateZ(-$pot-side-width / 2) rotateY(-20deg);
       transform-origin: bottom center;
       position: absolute;

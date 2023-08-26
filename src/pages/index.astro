@@ -2,6 +2,7 @@
 import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxImage from '../components/BoxImage.astro';
 import Chair from '../components/Chair.astro';
+import Computer from '../components/Computer.astro';
 import Desk from '../components/Desk.astro';
 import Ficus from '../components/Ficus.astro';
 import SectionLink from '../components/SectionLink.astro';
@@ -90,8 +91,14 @@ const commonLabelsProps = {
 
     <section class="decorations-container">
       <Ficus class="decorations-ficus" />
-      <Chair class="decorations-chair" seatColor="var(--seat-color)" liningColor="var(--lining-color-index)" />
-      <Desk class="decorations-desk" surfaceColor="var(--table-color)" />
+      <Chair class="decorations-chair" seatColor="var(--seat-color)" frameColor="var(--seat-frame-color)" />
+      <Desk
+        class="decorations-desk"
+        surfaceColor="var(--table-color)"
+        frameColor="var(--table-frame-color)"
+        height="var(--table-height)"
+      />
+      <Computer class="decorations-computer" />
     </section>
   </main>
 </IndexLayout>
@@ -126,7 +133,7 @@ const commonLabelsProps = {
     --animation-end-rotate-x: -20deg;
     --animation-end-rotate-y: 30deg;
     --animation-start-offset-y: -40vh;
-    --rocking-step: 5deg;
+    --rocking-step: 2deg;
 
     @media (max-width: 460px) or (max-height: 520px) {
       --animation-end-offset-y: calc(-50vh + 30vw);
@@ -241,12 +248,16 @@ const commonLabelsProps = {
 
     .decorations {
       &-container {
-        --seat-color: #6c3c14;
-        --table-color: #601f00;
-        --lining-color-index: #601f00;
+        --base-offset: 400px;
+
+        --seat-color: #dcdcdc;
+        --seat-frame-color: #707070;
+        --table-color: #aeaeae;
+        --table-frame-color: #707070;
+        --table-height: 64px;
+
         @media (prefers-color-scheme: dark) {
           --seat-color: #190b00;
-          --lining-color-index: #9e5700;
         }
 
         pointer-events: none;
@@ -259,24 +270,34 @@ const commonLabelsProps = {
 
       &-ficus {
         position: absolute;
-        bottom: 0;
-        // right: 0;
+        left: calc(var(--base-offset) + 100px);
+        bottom: calc(var(--table-height) + 4px);
+
+        transform: translateZ(400px);
       }
 
       &-chair {
         position: absolute;
-        left: 500px;
+        left: calc(var(--base-offset) + 30px);
         bottom: 0;
 
-        transform: translateZ(500px) rotateY(-180deg);
+        transform: translateZ(450px) rotateY(-180deg);
       }
 
       &-desk {
         position: absolute;
-        left: 466px;
+        left: var(--base-offset);
         bottom: 0;
 
         transform: translateZ(400px);
+      }
+
+      &-computer {
+        position: absolute;
+        left: calc(var(--base-offset) + 45px);
+        bottom: var(--table-height);
+
+        transform: translateZ(400px) translateY(-4px);
       }
     }
   }

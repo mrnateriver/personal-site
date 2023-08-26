@@ -7,16 +7,9 @@ interface Props {
   wheelsColor?: Color;
   frameColor?: Color;
   seatColor?: Color;
-  liningColor?: Color;
 }
 
-const {
-  class: className,
-  wheelsColor = 'black',
-  frameColor = '#282828',
-  seatColor = '#190b00',
-  liningColor = '#9e5700',
-} = Astro.props;
+const { class: className, wheelsColor = 'black', frameColor = '#282828', seatColor = '#190b00' } = Astro.props;
 
 const baseWidth = 'var(--chair-leg-width)';
 const baseRadius = 'var(--chair-base-radius)';
@@ -25,10 +18,9 @@ const seatWidth = 'var(--chair-seat-width)';
 const wheelsColorNormalized = normalizeColor(wheelsColor) ?? 'black';
 const frameColorNormalized = normalizeColor(frameColor) ?? 'gray';
 const seatColorNormalized = normalizeColor(seatColor) ?? '#190b00';
-const liningColorNormalized = normalizeColor(liningColor) ?? '#9e5700';
 ---
 
-<div class={`chair ${className ?? ''}`} style={{ '--lining-color': liningColorNormalized }}>
+<div class={`chair ${className ?? ''}`}>
   <div class="chair-wheels">
     <Box class="chair-wheels-wheel" size={baseWidth} surfaceColor={wheelsColorNormalized} />
     <Box class="chair-wheels-wheel" size={baseWidth} surfaceColor={wheelsColorNormalized} />
@@ -120,42 +112,6 @@ const liningColorNormalized = normalizeColor(liningColor) ?? '#9e5700';
     </div>
   </div>
 </div>
-
-<style lang="scss" is:global>
-  .chair-body {
-    .box.chair-body-seat {
-      .box-side-top::before {
-        content: '';
-        position: absolute;
-        top: var(--chair-leg-width);
-        left: var(--chair-leg-width);
-        right: var(--chair-leg-width);
-        bottom: calc(var(--chair-leg-width) * 2);
-        border: 1px solid var(--lining-color);
-      }
-    }
-
-    .box.chair-body-back {
-      .box-side-front::before,
-      .box-side-back::before {
-        content: '';
-        position: absolute;
-        inset: var(--chair-leg-width);
-        border: 1px solid var(--lining-color);
-      }
-    }
-
-    .box.chair-body-headrest {
-      .box-side-front::before,
-      .box-side-back::before {
-        content: '';
-        position: absolute;
-        inset: var(--chair-leg-width);
-        border: 1px solid var(--lining-color);
-      }
-    }
-  }
-</style>
 
 <style lang="scss">
   @use 'sass:list';

@@ -1,20 +1,23 @@
 ---
 import { normalizeColor, type Color } from '../colors';
+import { normalizeCssValue } from '../styles';
 import Box from './Box.astro';
 
 interface Props {
   class?: string;
   frameColor?: Color;
   surfaceColor?: Color;
+  height?: string | number;
 }
 
-const { class: className, frameColor = '#282828', surfaceColor = '#190b00' } = Astro.props;
+const { class: className, frameColor = '#282828', surfaceColor = '#190b00', height = 64 } = Astro.props;
 
 const frameColorNormalized = normalizeColor(frameColor) ?? '#282828';
 const surfaceColorNormalized = normalizeColor(surfaceColor) ?? '#190b00';
+const heightNormalized = normalizeCssValue(height, 'px') ?? '64px';
 ---
 
-<div class={`desk ${className ?? ''}`}>
+<div class={`desk ${className ?? ''}`} style={{ '--desk-height': heightNormalized }}>
   <Box
     class="desk-surface"
     surfaceColor={surfaceColorNormalized}
@@ -46,7 +49,6 @@ const surfaceColorNormalized = normalizeColor(surfaceColor) ?? '#190b00';
 
 <style lang="scss">
   .desk {
-    --desk-height: 64px;
     --desk-length: 128px;
     --desk-width: 64px;
     --desk-surface-height: 4px;

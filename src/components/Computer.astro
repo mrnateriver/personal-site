@@ -1,0 +1,172 @@
+---
+import { normalizeColor, type Color } from '../colors';
+import Box from './Box.astro';
+
+interface Props {
+  class?: string;
+  plasticColor?: Color;
+}
+
+const { class: className, plasticColor = 'beige' } = Astro.props;
+
+const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
+---
+
+<div class={`computer ${className ?? ''}`} style={{ '--computer-plastic-color': plasticColorNormalized }}>
+  <div class="computer-screen">
+    <Box
+      class="computer-screen-front"
+      surfaceColor={plasticColorNormalized}
+      size={{
+        wx: 'var(--computer-monitor-width)',
+        wy: 'var(--computer-monitor-width)',
+        wz: 'var(--computer-monitor-depth-front)',
+      }}
+    />
+
+    <i class="computer-screen-back-top"></i>
+    <i class="computer-screen-back-bottom"></i>
+    <i class="computer-screen-back-left"></i>
+    <i class="computer-screen-back-right"></i>
+    <i class="computer-screen-back-back"></i>
+
+    <img class="computer-screen-image" src="src/assets/win98.png" alt="Windows 98 Screenshot" />
+  </div>
+
+  <Box
+    class="computer-screen-stand"
+    surfaceColor={plasticColorNormalized}
+    size={{
+      wx: 'var(--computer-monitor-width)',
+      wz: 'var(--computer-monitor-width)',
+      wy: 'calc(var(--computer-monitor-depth-front) / 4)',
+    }}
+  />
+</div>
+
+<style lang="scss">
+  @use 'sass:math';
+
+  .computer {
+    --computer-monitor-width: 32px;
+    --computer-monitor-depth: 32px;
+    --computer-monitor-depth-front: 12px;
+
+    $back-sides-angle: 10deg;
+    --back-sides-padding: calc(var(--computer-monitor-depth) * #{math.sin($back-sides-angle)});
+
+    transform-style: preserve-3d;
+    position: relative;
+    height: var(--computer-monitor-width);
+    width: var(--computer-monitor-width); // TODO: +keyboard +mouse
+
+    &-screen {
+      --side-padding: 0.2;
+      --side-offset: calc(
+        (var(--computer-monitor-width) - var(--computer-monitor-width) * (1 - var(--side-padding))) / 2
+      );
+      --side-width: calc(var(--computer-monitor-width) * (1 - var(--side-padding)));
+
+      transform: rotateX(10deg) translateY(-4px);
+      transform-style: preserve-3d;
+      position: absolute;
+      bottom: 0;
+
+      i {
+        display: block;
+      }
+
+      &-front {
+      }
+
+      &-stand {
+        transform: translateZ(calc(-1 * var(--computer-monitor-width) / 2));
+        position: absolute;
+        bottom: 0;
+      }
+
+      &-image {
+        position: absolute;
+        width: var(--side-width);
+        bottom: var(--side-offset);
+        left: var(--side-offset);
+        height: var(--side-width);
+        transform: translateZ(calc(var(--computer-monitor-depth-front) / 2));
+      }
+
+      [class^='computer-screen-back-'] {
+        position: absolute;
+      }
+
+      &-back {
+        &-top,
+        &-bottom,
+        &-left,
+        &-right {
+          height: var(--computer-monitor-depth);
+          width: var(--side-width);
+        }
+
+        &-top,
+        &-bottom {
+          left: var(--side-offset);
+          background-image: linear-gradient(to top right, transparent, #00000015),
+            linear-gradient(to top, var(--computer-plastic-color), var(--computer-plastic-color));
+        }
+
+        &-top {
+          top: var(--side-offset);
+          transform: translateZ(calc(var(--computer-monitor-depth-front) / -2)) rotateX(-#{90deg - $back-sides-angle});
+          transform-origin: center top;
+        }
+
+        &-bottom {
+          bottom: var(--side-offset);
+          transform: translateZ(calc(var(--computer-monitor-depth-front) / -2)) rotateX(#{90deg - $back-sides-angle});
+          transform-origin: center bottom;
+        }
+
+        &-left,
+        &-right {
+          transform-origin: center top;
+          clip-path: polygon(
+            0 0,
+            100% 0,
+            calc(100% - var(--back-sides-padding)) 100%,
+            var(--back-sides-padding) 100%,
+            0 0
+          );
+        }
+
+        &-right {
+          transform: rotateZ(90deg) rotateX(-90deg) translateX(calc(var(--computer-monitor-width) / -2))
+            translateY(calc(var(--computer-monitor-depth-front) / 2))
+            translateZ(calc(-1 * var(--side-offset) - var(--side-width) / 2));
+
+          background-image: linear-gradient(to top right, transparent, #ffffff15),
+            linear-gradient(to top, var(--computer-plastic-color), var(--computer-plastic-color));
+        }
+
+        &-left {
+          transform: rotateZ(90deg) rotateX(-90deg) translateX(calc(var(--computer-monitor-width) / -2))
+            translateY(calc(var(--computer-monitor-depth-front) / 2))
+            translateZ(calc(var(--side-width) / 2 - var(--side-offset)));
+
+          background-image: linear-gradient(to top right, transparent, #00000015),
+            linear-gradient(to top, var(--computer-plastic-color), var(--computer-plastic-color));
+        }
+
+        &-back {
+          height: calc(var(--side-width) - var(--back-sides-padding) * 2);
+          width: var(--side-width);
+          transform: translateZ(calc(-1 * var(--computer-monitor-depth) - var(--computer-monitor-depth-front) / 2));
+          bottom: calc(var(--back-sides-padding) + var(--side-offset));
+          left: var(--side-offset);
+
+          background-image: linear-gradient(to top, #00000030, #00000030),
+            linear-gradient(to top, var(--computer-plastic-color), var(--computer-plastic-color));
+        }
+      }
+    }
+  }
+</style>
