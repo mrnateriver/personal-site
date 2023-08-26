@@ -1,0 +1,94 @@
+---
+import { normalizeColor, type Color } from '../colors';
+import Box from './Box.astro';
+
+interface Props {
+  class?: string;
+  frameColor?: Color;
+  surfaceColor?: Color;
+}
+
+const { class: className, frameColor = '#282828', surfaceColor = '#190b00' } = Astro.props;
+
+const frameColorNormalized = normalizeColor(frameColor) ?? '#282828';
+const surfaceColorNormalized = normalizeColor(surfaceColor) ?? '#190b00';
+---
+
+<div class={`desk ${className ?? ''}`}>
+  <Box
+    class="desk-surface"
+    surfaceColor={surfaceColorNormalized}
+    size={{ wx: 'var(--desk-length)', wy: 'var(--desk-surface-height)', wz: 'var(--desk-width)' }}
+  />
+
+  <Box
+    class="desk-leg desk-leg-left"
+    surfaceColor={frameColorNormalized}
+    size={{ wx: 'var(--desk-leg-depth)', wy: 'var(--desk-height)', wz: 'var(--desk-leg-width)' }}
+  />
+  <Box
+    class="desk-leg desk-leg-right"
+    surfaceColor={frameColorNormalized}
+    size={{ wx: 'var(--desk-leg-depth)', wy: 'var(--desk-height)', wz: 'var(--desk-leg-width)' }}
+  />
+
+  <Box
+    class="desk-support desk-support-left"
+    surfaceColor={frameColorNormalized}
+    size={{ wx: 'var(--desk-leg-depth)', wy: 'var(--desk-leg-depth)', wz: 'var(--desk-support-width)' }}
+  />
+  <Box
+    class="desk-support desk-support-right"
+    surfaceColor={frameColorNormalized}
+    size={{ wx: 'var(--desk-leg-depth)', wy: 'var(--desk-leg-depth)', wz: 'var(--desk-support-width)' }}
+  />
+</div>
+
+<style lang="scss">
+  .desk {
+    --desk-height: 64px;
+    --desk-length: 128px;
+    --desk-width: 64px;
+    --desk-surface-height: 4px;
+    --desk-support-width: calc(var(--desk-width) * 0.8);
+    --desk-leg-width: 16px;
+    --desk-leg-depth: 4px;
+
+    transform-style: preserve-3d;
+    position: relative;
+
+    &-surface,
+    &-leg,
+    &-support {
+      position: absolute;
+    }
+
+    &-surface {
+      bottom: var(--desk-height);
+    }
+
+    &-leg {
+      bottom: 0;
+
+      &-left {
+        //
+      }
+
+      &-right {
+        right: calc(-1 * var(--desk-length));
+      }
+    }
+
+    &-support {
+      bottom: 0;
+
+      &-left {
+        //
+      }
+
+      &-right {
+        right: calc(-1 * var(--desk-length));
+      }
+    }
+  }
+</style>

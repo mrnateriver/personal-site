@@ -204,7 +204,8 @@ const liningColorNormalized = normalizeColor(liningColor) ?? '#9e5700';
 
       @for $i from 1 through 5 {
         &-wheel:nth-child(#{$i}) {
-          transform: translateX(var(--chair-base-radius))
+          transform: translateY(-1px)
+            translateX(var(--chair-base-radius))
             rotateY(#{list.nth($wheels-rotation, $i)} + deg)
             translateZ(calc(var(--chair-base-radius) - var(--chair-leg-width)))
             rotateX(45deg);

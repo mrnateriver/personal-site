@@ -2,6 +2,7 @@
 import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxImage from '../components/BoxImage.astro';
 import Chair from '../components/Chair.astro';
+import Desk from '../components/Desk.astro';
 import Ficus from '../components/Ficus.astro';
 import SectionLink from '../components/SectionLink.astro';
 import IndexLayout from '../layouts/Layout.astro';
@@ -90,6 +91,7 @@ const commonLabelsProps = {
     <section class="decorations-container">
       <Ficus class="decorations-ficus" />
       <Chair class="decorations-chair" seatColor="var(--seat-color)" liningColor="var(--lining-color-index)" />
+      <Desk class="decorations-desk" surfaceColor="var(--table-color)" />
     </section>
   </main>
 </IndexLayout>
@@ -239,7 +241,8 @@ const commonLabelsProps = {
 
     .decorations {
       &-container {
-        --seat-color: #97531d;
+        --seat-color: #6c3c14;
+        --table-color: #601f00;
         --lining-color-index: #601f00;
         @media (prefers-color-scheme: dark) {
           --seat-color: #190b00;
@@ -262,9 +265,18 @@ const commonLabelsProps = {
 
       &-chair {
         position: absolute;
-        bottom: 1px;
+        left: 500px;
+        bottom: 0;
 
-        transform: translateZ(600px) rotateY(-180deg);
+        transform: translateZ(500px) rotateY(-180deg);
+      }
+
+      &-desk {
+        position: absolute;
+        left: 466px;
+        bottom: 0;
+
+        transform: translateZ(400px);
       }
     }
   }
