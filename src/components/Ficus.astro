@@ -9,7 +9,7 @@ interface Props {
 const { class: className, color = 'var(--color-surface)' } = Astro.props;
 ---
 
-<div class={`ficus ${className}`} style={{ '--side-color': normalizeColor(color) }}>
+<div class={`ficus ${className ?? ''}`} style={{ '--side-color': normalizeColor(color) }}>
   <img class="ficus-plant" src="src/assets/plant.png" />
   <div class="ficus-pot">
     <i class="ficus-pot-side-left"></i>

@@ -1,6 +1,7 @@
 ---
 import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxImage from '../components/BoxImage.astro';
+import Chair from '../components/Chair.astro';
 import Ficus from '../components/Ficus.astro';
 import SectionLink from '../components/SectionLink.astro';
 import IndexLayout from '../layouts/Layout.astro';
@@ -88,6 +89,7 @@ const commonLabelsProps = {
 
     <section class="decorations-container">
       <Ficus class="decorations-ficus" />
+      <Chair class="decorations-chair" seatColor="var(--seat-color)" liningColor="var(--lining-color-index)" />
     </section>
   </main>
 </IndexLayout>
@@ -122,7 +124,7 @@ const commonLabelsProps = {
     --animation-end-rotate-x: -20deg;
     --animation-end-rotate-y: 30deg;
     --animation-start-offset-y: -40vh;
-    --rocking-step: 1deg;
+    --rocking-step: 5deg;
 
     @media (max-width: 460px) or (max-height: 520px) {
       --animation-end-offset-y: calc(-50vh + 30vw);
@@ -237,6 +239,13 @@ const commonLabelsProps = {
 
     .decorations {
       &-container {
+        --seat-color: #97531d;
+        --lining-color-index: #601f00;
+        @media (prefers-color-scheme: dark) {
+          --seat-color: #190b00;
+          --lining-color-index: #9e5700;
+        }
+
         pointer-events: none;
         transform-style: preserve-3d;
         transform: translateZ(100px);
@@ -246,9 +255,16 @@ const commonLabelsProps = {
       }
 
       &-ficus {
-        // position: absolute;
+        position: absolute;
         bottom: 0;
         // right: 0;
+      }
+
+      &-chair {
+        position: absolute;
+        bottom: 1px;
+
+        transform: translateZ(600px) rotateY(-180deg);
       }
     }
   }

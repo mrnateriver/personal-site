@@ -1,0 +1,298 @@
+---
+import { normalizeColor, type Color } from '../colors';
+import Box from './Box.astro';
+
+interface Props {
+  class?: string;
+  wheelsColor?: Color;
+  frameColor?: Color;
+  seatColor?: Color;
+  liningColor?: Color;
+}
+
+const {
+  class: className,
+  wheelsColor = 'black',
+  frameColor = '#282828',
+  seatColor = '#190b00',
+  liningColor = '#9e5700',
+} = Astro.props;
+
+const baseWidth = 'var(--chair-leg-width)';
+const baseRadius = 'var(--chair-base-radius)';
+const seatWidth = 'var(--chair-seat-width)';
+
+const wheelsColorNormalized = normalizeColor(wheelsColor) ?? 'black';
+const frameColorNormalized = normalizeColor(frameColor) ?? 'gray';
+const seatColorNormalized = normalizeColor(seatColor) ?? '#190b00';
+const liningColorNormalized = normalizeColor(liningColor) ?? '#9e5700';
+---
+
+<div class={`chair ${className ?? ''}`} style={{ '--lining-color': liningColorNormalized }}>
+  <div class="chair-wheels">
+    <Box class="chair-wheels-wheel" size={baseWidth} surfaceColor={wheelsColorNormalized} />
+    <Box class="chair-wheels-wheel" size={baseWidth} surfaceColor={wheelsColorNormalized} />
+    <Box class="chair-wheels-wheel" size={baseWidth} surfaceColor={wheelsColorNormalized} />
+    <Box class="chair-wheels-wheel" size={baseWidth} surfaceColor={wheelsColorNormalized} />
+    <Box class="chair-wheels-wheel" size={baseWidth} surfaceColor={wheelsColorNormalized} />
+  </div>
+  <div class="chair-legs">
+    <Box
+      class="chair-legs-leg"
+      size={{ wx: baseWidth, wy: baseWidth, wz: baseRadius }}
+      surfaceColor={frameColorNormalized}
+    />
+    <Box
+      class="chair-legs-leg"
+      size={{ wx: baseWidth, wy: baseWidth, wz: baseRadius }}
+      surfaceColor={frameColorNormalized}
+    />
+    <Box
+      class="chair-legs-leg"
+      size={{ wx: baseWidth, wy: baseWidth, wz: baseRadius }}
+      surfaceColor={frameColorNormalized}
+    />
+    <Box
+      class="chair-legs-leg"
+      size={{ wx: baseWidth, wy: baseWidth, wz: baseRadius }}
+      surfaceColor={frameColorNormalized}
+    />
+    <Box
+      class="chair-legs-leg"
+      size={{ wx: baseWidth, wy: baseWidth, wz: baseRadius }}
+      surfaceColor={frameColorNormalized}
+    />
+  </div>
+  <Box
+    class="chair-spine"
+    size={{ wx: baseWidth, wy: 'var(--chair-spine-height)', wz: baseWidth }}
+    surfaceColor={frameColorNormalized}
+  />
+
+  <div class="chair-body">
+    <Box
+      class="chair-body-seat"
+      size={{ wx: seatWidth, wy: baseWidth, wz: seatWidth }}
+      surfaceColor={seatColorNormalized}
+    />
+    <Box
+      class="chair-body-back"
+      size={{ wx: seatWidth, wz: baseWidth, wy: 'var(--chair-back-height)' }}
+      surfaceColor={seatColorNormalized}
+    />
+    <Box
+      class="chair-body-headrest"
+      size={{ wx: 'var(--chair-headrest-width)', wz: baseWidth, wy: 'var(--chair-headrest-height)' }}
+      surfaceColor={seatColorNormalized}
+    />
+
+    <div class="chair-body-armrests">
+      <Box
+        class="chair-body-armrests-vertical"
+        size={{
+          wx: 'calc(var(--chair-leg-width) / 2)',
+          wz: baseWidth,
+          wy: 'calc(var(--chair-armrest-height) + var(--chair-leg-width))',
+        }}
+        surfaceColor={frameColorNormalized}
+      />
+      <Box
+        class="chair-body-armrests-horizontal"
+        size={{ wx: baseWidth, wz: 'var(--chair-armrest-length)', wy: 'calc(var(--chair-leg-width) / 2)' }}
+        surfaceColor={seatColorNormalized}
+      />
+    </div>
+    <div class="chair-body-armrests">
+      <Box
+        class="chair-body-armrests-vertical"
+        size={{
+          wx: 'calc(var(--chair-leg-width) / 2)',
+          wz: baseWidth,
+          wy: 'calc(var(--chair-armrest-height) + var(--chair-leg-width))',
+        }}
+        surfaceColor={frameColorNormalized}
+      />
+      <Box
+        class="chair-body-armrests-horizontal"
+        size={{ wx: baseWidth, wz: 'var(--chair-armrest-length)', wy: 'calc(var(--chair-leg-width) / 2)' }}
+        surfaceColor={seatColorNormalized}
+      />
+    </div>
+  </div>
+</div>
+
+<style lang="scss" is:global>
+  .chair-body {
+    .box.chair-body-seat {
+      .box-side-top::before {
+        content: '';
+        position: absolute;
+        top: var(--chair-leg-width);
+        left: var(--chair-leg-width);
+        right: var(--chair-leg-width);
+        bottom: calc(var(--chair-leg-width) * 2);
+        border: 1px solid var(--lining-color);
+      }
+    }
+
+    .box.chair-body-back {
+      .box-side-front::before,
+      .box-side-back::before {
+        content: '';
+        position: absolute;
+        inset: var(--chair-leg-width);
+        border: 1px solid var(--lining-color);
+      }
+    }
+
+    .box.chair-body-headrest {
+      .box-side-front::before,
+      .box-side-back::before {
+        content: '';
+        position: absolute;
+        inset: var(--chair-leg-width);
+        border: 1px solid var(--lining-color);
+      }
+    }
+  }
+</style>
+
+<style lang="scss">
+  @use 'sass:list';
+
+  .chair {
+    --chair-leg-width: 5px;
+    --chair-base-radius: 32px;
+    --chair-spine-height: 16px;
+    --chair-seat-width: calc(var(--chair-base-radius) * 1.5);
+    --chair-back-height: 64px;
+    --chair-back-angle: 15deg;
+    --chair-headrest-width: calc(var(--chair-seat-width) * 0.8);
+    --chair-headrest-height: 16px;
+    --chair-armrest-height: 16px;
+    --chair-armrest-length: 24px;
+
+    height: calc(
+      var(--chair-leg-width) * 3 + var(--chair-spine-height) + var(--chair-back-height) + var(--chair-headrest-height)
+    );
+    width: calc(var(--chair-base-radius) * 2);
+    transform-style: preserve-3d;
+    position: relative;
+
+    &-wheels,
+    &-wheels-wheel,
+    &-legs,
+    &-legs-leg,
+    &-spine,
+    &-body,
+    &-body-seat,
+    &-body-back,
+    &-body-headrest,
+    &-body-armrests,
+    &-body-armrests-vertical,
+    &-body-armrests-horizontal {
+      transform-style: preserve-3d;
+      position: absolute;
+    }
+
+    $wheels-rotation: 0, 72, 144, 216, 288;
+    &-wheels {
+      height: var(--chair-leg-width);
+      bottom: 0;
+      right: 0;
+      left: 0;
+
+      @for $i from 1 through 5 {
+        &-wheel:nth-child(#{$i}) {
+          transform: translateX(var(--chair-base-radius))
+            rotateY(#{list.nth($wheels-rotation, $i)} + deg)
+            translateZ(calc(var(--chair-base-radius) - var(--chair-leg-width)))
+            rotateX(45deg);
+        }
+      }
+    }
+
+    &-legs {
+      height: var(--chair-leg-width);
+      bottom: var(--chair-leg-width);
+      right: 0;
+      left: 0;
+
+      @for $i from 1 through 5 {
+        &-leg:nth-child(#{$i}) {
+          transform: translateX(var(--chair-base-radius))
+            rotateY(#{list.nth($wheels-rotation, $i)} + deg)
+            translateZ(calc(var(--chair-base-radius) / 2 - var(--chair-leg-width) / 2));
+        }
+      }
+    }
+
+    &-spine {
+      transform: translateX(var(--chair-base-radius));
+      bottom: calc(2 * var(--chair-leg-width));
+    }
+
+    &-body {
+      bottom: calc(3 * var(--chair-leg-width) + var(--chair-spine-height));
+
+      &-seat {
+        transform: translateX(
+          calc(var(--chair-base-radius) + var(--chair-seat-width) / -2 + var(--chair-leg-width) / 2)
+        );
+      }
+
+      &-back {
+        transform: translateX(
+            calc(var(--chair-base-radius) + var(--chair-seat-width) / -2 + var(--chair-leg-width) / 2)
+          )
+          translateZ(calc(var(--chair-seat-width) / -2 - var(--chair-leg-width))) rotateX(var(--chair-back-angle));
+        bottom: -2px;
+      }
+
+      &-headrest {
+        transform: translateX(
+            calc(
+              var(--chair-base-radius) + var(--chair-seat-width) / -2 + var(--chair-leg-width) / 2 +
+                (var(--chair-seat-width) - var(--chair-headrest-width)) / 2
+            )
+          )
+          translateZ(calc(var(--chair-seat-width) / -2 - var(--chair-leg-width) * 2 - 2px));
+        bottom: calc(var(--chair-back-height) - 4px);
+      }
+
+      &-armrests {
+        height: calc(var(--chair-armrest-height) + var(--chair-leg-width) / 2);
+        bottom: 0;
+
+        $self: &;
+        &:first-of-type {
+          transform: translateX(calc(var(--chair-base-radius) - var(--chair-seat-width) / 2))
+            translateZ(calc(var(--chair-leg-width) / 2));
+
+          #{$self}-horizontal {
+            transform: translateX(calc(var(--chair-leg-width) / -4));
+          }
+        }
+
+        &:last-of-type {
+          transform: translateX(
+              calc(var(--chair-base-radius) + var(--chair-seat-width) / 2 + var(--chair-leg-width) / 2)
+            )
+            translateZ(calc(var(--chair-leg-width) / 2));
+
+          #{$self}-horizontal {
+            transform: translateX(calc(var(--chair-leg-width) / -4));
+          }
+        }
+
+        &-vertical {
+          bottom: calc(-1 * var(--chair-leg-width));
+        }
+
+        &-horizontal {
+          bottom: var(--chair-armrest-height);
+        }
+      }
+    }
+  }
+</style>
