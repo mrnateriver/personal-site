@@ -99,13 +99,13 @@ const sides = (['left', 'right', 'top', 'bottom', 'front', 'back'] as Array<keyo
       }
       &-front {
         transform: translateZ(calc(var(--wz) / 2));
-        background-image: linear-gradient(to bottom left, transparent, $darken),
+        background-image: linear-gradient(to bottom right, transparent, $darken),
           linear-gradient(to top right, transparent, $lighten),
           linear-gradient(to bottom, var(--sf, var(--sa)), var(--sf, var(--sa)));
       }
       &-back {
         transform: translateZ(calc(-1 * var(--wz) + var(--wz) / 2));
-        background-image: linear-gradient(to bottom left, transparent, $darken),
+        background-image: linear-gradient(to bottom right, transparent, $darken),
           linear-gradient(to top right, transparent, $lighten),
           linear-gradient(to bottom, var(--sbk, var(--sa)), var(--sbk, var(--sa)));
       }
