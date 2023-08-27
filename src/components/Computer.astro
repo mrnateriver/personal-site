@@ -42,6 +42,17 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
       wy: 'calc(var(--computer-monitor-depth-front) / 4)',
     }}
   />
+
+  <Box
+    class="computer-keyboard"
+    surfaceColor={plasticColorNormalized}
+    size={{
+      wx: 'var(--computer-keyboard-length)',
+      wz: 'var(--computer-keyboard-width)',
+      wy: 'var(--computer-keyboard-height)',
+    }}
+  />
+  <img class="computer-keyboard-texture" src="src/assets/keyboard.png" alt="Computer Keyboard Texture" />
 </div>
 
 <style lang="scss">
@@ -51,6 +62,9 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
     --computer-monitor-width: 32px;
     --computer-monitor-depth: 32px;
     --computer-monitor-depth-front: 12px;
+    --computer-keyboard-length: 48px;
+    --computer-keyboard-width: 16px;
+    --computer-keyboard-height: 2px;
 
     $back-sides-angle: 10deg;
     --back-sides-padding: calc(var(--computer-monitor-depth) * #{math.sin($back-sides-angle)});
@@ -58,7 +72,7 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
     transform-style: preserve-3d;
     position: relative;
     height: var(--computer-monitor-width);
-    width: var(--computer-monitor-width); // TODO: +keyboard +mouse
+    width: max(var(--computer-monitor-width), var(--computer-keyboard-length));
 
     &-screen {
       --side-padding: 0.2;
@@ -129,13 +143,24 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
         &-left,
         &-right {
           transform-origin: center top;
-          clip-path: polygon(
-            0 0,
-            100% 0,
-            calc(100% - var(--back-sides-padding)) 100%,
-            var(--back-sides-padding) 100%,
-            0 0
-          );
+          // Chrome 116.0.5845.111 has a bug and it doesn't render the element with clip-path intermittently; this animation seems to fix it
+          animation: 1s forwards workaround-chrome-clip-path-bug-computer-screen linear;
+        }
+
+        @keyframes workaround-chrome-clip-path-bug-computer-screen {
+          0%,
+          99% {
+            clip-path: none;
+          }
+          100% {
+            clip-path: polygon(
+              0 0,
+              100% 0,
+              calc(100% - var(--back-sides-padding)) 100%,
+              var(--back-sides-padding) 100%,
+              0 0
+            );
+          }
         }
 
         &-right {
@@ -166,6 +191,24 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
           background-image: linear-gradient(to top, #00000030, #00000030),
             linear-gradient(to top, var(--computer-plastic-color), var(--computer-plastic-color));
         }
+      }
+    }
+
+    &-keyboard {
+      bottom: 0;
+      position: absolute;
+      transform: translateZ(calc(var(--computer-monitor-width) / 2 + var(--computer-keyboard-width) / 4))
+        translateX(-25%);
+
+      &-texture {
+        position: absolute;
+        bottom: 0;
+        width: var(--computer-keyboard-length);
+        height: var(--computer-keyboard-width);
+        transform-origin: center top;
+        transform: rotateX(90deg)
+          translateZ(calc(-1 * (var(--computer-keyboard-width) - var(--computer-keyboard-height))))
+          translateY(calc(var(--computer-keyboard-length) / 4)) translateX(calc(var(--computer-keyboard-length) / -4));
       }
     }
   }

@@ -205,8 +205,7 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
           linear-gradient(to top left, transparent, #00000020),
           linear-gradient(to top, var(--side-color), var(--side-color));
         background-image: var(--lid-background);
-
-        $clip-path: polygon(
+        clip-path: polygon(
           $de + px 0,
           $de + $pot-side-width 0,
           $de + $pot-side-width + $de $de + px,
@@ -217,23 +216,29 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
           0 $de + px,
           $de + px 0
         );
-        -webkit-clip-path: $clip-path;
-        clip-path: $clip-path;
 
         &:not(&-soil) {
           // Chrome 116.0.5845.111 has a bug and it doesn't render the element with clip-path intermittently; this animation seems to fix it
-          animation: 5s forwards workaround-chrome-clip-path-bug linear;
+          animation: 1s forwards workaround-chrome-clip-path-bug-ficus linear;
         }
 
-        @keyframes workaround-chrome-clip-path-bug {
-          0% {
-            background-image: var(--lid-background);
-          }
+        @keyframes workaround-chrome-clip-path-bug-ficus {
+          0%,
           99% {
-            background: var(--side-color);
+            clip-path: none;
           }
           100% {
-            background-image: var(--lid-background);
+            clip-path: polygon(
+              $de + px 0,
+              $de + $pot-side-width 0,
+              $de + $pot-side-width + $de $de + px,
+              $de + $pot-side-width + $de $de + $pot-side-width,
+              $de + $pot-side-width $de + $pot-side-width + $de,
+              $de + px $de + $pot-side-width + $de,
+              0 $de + $pot-side-width,
+              0 $de + px,
+              $de + px 0
+            );
           }
         }
 

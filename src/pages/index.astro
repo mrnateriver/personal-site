@@ -21,8 +21,6 @@ const commonLabelsProps = {
 ---
 
 <IndexLayout title="Hi mom">
-  <Acknowledgments class="acks" />
-
   <main>
     <i class="main-wall main-wall-vertical"></i>
     <i class="main-wall main-wall-horizontal"></i>
@@ -101,6 +99,8 @@ const commonLabelsProps = {
       <Computer class="decorations-computer" />
     </section>
   </main>
+
+  <Acknowledgments class="acks" />
 </IndexLayout>
 
 <style lang="scss" is:global>
@@ -248,7 +248,7 @@ const commonLabelsProps = {
 
     .decorations {
       &-container {
-        --base-offset: 400px;
+        --base-offset: 320px;
 
         --seat-color: #dcdcdc;
         --seat-frame-color: #707070;
