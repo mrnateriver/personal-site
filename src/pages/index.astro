@@ -6,6 +6,7 @@ import Computer from '../components/Computer.astro';
 import Desk from '../components/Desk.astro';
 import Ficus from '../components/Ficus.astro';
 import SectionLink from '../components/SectionLink.astro';
+import SectionPreview from '../components/SectionPreview.astro';
 import IndexLayout from '../layouts/Layout.astro';
 
 const hideSurfacesLabels = { right: true, back: true, bottom: true };
@@ -46,6 +47,13 @@ const commonLabelsProps = {
             hideGradient={true}
             {...commonLabelsProps}
           />
+          <SectionPreview
+            class="section-preview-blog"
+            caption="Latest Entry"
+            title="Meaning of life"
+            description="Lorem ipsum and other stuff like this."
+          />
+
           <BoxImage
             imagePath="src/assets/label_resume.bmp"
             hideSurfaces={hideSurfacesShadows}
@@ -69,6 +77,12 @@ const commonLabelsProps = {
             {...commonLabelsProps}
           />
         </SectionLink>
+        <SectionPreview
+          class="section-preview-blog"
+          caption="Latest Entry"
+          title="Meaning of life"
+          description="Lorem ipsum and other stuff like this."
+        />
 
         <SectionLink
           class="labels-resume"
@@ -84,6 +98,12 @@ const commonLabelsProps = {
             {...commonLabelsProps}
           />
         </SectionLink>
+        <SectionPreview
+          class="section-preview-resume"
+          caption="Summary"
+          title="Meaning of life"
+          description="Lorem ipsum and other stuff like this."
+        />
       </div>
     </section>
 
@@ -122,12 +142,63 @@ const commonLabelsProps = {
     left: 0;
   }
 
+  .section-preview {
+    // TODO: !
+    // left: 60%;
+    // position: absolute;
+    margin-top: var(--padding-md);
+    transform-style: preserve-3d;
+
+    &-blog {
+      transform: translateZ(calc(var(--labels-offset) * 1));
+      width: 310px;
+    }
+
+    &-resume {
+      transform: translateZ(calc(var(--labels-offset) * 2));
+      width: 490px;
+    }
+
+    @media (max-width: 768px) or (max-height: 600px) {
+      &-blog {
+        width: 240px;
+      }
+
+      &-resume {
+        width: 370px;
+      }
+    }
+
+    @media (max-width: 460px) or (max-height: 460px) {
+      position: absolute;
+
+      &-blog,
+      &-resume {
+        left: 400px;
+      }
+
+      &-blog {
+        width: 310px;
+        top: -70px;
+      }
+
+      &-resume {
+        top: 30px;
+        width: 490px;
+      }
+    }
+  }
+
   main {
+    --labels-size: 16px;
+    --labels-offset: 100px;
+    --labels-shadow-color: rgba(0, 0, 0, 0.1);
+
     --animation-1-delay: 1s;
     --animation-1-duration: 2s;
     --animation-2-delay: calc(var(--animation-1-delay) + var(--animation-1-duration));
     --animation-2-duration: 20s;
-    --animation-end-offset-y: calc(-50vh + 20vw);
+    --animation-end-offset-y: calc(-40vh + 20vw);
     --animation-end-offset-x: 20vw;
     --animation-end-offset-z: -40vw;
     --animation-end-rotate-x: -20deg;
@@ -136,7 +207,7 @@ const commonLabelsProps = {
     --rocking-step: 1deg;
 
     @media (max-width: 460px) or (max-height: 520px) {
-      --animation-end-offset-y: calc(-50vh + 30vw);
+      --animation-end-offset-y: calc(-50vh + 25vw);
     }
 
     height: 100%;
@@ -193,13 +264,9 @@ const commonLabelsProps = {
 
     .labels {
       &-container {
-        --labels-size: 16px;
-        --labels-offset: 100px;
-        --labels-shadow-color: rgba(0, 0, 0, 0.1);
-
         transform-style: preserve-3d;
         transform: translateZ(calc(var(--labels-size) / 2))
-          translateY(calc(50vh - 50% - var(--padding-xlg) - var(--padding-sm)));
+          translateY(calc(45vh - 50% - var(--padding-xlg) - var(--padding-sm)));
 
         @media (prefers-color-scheme: dark) {
           --labels-shadow-color: rgba(255, 255, 255, 0.1);
@@ -230,7 +297,7 @@ const commonLabelsProps = {
         align-items: flex-start;
         transform-style: preserve-3d;
         position: relative;
-        gap: var(--padding-lg);
+        gap: var(--padding-xlg);
       }
 
       &-shadows {
@@ -250,7 +317,7 @@ const commonLabelsProps = {
       &-container {
         --light-overlay-opacity: 0.15;
 
-        --base-offset-x: 200px;
+        --base-offset-x: 250px;
         --base-offset-z: 600px;
         --base-rotate-y: 0deg;
 

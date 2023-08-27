@@ -37,6 +37,10 @@ const { class: className } = Astro.props;
     font-family: 'Handjet', cursive;
     font-size: var(--font-size-lg);
     font-weight: bold;
+
+    @media (max-width: 650px) {
+      font-size: var(--font-size-sm);
+    }
   }
 
   .stack {
@@ -47,7 +51,7 @@ const { class: className } = Astro.props;
     gap: var(--padding-lg);
 
     @media (max-width: 650px) {
-      flex-direction: column;
+      gap: var(--padding-xs);
     }
 
     &-entry {

@@ -1,0 +1,54 @@
+---
+interface Props {
+  class?: string;
+  caption?: string;
+  title: string;
+  description: string;
+}
+
+const { class: className, caption, title, description } = Astro.props;
+---
+
+<div class={`section-preview ${className ?? ''}`}>
+  {caption && <span class="section-preview-caption">{caption}</span>}
+  <div class="section-preview-content">
+    <h2>{title}</h2>
+    <p>{description}</p>
+  </div>
+</div>
+
+<style lang="scss">
+  .section-preview {
+    border-radius: var(--border-radius-base);
+    box-shadow: var(--box-shadow-base);
+    background: var(--color-surface);
+    overflow: hidden;
+
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h2 {
+      font-size: var(--font-size-md);
+      margin-bottom: var(--padding-sm);
+    }
+
+    p {
+      font-size: var(--font-size-sm);
+      text-indent: 0;
+    }
+
+    &-caption {
+      display: block;
+      font-size: var(--font-size-xs);
+      background: var(--color-accent);
+      padding: var(--padding-sm) var(--padding-md);
+      color: white;
+    }
+
+    &-content {
+      padding: var(--padding-md);
+    }
+  }
+</style>

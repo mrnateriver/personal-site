@@ -37,26 +37,33 @@
 }
 
 @mixin palette() {
+  --color-primary: #5091d7;
+  --color-accent: darkorange;
   --color-background: #fafafa;
   --color-surface: white;
   --color-text-primary: black;
   --color-text-secondary: gray;
   --color-text-tertiary: darkgray;
-  --color-text-anchor: #5091d7;
-  --color-text-anchor-visited: darkorange;
+  --color-text-anchor: var(--color-primary);
+  --color-text-anchor-visited: var(--color-accent);
 
   @media (prefers-color-scheme: dark) {
     --color-background: #0c0c0c;
     --color-surface: #121212;
     --color-text-primary: white;
     --color-text-secondary: #d5d5d5;
-    --color-text-tertiary: darkgray;
-    --color-text-anchor: #0e96df;
-    --color-text-anchor-visited: darkorange;
   }
 }
 
 @mixin effects() {
   --animation-curve-base: cubic-bezier(0.65, 0.05, 0.36, 1);
   --animation-curve-playful: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+
+  --border-radius-base: var(--padding-sm);
+
+  --box-shadow-base: 0 0 5rem rgba(0, 0, 0, 0.1);
+
+  @media (prefers-color-scheme: dark) {
+    --box-shadow-base: 0 0 5rem rgba(0, 0, 0, 1);
+  }
 }
