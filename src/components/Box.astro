@@ -57,7 +57,7 @@ const sides = (['left', 'right', 'top', 'bottom', 'front', 'back'] as Array<keyo
       $self: &;
       $sides: left, right, top, bottom, front, back;
       $colors: --sl, --sr, --st, --sb, --sf, --sbk;
-      $lighten: rgba(255, 255, 255, 0.35);
+      $lighten: rgba(255, 255, 255, var(--light-overlay-opacity, 0.35));
       $darken: rgba(0, 0, 0, 0.15);
 
       &-hide-gradient {

@@ -209,6 +209,10 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
         transform: rotateX(90deg)
           translateZ(calc(-1 * (var(--computer-keyboard-width) - var(--computer-keyboard-height))))
           translateY(calc(var(--computer-keyboard-length) / 4)) translateX(calc(var(--computer-keyboard-length) / -4));
+
+        @media (prefers-color-scheme: dark) {
+          filter: brightness(0.75);
+        }
       }
     }
   }
