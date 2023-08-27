@@ -191,6 +191,20 @@ const seatColorNormalized = normalizeColor(seatColor) ?? '#190b00';
 
     &-body {
       bottom: calc(3 * var(--chair-leg-width) + var(--chair-spine-height));
+      animation: 5s ease-in-out infinite chair-rocking;
+
+      @keyframes chair-rocking {
+        0%,
+        100% {
+          transform: rotateY(0deg);
+        }
+        25% {
+          transform: rotateY(5deg);
+        }
+        75% {
+          transform: rotateY(-5deg);
+        }
+      }
 
       &-seat {
         transform: translateX(
