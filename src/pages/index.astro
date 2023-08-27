@@ -252,6 +252,20 @@ const commonLabelsProps = {
 
         --base-offset-x: 200px;
         --base-offset-z: 600px;
+        --base-rotate-y: 0deg;
+
+        @media (max-width: 850px) {
+          --base-offset-x: 50px;
+          --base-offset-z: 650px;
+        }
+        @media (max-width: 650px) {
+          --base-offset-x: 240px;
+          --base-rotate-y: -30deg;
+        }
+
+        @media (max-height: 810px) {
+          --base-offset-z: 500px;
+        }
 
         --seat-color: #dcdcdc;
         --seat-frame-color: #707070;
@@ -270,7 +284,7 @@ const commonLabelsProps = {
 
         pointer-events: none;
         transform-style: preserve-3d;
-        transform: translateZ(100px);
+        transform: translateZ(100px) rotateY(var(--base-rotate-y));
         position: absolute;
         width: 800px;
         bottom: 0;

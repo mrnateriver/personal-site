@@ -46,6 +46,10 @@ const { class: className } = Astro.props;
     justify-content: center;
     gap: var(--padding-lg);
 
+    @media (max-width: 650px) {
+      flex-direction: column;
+    }
+
     &-entry {
       display: flex;
       align-items: center;
