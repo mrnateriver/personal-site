@@ -117,16 +117,16 @@ const seatColorNormalized = normalizeColor(seatColor) ?? '#190b00';
   @use 'sass:list';
 
   .chair {
-    --chair-leg-width: 5px;
-    --chair-base-radius: 32px;
-    --chair-spine-height: 16px;
+    --chair-leg-width: 10px;
+    --chair-base-radius: 64px;
+    --chair-spine-height: 32px;
     --chair-seat-width: calc(var(--chair-base-radius) * 1.5);
-    --chair-back-height: 64px;
+    --chair-back-height: 128px;
     --chair-back-angle: 15deg;
     --chair-headrest-width: calc(var(--chair-seat-width) * 0.8);
-    --chair-headrest-height: 16px;
-    --chair-armrest-height: 16px;
-    --chair-armrest-length: 24px;
+    --chair-headrest-height: 32px;
+    --chair-armrest-height: 32px;
+    --chair-armrest-length: 48px;
 
     height: calc(
       var(--chair-leg-width) * 3 + var(--chair-spine-height) + var(--chair-back-height) + var(--chair-headrest-height)

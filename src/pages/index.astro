@@ -250,13 +250,14 @@ const commonLabelsProps = {
       &-container {
         --light-overlay-opacity: 0.15;
 
-        --base-offset: 320px;
+        --base-offset-x: 200px;
+        --base-offset-z: 600px;
 
         --seat-color: #dcdcdc;
         --seat-frame-color: #707070;
         --table-color: #aeaeae;
         --table-frame-color: #707070;
-        --table-height: 64px;
+        --table-height: 128px;
         --plastic-color: beige;
 
         @media (prefers-color-scheme: dark) {
@@ -277,34 +278,34 @@ const commonLabelsProps = {
 
       &-ficus {
         position: absolute;
-        left: calc(var(--base-offset) + 100px);
-        bottom: calc(var(--table-height) + 4px);
+        left: calc(var(--base-offset-x) + 200px);
+        bottom: calc(var(--table-height) + 8px);
 
-        transform: translateZ(400px);
+        transform: translateZ(var(--base-offset-z));
       }
 
       &-chair {
         position: absolute;
-        left: calc(var(--base-offset) + 30px);
+        left: calc(var(--base-offset-x) + 50px);
         bottom: 0;
 
-        transform: translateZ(450px) rotateY(-180deg);
+        transform: translateZ(calc(var(--base-offset-z) + 50px)) rotateY(-180deg);
       }
 
       &-desk {
         position: absolute;
-        left: var(--base-offset);
+        left: var(--base-offset-x);
         bottom: 0;
 
-        transform: translateZ(400px);
+        transform: translateZ(var(--base-offset-z));
       }
 
       &-computer {
         position: absolute;
-        left: calc(var(--base-offset) + 45px);
-        bottom: var(--table-height);
+        left: calc(var(--base-offset-x) + 75px);
+        bottom: calc(var(--table-height) + 4px);
 
-        transform: translateZ(400px) translateY(-4px);
+        transform: translateZ(var(--base-offset-z)) translateY(-4px);
       }
     }
   }

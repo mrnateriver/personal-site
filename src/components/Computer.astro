@@ -59,12 +59,12 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
   @use 'sass:math';
 
   .computer {
-    --computer-monitor-width: 32px;
-    --computer-monitor-depth: 32px;
-    --computer-monitor-depth-front: 12px;
-    --computer-keyboard-length: 48px;
-    --computer-keyboard-width: 16px;
-    --computer-keyboard-height: 2px;
+    --computer-monitor-width: 64px;
+    --computer-monitor-depth: 64px;
+    --computer-monitor-depth-front: 24px;
+    --computer-keyboard-length: 96px;
+    --computer-keyboard-width: 32px;
+    --computer-keyboard-height: 4px;
 
     $back-sides-angle: 10deg;
     --back-sides-padding: calc(var(--computer-monitor-depth) * #{math.sin($back-sides-angle)});
@@ -198,7 +198,7 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
       bottom: 0;
       position: absolute;
       transform: translateZ(calc(var(--computer-monitor-width) / 2 + var(--computer-keyboard-width) / 4))
-        translateX(-25%);
+        translateX(calc((var(--computer-keyboard-length) - var(--computer-monitor-width)) / -2));
 
       &-texture {
         position: absolute;
@@ -207,8 +207,9 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
         height: var(--computer-keyboard-width);
         transform-origin: center top;
         transform: rotateX(90deg)
-          translateZ(calc(-1 * (var(--computer-keyboard-width) - var(--computer-keyboard-height))))
-          translateY(calc(var(--computer-keyboard-length) / 4)) translateX(calc(var(--computer-keyboard-length) / -4));
+          translateZ(calc(-1 * (var(--computer-keyboard-width) - var(--computer-keyboard-height) - 1px)))
+          translateY(calc(var(--computer-keyboard-length) / 4))
+          translateX(calc((var(--computer-keyboard-length) - var(--computer-monitor-width)) / -2));
 
         @media (prefers-color-scheme: dark) {
           filter: brightness(0.75);
