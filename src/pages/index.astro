@@ -26,98 +26,97 @@ const commonLabelsProps = {
     <i class="main-wall main-wall-vertical"></i>
     <i class="main-wall main-wall-horizontal"></i>
 
-    <section class="labels-container">
-      <!-- TODO: accessibility for boximages -->
-      <h1>
-        <BoxImage
-          imagePath="src/assets/label_author.bmp"
-          hideSurfaces={hideSurfacesShadows}
-          cellsColor={labelsColorShadow}
-          hideGradient={true}
-          {...commonLabelsProps}
-        />
-      </h1>
-
-      <div class="labels-links">
-        <div class="labels-shadows">
+    <div class="content">
+      <section class="labels-container">
+        <!-- TODO: accessibility for boximages -->
+        <h1>
           <BoxImage
-            imagePath="src/assets/label_blog.bmp"
+            imagePath="src/assets/label_author.bmp"
             hideSurfaces={hideSurfacesShadows}
             cellsColor={labelsColorShadow}
             hideGradient={true}
             {...commonLabelsProps}
           />
-          <SectionPreview
-            class="section-preview-blog"
-            caption="Latest Entry"
-            title="Meaning of life"
-            description="Lorem ipsum and other stuff like this."
-          />
+        </h1>
 
-          <BoxImage
-            imagePath="src/assets/label_resume.bmp"
-            hideSurfaces={hideSurfacesShadows}
-            cellsColor={labelsColorShadow}
-            hideGradient={true}
-            {...commonLabelsProps}
-          />
+        <div class="labels-links">
+          <div class="labels-shadows">
+            <BoxImage
+              imagePath="src/assets/label_blog.bmp"
+              hideSurfaces={hideSurfacesShadows}
+              cellsColor={labelsColorShadow}
+              hideGradient={true}
+              {...commonLabelsProps}
+            />
+
+            <BoxImage
+              imagePath="src/assets/label_resume.bmp"
+              hideSurfaces={hideSurfacesShadows}
+              cellsColor={labelsColorShadow}
+              hideGradient={true}
+              {...commonLabelsProps}
+            />
+          </div>
+
+          <SectionLink
+            class="labels-blog"
+            href="https://google.com"
+            borderWidth="var(--padding-md)"
+            borderOffset="var(--padding-xlg)"
+            borderSize="calc(4 * var(--padding-lg))"
+          >
+            <BoxImage
+              imagePath="src/assets/label_blog.bmp"
+              hideSurfaces={hideSurfacesLabels}
+              cellsColor={labelsColor}
+              {...commonLabelsProps}
+            />
+          </SectionLink>
+
+          <SectionLink
+            class="labels-resume"
+            href="https://google.com"
+            borderWidth="var(--padding-md)"
+            borderOffset="var(--padding-xlg)"
+            borderSize="calc(4 * var(--padding-lg))"
+          >
+            <BoxImage
+              imagePath="src/assets/label_resume.bmp"
+              hideSurfaces={hideSurfacesLabels}
+              cellsColor={labelsColor}
+              {...commonLabelsProps}
+            />
+          </SectionLink>
         </div>
+      </section>
 
-        <SectionLink
-          class="labels-blog"
-          href="https://google.com"
-          borderWidth="var(--padding-md)"
-          borderOffset="var(--padding-xlg)"
-          borderSize="calc(4 * var(--padding-lg))"
-        >
-          <BoxImage
-            imagePath="src/assets/label_blog.bmp"
-            hideSurfaces={hideSurfacesLabels}
-            cellsColor={labelsColor}
-            {...commonLabelsProps}
-          />
-        </SectionLink>
+      <section class="section-preview-container">
         <SectionPreview
           class="section-preview-blog"
           caption="Latest Entry"
           title="Meaning of life"
           description="Lorem ipsum and other stuff like this."
         />
-
-        <SectionLink
-          class="labels-resume"
-          href="https://google.com"
-          borderWidth="var(--padding-md)"
-          borderOffset="var(--padding-xlg)"
-          borderSize="calc(4 * var(--padding-lg))"
-        >
-          <BoxImage
-            imagePath="src/assets/label_resume.bmp"
-            hideSurfaces={hideSurfacesLabels}
-            cellsColor={labelsColor}
-            {...commonLabelsProps}
-          />
-        </SectionLink>
         <SectionPreview
           class="section-preview-resume"
           caption="Summary"
           title="Meaning of life"
           description="Lorem ipsum and other stuff like this."
         />
-      </div>
-    </section>
+      </section>
 
-    <section class="decorations-container">
-      <Ficus class="decorations-ficus" />
-      <Chair class="decorations-chair" seatColor="var(--seat-color)" frameColor="var(--seat-frame-color)" />
-      <Desk
-        class="decorations-desk"
-        surfaceColor="var(--table-color)"
-        frameColor="var(--table-frame-color)"
-        height="var(--table-height)"
-      />
-      <Computer class="decorations-computer" plasticColor="var(--plastic-color)" />
-    </section>
+      <section class="decorations-container">
+        <Ficus class="decorations-ficus" />
+        <Chair class="decorations-chair" seatColor="var(--seat-color)" frameColor="var(--seat-frame-color)" />
+        <Desk
+          class="decorations-desk"
+          surfaceColor="var(--table-color)"
+          frameColor="var(--table-frame-color)"
+          height="var(--table-height)"
+        />
+        <Computer class="decorations-computer" plasticColor="var(--plastic-color)" />
+      </section>
+    </div>
   </main>
 
   <Acknowledgments class="acks" />
@@ -137,62 +136,63 @@ const commonLabelsProps = {
   .acks {
     position: fixed;
     bottom: var(--padding-md);
-    z-index: 1;
     right: 0;
     left: 0;
   }
 
-  .section-preview {
-    // TODO: !
-    // left: 60%;
-    // position: absolute;
-    margin-top: var(--padding-md);
+  .content {
     transform-style: preserve-3d;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: calc(var(--padding-xlg) * 2);
+    padding-bottom: calc(var(--padding-xlg) * 4);
+  }
 
-    &-blog {
-      transform: translateZ(calc(var(--labels-offset) * 1));
-      width: 310px;
+  .section-preview {
+    &-container {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--labels-vertical-gap);
+      transform-style: preserve-3d;
+      transform: translateZ(var(--labels-offset));
+
+      @media (max-width: 600px) {
+        display: none;
+      }
     }
 
     &-resume {
-      transform: translateZ(calc(var(--labels-offset) * 2));
-      width: 490px;
-    }
-
-    @media (max-width: 768px) or (max-height: 600px) {
-      &-blog {
-        width: 240px;
-      }
-
-      &-resume {
-        width: 370px;
-      }
-    }
-
-    @media (max-width: 460px) or (max-height: 460px) {
-      position: absolute;
-
-      &-blog,
-      &-resume {
-        left: 400px;
-      }
-
-      &-blog {
-        width: 310px;
-        top: -70px;
-      }
-
-      &-resume {
-        top: 30px;
-        width: 490px;
-      }
+      transform: translateZ(var(--labels-offset));
     }
   }
 
   main {
     --labels-size: 16px;
     --labels-offset: 100px;
+    --labels-vertical-gap: 0px;
     --labels-shadow-color: rgba(0, 0, 0, 0.1);
+
+    @media (prefers-color-scheme: dark) {
+      --labels-shadow-color: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 800px) or (max-height: 600px) {
+      --labels-size: 12px;
+      --labels-offset: 50px;
+    }
+    @media (max-width: 460px) or (max-height: 460px) {
+      --labels-size: 10px;
+      --labels-offset: 0px;
+      --labels-vertical-gap: var(--padding-xlg);
+    }
+    @media (max-width: 280px) {
+      --labels-size: 8px;
+      --labels-offset: 0px;
+      --labels-vertical-gap: var(--padding-xlg);
+    }
 
     --animation-1-delay: 1s;
     --animation-1-duration: 2s;
@@ -212,12 +212,13 @@ const commonLabelsProps = {
 
     height: 100%;
     display: grid;
-    place-items: center;
+    place-items: flex-end center;
     transform-style: preserve-3d;
     transform-origin: center;
     transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(var(--animation-start-offset-y));
     animation: var(--animation-1-duration) var(--animation-1-delay) forwards main-rotation var(--animation-curve-base),
       var(--animation-2-duration) var(--animation-2-delay) infinite main-rocking var(--animation-curve-base);
+    perspective: 100000px;
 
     @keyframes main-rotation {
       0% {
@@ -265,25 +266,6 @@ const commonLabelsProps = {
     .labels {
       &-container {
         transform-style: preserve-3d;
-        transform: translateZ(calc(var(--labels-size) / 2))
-          translateY(calc(45vh - 50% - var(--padding-xlg) - var(--padding-sm)));
-
-        @media (prefers-color-scheme: dark) {
-          --labels-shadow-color: rgba(255, 255, 255, 0.1);
-        }
-
-        @media (max-width: 768px) or (max-height: 600px) {
-          --labels-size: 12px;
-          --labels-offset: 50px;
-        }
-        @media (max-width: 460px) or (max-height: 460px) {
-          --labels-size: 10px;
-          --labels-offset: 0px;
-        }
-        @media (max-width: 280px) {
-          --labels-size: 8px;
-          --labels-offset: 0px;
-        }
 
         h1 {
           margin-bottom: var(--padding-lg);
@@ -294,7 +276,7 @@ const commonLabelsProps = {
       &-links {
         display: flex;
         flex-flow: column;
-        align-items: flex-start;
+        align-items: flex-end;
         transform-style: preserve-3d;
         position: relative;
         gap: var(--padding-xlg);
@@ -317,6 +299,7 @@ const commonLabelsProps = {
       &-container {
         --light-overlay-opacity: 0.15;
 
+        --initial-offset-z: 100000px;
         --base-offset-x: 250px;
         --base-offset-z: 600px;
         --base-rotate-y: 0deg;
@@ -325,9 +308,15 @@ const commonLabelsProps = {
           --base-offset-x: 50px;
           --base-offset-z: 650px;
         }
-        @media (max-width: 650px) {
-          --base-offset-x: 240px;
+        @media (max-width: 600px) {
+          --base-offset-x: -100%;
           --base-rotate-y: -30deg;
+        }
+        @media (max-width: 450px) {
+          --base-offset-x: -120%;
+        }
+        @media (max-width: 270px) {
+          --base-offset-x: -140%;
         }
 
         @media (max-height: 810px) {
@@ -339,6 +328,7 @@ const commonLabelsProps = {
         --table-color: #aeaeae;
         --table-frame-color: #707070;
         --table-height: 128px;
+        --table-length: 256px;
         --plastic-color: beige;
 
         @media (prefers-color-scheme: dark) {
@@ -351,42 +341,36 @@ const commonLabelsProps = {
 
         pointer-events: none;
         transform-style: preserve-3d;
-        transform: translateZ(100px) rotateY(var(--base-rotate-y));
         position: absolute;
-        width: 800px;
+        width: var(--table-length);
+        height: 220px;
         bottom: 0;
+        transform: translateX(var(--base-offset-x)) translateZ(var(--base-offset-z)) rotateY(var(--base-rotate-y));
       }
 
       &-ficus {
         position: absolute;
-        left: calc(var(--base-offset-x) + 10px);
+        left: 10px;
         bottom: calc(var(--table-height) + 8px);
-
-        transform: translateZ(var(--base-offset-z));
       }
 
       &-chair {
         position: absolute;
-        left: calc(var(--base-offset-x) + 80px);
+        left: 80px;
         bottom: 0;
-
-        transform: translateZ(calc(var(--base-offset-z) + 50px)) rotateY(-180deg);
+        transform: translateZ(50px) rotateY(-180deg);
       }
 
       &-desk {
         position: absolute;
-        left: var(--base-offset-x);
         bottom: 0;
-
-        transform: translateZ(var(--base-offset-z));
       }
 
       &-computer {
         position: absolute;
-        left: calc(var(--base-offset-x) + 105px);
+        left: 105px;
         bottom: calc(var(--table-height) + 4px);
-
-        transform: translateZ(var(--base-offset-z)) translateY(-4px);
+        transform: translateY(-4px);
       }
     }
   }

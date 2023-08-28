@@ -8,16 +8,18 @@ interface Props {
   frameColor?: Color;
   surfaceColor?: Color;
   height?: string | number;
+  length?: string | number;
 }
 
-const { class: className, frameColor = '#282828', surfaceColor = '#190b00', height = 64 } = Astro.props;
+const { class: className, frameColor = '#282828', surfaceColor = '#190b00', height = 128, length = 256 } = Astro.props;
 
 const frameColorNormalized = normalizeColor(frameColor) ?? '#282828';
 const surfaceColorNormalized = normalizeColor(surfaceColor) ?? '#190b00';
-const heightNormalized = normalizeCssValue(height, 'px') ?? '64px';
+const heightNormalized = normalizeCssValue(height, 'px') ?? '128px';
+const lengthNormalized = normalizeCssValue(length, 'px') ?? '256px';
 ---
 
-<div class={`desk ${className ?? ''}`} style={{ '--desk-height': heightNormalized }}>
+<div class={`desk ${className ?? ''}`} style={{ '--desk-height': heightNormalized, '--desk-length': lengthNormalized }}>
   <Box
     class="desk-surface"
     surfaceColor={surfaceColorNormalized}
@@ -49,7 +51,6 @@ const heightNormalized = normalizeCssValue(height, 'px') ?? '64px';
 
 <style lang="scss">
   .desk {
-    --desk-length: 256px;
     --desk-width: 128px;
     --desk-surface-height: 8px;
     --desk-support-width: calc(var(--desk-width) * 0.8);
