@@ -62,8 +62,12 @@ const { class: className } = Astro.props;
       position: relative;
       gap: var(--padding-md);
       padding: 0 var(--padding-lg);
-      color: var(--color-text-primary);
       height: var(--font-size-xl);
+      color: var(--color-text-primary);
+
+      &:visited {
+        color: var(--color-text-primary);
+      }
     }
   }
 

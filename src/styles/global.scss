@@ -67,3 +67,11 @@ blockquote {
     }
   }
 }
+
+a {
+  color: var(--color-text-anchor);
+
+  &:visited {
+    color: var(--color-text-anchor-visited);
+  }
+}

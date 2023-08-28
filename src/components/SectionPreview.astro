@@ -2,27 +2,95 @@
 interface Props {
   class?: string;
   caption?: string;
+  href?: string;
   title: string;
   description: string;
 }
 
-const { class: className, caption, title, description } = Astro.props;
+const { class: className, href, caption, title, description } = Astro.props;
+
+const Element = href ? 'a' : 'div';
 ---
 
-<div class={`section-preview ${className ?? ''}`}>
-  {caption && <span class="section-preview-caption">{caption}</span>}
-  <div class="section-preview-content">
-    <h2>{title}</h2>
-    <p>{description}</p>
+<Element
+  class={`section-preview ${href ? 'section-preview-clickable' : ''} ${className ?? ''}`}
+  title={href ? `${caption} - ${title}` : undefined}
+  href={href}
+>
+  <div class="section-preview-content-wrapper">
+    {caption && <span class="section-preview-caption">{caption}</span>}
+    <div class="section-preview-content">
+      <h2>{title}</h2>
+      <p>{description}</p>
+    </div>
   </div>
-</div>
+</Element>
 
 <style lang="scss">
   .section-preview {
-    border-radius: var(--border-radius-base);
     box-shadow: var(--box-shadow-base);
     background: var(--color-surface);
-    overflow: hidden;
+    position: relative;
+    display: block;
+
+    &-clickable {
+      --border-width: 8px;
+      --border-size: 32px;
+
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--color-text-primary);
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+
+      &:visited {
+        color: var(--color-text-primary);
+      }
+
+      @keyframes section-preview-arrow-grow {
+        0% {
+          border-width: var(--border-width);
+          height: 0;
+          width: 0;
+          right: -36px;
+          top: calc(50% - 19px);
+        }
+        50% {
+          border-width: var(--border-width);
+          width: var(--border-size);
+          height: 0;
+          right: -52px;
+        }
+        100% {
+          border-width: var(--border-width);
+          width: var(--border-size);
+          height: var(--border-size);
+          right: -41px;
+          top: calc(50% - 26px);
+        }
+      }
+
+      $self: &;
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        border-left-color: var(--color-accent);
+        border-top-color: var(--color-accent);
+        transform: rotateY(180deg) rotateZ(-45deg);
+        height: 0;
+        width: 0;
+        right: -40px;
+        top: calc(50% - 20px);
+      }
+
+      &:hover::after,
+      &:focus-within::after {
+        border-top-style: solid;
+        border-left-style: solid;
+        animation: section-preview-arrow-grow 200ms forwards ease-in-out;
+      }
+    }
 
     h2,
     p {
@@ -49,6 +117,11 @@ const { class: className, caption, title, description } = Astro.props;
 
     &-content {
       padding: var(--padding-md);
+
+      &-wrapper {
+        border-radius: var(--border-radius-base);
+        overflow: hidden;
+      }
     }
   }
 </style>
