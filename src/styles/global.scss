@@ -3,7 +3,7 @@
 @import 'variables';
 @import 'reset';
 
-html {
+:root {
   @include variables();
   color-scheme: light dark;
   font-size: var(--font-size-base);
@@ -28,7 +28,7 @@ $sizes: xxxxl, xxxl, xxl, xl, lg;
     font-family: var(--font-family-header);
     font-size: var(--font-size-#{list.nth($sizes, $i)});
     margin: calc((6 - $i) / 2 * var(--padding-lg)) 0;
-    font-weight: 600;
+    font-weight: 700;
   }
 }
 

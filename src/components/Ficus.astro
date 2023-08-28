@@ -91,7 +91,7 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
 
   $corner-plane-width: $ge;
   $corner-plane-angle: math.atan(math.div($dh, $od));
-  $corner-plane-height: $dh / math.sin($corner-plane-angle);
+  $corner-plane-height: math.div($dh, math.sin($corner-plane-angle));
 
   .ficus {
     transform-style: preserve-3d;
@@ -99,7 +99,7 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
 
     &-plant {
       width: $pot-side-width * 2.5;
-      transform: translateX(50%) translateZ(-$pot-side-width / 2) rotateY(-20deg);
+      transform: translateX(50%) translateZ(math.div(-$pot-side-width, 2)) rotateY(-20deg);
       transform-origin: bottom center;
       position: absolute;
       bottom: $pot-side-height - $dx;
@@ -140,7 +140,7 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
 
           &-corner {
             transform: translateX($de + px) rotateY(45deg * 3) rotateX($corner-plane-angle)
-              translateX(-$corner-plane-width / 2 + px);
+              translateX(math.div(-$corner-plane-width, 2) + px);
           }
         }
         &-right {
@@ -148,7 +148,7 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
 
           &-corner {
             transform: translateX($de + px) translateZ(-$pot-side-width) translateX($pot-side-width) rotateY(45deg * 3)
-              rotateX(-$corner-plane-angle) translateX(-$corner-plane-width / 2 + px);
+              rotateX(-$corner-plane-angle) translateX(math.div(-$corner-plane-width, 2) + px);
           }
         }
         &-back {
@@ -156,7 +156,7 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
 
           &-corner {
             transform: translateX($de + px) translateZ(-$pot-side-width) rotateY(45deg) rotateX($corner-plane-angle)
-              translateX(-$corner-plane-width / 2 + px);
+              translateX(math.div(-$corner-plane-width, 2) + px);
           }
         }
         &-front {
@@ -164,7 +164,7 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
 
           &-corner {
             transform: translateX($pot-side-width + $de) rotateY(45deg) rotateX(-$corner-plane-angle)
-              translateX(-$corner-plane-width / 2 + px);
+              translateX(math.div(-$corner-plane-width, 2) + px);
           }
         }
 
@@ -246,8 +246,8 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
           --soil-color: #1e1e1e7e;
 
           transform-origin: center;
-          transform: translateX($de + px) rotateX(90deg) translateZ($lid-size - $dx - $lid-size / 2)
-            translateY($de - $lid-size / 2) translateX(-$de + px) scale(0.85);
+          transform: translateX($de + px) rotateX(90deg) translateZ($lid-size - $dx - math.div($lid-size, 2))
+            translateY($de - math.div($lid-size, 2)) translateX(-$de + px) scale(0.85);
           background: var(--soil-color);
         }
       }
