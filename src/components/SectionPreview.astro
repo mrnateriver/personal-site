@@ -17,7 +17,7 @@ const Element = href ? 'a' : 'div';
   title={href ? `${caption} - ${title}` : undefined}
   href={href}
 >
-  <div class="section-preview-content-wrapper">
+  <div class="section-preview-content-wrapper" aria-hidden="true">
     {caption && <span class="section-preview-caption">{caption}</span>}
     <div class="section-preview-content">
       <h2>{title}</h2>

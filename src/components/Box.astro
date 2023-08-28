@@ -30,7 +30,7 @@ const sides = (['left', 'right', 'top', 'bottom', 'front', 'back'] as Array<keyo
   .map((side) => `box-side-${side}`);
 ---
 
-<i class:list={['box', className, hideGradient ? 'box-side-hide-gradient' : '']} style={style}>
+<i class:list={['box', className, hideGradient ? 'box-side-hide-gradient' : '']} style={style} aria-hidden="true">
   {sides.map((side) => <i class={side} />)}
 </i>
 

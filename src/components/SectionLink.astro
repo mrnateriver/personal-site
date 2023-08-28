@@ -2,6 +2,7 @@
 import { normalizeColor, type Color } from '../colors';
 import { normalizeCssValue } from '../styles';
 export interface Props {
+  title?: string;
   class?: string;
   href: string;
   borderWidth?: string | number;
@@ -10,10 +11,10 @@ export interface Props {
   borderColor?: Color;
 }
 
-const { class: className, href, borderWidth = 2, borderSize = 32, borderOffset = 16, borderColor } = Astro.props;
+const { title, class: className, href, borderWidth = 2, borderSize = 32, borderOffset = 16, borderColor } = Astro.props;
 ---
 
-<a class={className} href={href}>
+<a class={className} href={href} title={title}>
   <slot />
 </a>
 

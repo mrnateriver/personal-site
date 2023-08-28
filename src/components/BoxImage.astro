@@ -10,6 +10,7 @@ interface BaseProps
     'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient' | 'animationFrameMs' | 'animationDelayMs'
   > {
   class?: string;
+  title?: string;
   cellsColor?: Color;
 }
 
@@ -25,6 +26,7 @@ export type Props = BaseProps &
 
 const props = Astro.props;
 const {
+  title,
   class: className,
   cellsColor,
   hideSurfaces,
@@ -62,6 +64,7 @@ if ('imagePath' in props) {
 ---
 
 <BoxGrid
+  title={title}
   class={className}
   rows={imagePixels}
   hideSurfaces={hideSurfaces}

@@ -27,10 +27,10 @@ const commonLabelsProps = {
     <i class="main-wall main-wall-horizontal"></i>
 
     <div class="content">
-      <section class="labels-container">
-        <!-- TODO: accessibility for boximages -->
+      <section title="Main Navigation" class="labels-container">
         <h1>
           <BoxImage
+            title="Evgenii's"
             imagePath="src/assets/label_author.bmp"
             hideSurfaces={hideSurfacesShadows}
             cellsColor={labelsColorShadow}
@@ -40,7 +40,7 @@ const commonLabelsProps = {
         </h1>
 
         <div class="labels-links">
-          <div class="labels-shadows">
+          <div class="labels-shadows" aria-hidden="true">
             <BoxImage
               imagePath="src/assets/label_blog.bmp"
               hideSurfaces={hideSurfacesShadows}
@@ -59,6 +59,7 @@ const commonLabelsProps = {
           </div>
 
           <SectionLink
+            title="Blog"
             class="labels-blog"
             href="https://google.com"
             borderWidth="var(--padding-md)"
@@ -74,6 +75,7 @@ const commonLabelsProps = {
           </SectionLink>
 
           <SectionLink
+            title="Resume"
             class="labels-resume"
             href="https://google.com"
             borderWidth="var(--padding-md)"
@@ -90,7 +92,7 @@ const commonLabelsProps = {
         </div>
       </section>
 
-      <section class="section-preview-container">
+      <section title="Recent Content" class="section-preview-container">
         <SectionPreview
           href="https://google.com"
           class="section-preview-blog"
@@ -107,7 +109,7 @@ const commonLabelsProps = {
         />
       </section>
 
-      <section class="decorations-container">
+      <section class="decorations-container" aria-hidden="true">
         <Ficus class="decorations-ficus" />
         <Chair class="decorations-chair" seatColor="var(--seat-color)" frameColor="var(--seat-frame-color)" />
         <Desk

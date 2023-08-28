@@ -8,6 +8,7 @@ import Box, { type BaseBoxProps } from './Box.astro';
 
 export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient'> {
   class?: string;
+  title?: string;
   /**
    * Gap between boxes.
    * @default 2
@@ -48,6 +49,7 @@ export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient
 }
 
 const {
+  title,
   gap = 2,
   cellSize = 24,
   transparentColor = 0xffffffff,
@@ -156,10 +158,10 @@ const baseSectionProps: BoxProps = {
 };
 ---
 
-<div class:list={['grid', className]} style={style}>
+<div class:list={['grid', className]} style={style} title={title}>
   {
     Array.from(rowsByColors.entries()).map(([surfaceColor, rows]) => (
-      <div class="grid-section" style={getBoxStyleVars({ ...baseSectionProps, surfaceColor })}>
+      <div class="grid-section" style={getBoxStyleVars({ ...baseSectionProps, surfaceColor })} aria-hidden="true">
         {Array.from(rows.entries()).map(([rowIndex, cells]) => (
           <div class={`grid-section-row ${waveDisabled ? '' : 'grid-section-row-wave'}`} style={{ '--ri': rowIndex }}>
             {cells.map((columnIndex) => {
