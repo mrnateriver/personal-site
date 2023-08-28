@@ -14,7 +14,7 @@ const Element = href ? 'a' : 'div';
 
 <Element
   class={`section-preview ${href ? 'section-preview-clickable' : ''} ${className ?? ''}`}
-  title={href ? `${caption} - ${title}` : undefined}
+  title={href ? `${caption ? `${caption} - ` : ''}${title}` : undefined}
   href={href}
 >
   <div class="section-preview-content-wrapper" aria-hidden="true">
