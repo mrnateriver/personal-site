@@ -1,0 +1,38 @@
+---
+export interface Props {
+  class?: string;
+  as?: string;
+}
+
+const { class: className, as: RoomElement = 'main' } = Astro.props;
+---
+
+<RoomElement class={`room ${className ?? ''}`}>
+  <i class="room-wall room-wall-vertical"></i>
+  <i class="room-wall room-wall-horizontal"></i>
+
+  <slot />
+</RoomElement>
+
+<style lang="scss">
+  .room {
+    transform-style: preserve-3d;
+
+    .room-wall {
+      position: absolute;
+      height: 200vh;
+      width: 200vw;
+      left: -50vw;
+      top: -100vh;
+
+      &-vertical {
+        background: var(--color-surface);
+      }
+      &-horizontal {
+        transform-origin: center bottom;
+        transform: rotateY(180deg) rotateX(90deg);
+        background: linear-gradient(var(--color-surface), var(--color-surface) 90%, var(--color-background));
+      }
+    }
+  }
+</style>

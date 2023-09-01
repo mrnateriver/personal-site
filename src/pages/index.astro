@@ -5,9 +5,10 @@ import Chair from '../components/Chair.astro';
 import Computer from '../components/Computer.astro';
 import Desk from '../components/Desk.astro';
 import Ficus from '../components/Ficus.astro';
+import Room from '../components/Room.astro';
 import SectionLink from '../components/SectionLink.astro';
 import SectionPreview from '../components/SectionPreview.astro';
-import IndexLayout from '../layouts/Layout.astro';
+import Layout from '../layouts/Layout.astro';
 
 const hideSurfacesLabels = { right: true, back: true, bottom: true };
 const hideSurfacesShadows = { right: true, left: true, back: true, bottom: true, top: true };
@@ -21,12 +22,9 @@ const commonLabelsProps = {
 };
 ---
 
-<IndexLayout title="Hi mom">
-  <main>
-    <i class="main-wall main-wall-vertical"></i>
-    <i class="main-wall main-wall-horizontal"></i>
-
-    <div class="content">
+<Layout title="Hi mom">
+  <Room class="scene">
+    <div class="scene-content">
       <section title="Main Navigation" class="labels-container">
         <h1>
           <BoxImage
@@ -61,7 +59,7 @@ const commonLabelsProps = {
           <SectionLink
             title="Blog"
             class="labels-blog"
-            href="https://google.com"
+            href="/blog"
             borderWidth="var(--padding-md)"
             borderOffset="var(--padding-xlg)"
             borderSize="calc(4 * var(--padding-lg))"
@@ -77,7 +75,7 @@ const commonLabelsProps = {
           <SectionLink
             title="Resume"
             class="labels-resume"
-            href="https://google.com"
+            href="/resume"
             borderWidth="var(--padding-md)"
             borderOffset="var(--padding-xlg)"
             borderSize="calc(4 * var(--padding-lg))"
@@ -94,14 +92,14 @@ const commonLabelsProps = {
 
       <section title="Recent Content" class="section-preview-container">
         <SectionPreview
-          href="https://google.com"
+          href="/blog"
           class="section-preview-blog"
           caption="Latest Blog Entry"
           title="Meaning of life"
           description="Lorem ipsum and other stuff like this."
         />
         <SectionPreview
-          href="https://google.com"
+          href="/resume"
           class="section-preview-resume"
           caption="Resume Summary"
           title="Meaning of life"
@@ -121,10 +119,10 @@ const commonLabelsProps = {
         <Computer class="decorations-computer" plasticColor="var(--plastic-color)" />
       </section>
     </div>
-  </main>
+  </Room>
 
   <Acknowledgments class="acks" />
-</IndexLayout>
+</Layout>
 
 <style lang="scss" is:global>
   html,
@@ -142,16 +140,6 @@ const commonLabelsProps = {
     bottom: var(--padding-md);
     right: 0;
     left: 0;
-  }
-
-  .content {
-    transform-style: preserve-3d;
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: calc(var(--padding-xlg) * 2);
-    padding-bottom: calc(var(--padding-xlg) * 6);
   }
 
   .section-preview {
@@ -173,7 +161,7 @@ const commonLabelsProps = {
     }
   }
 
-  main {
+  .scene {
     --labels-size: 16px;
     --labels-offset: 100px;
     --labels-vertical-gap: 0px;
@@ -214,15 +202,6 @@ const commonLabelsProps = {
       --animation-end-offset-y: calc(-50vh + 25vw);
     }
 
-    height: 100%;
-    display: grid;
-    place-items: flex-end center;
-    transform-style: preserve-3d;
-    transform-origin: center;
-    transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(var(--animation-start-offset-y));
-    animation: var(--animation-1-duration) var(--animation-1-delay) forwards main-rotation var(--animation-curve-base),
-      var(--animation-2-duration) var(--animation-2-delay) infinite main-rocking var(--animation-curve-base);
-
     @keyframes main-rotation {
       0% {
         transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(var(--animation-start-offset-y));
@@ -249,21 +228,22 @@ const commonLabelsProps = {
       }
     }
 
-    .main-wall {
-      position: absolute;
-      height: 200vh;
-      width: 200vw;
-      left: -50vw;
-      top: -100vh;
+    height: 100%;
+    display: grid;
+    place-items: flex-end center;
+    transform-origin: center;
+    transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(var(--animation-start-offset-y));
+    animation: var(--animation-1-duration) var(--animation-1-delay) forwards main-rotation var(--animation-curve-base),
+      var(--animation-2-duration) var(--animation-2-delay) infinite main-rocking var(--animation-curve-base);
 
-      &-vertical {
-        background: var(--color-surface);
-      }
-      &-horizontal {
-        transform-origin: center bottom;
-        transform: rotateY(180deg) rotateX(90deg);
-        background: linear-gradient(var(--color-surface), var(--color-surface) 90%, var(--color-background));
-      }
+    &-content {
+      transform-style: preserve-3d;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: calc(var(--padding-xlg) * 2);
+      padding-bottom: calc(var(--padding-xlg) * 6);
     }
 
     .labels {
