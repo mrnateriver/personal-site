@@ -1,6 +1,6 @@
 ---
 import Acknowledgments from '../components/Acknowledgments.astro';
-import BoxImage from '../components/BoxImage.astro';
+import BoxString from '../components/BoxString.astro';
 import Chair from '../components/Chair.astro';
 import Computer from '../components/Computer.astro';
 import Desk from '../components/Desk.astro';
@@ -27,11 +27,10 @@ const commonLabelsProps = {
     <div class="scene-content">
       <section title="Main Navigation" class="labels-container">
         <h1>
-          <BoxImage
-            title="Evgenii's"
-            imagePath="src/assets/label_author.bmp"
+          <BoxString
+            string="evgenii's"
+            color={labelsColorShadow}
             hideSurfaces={hideSurfacesShadows}
-            cellsColor={labelsColorShadow}
             hideGradient={true}
             {...commonLabelsProps}
           />
@@ -39,18 +38,18 @@ const commonLabelsProps = {
 
         <div class="labels-links">
           <div class="labels-shadows" aria-hidden="true">
-            <BoxImage
-              imagePath="src/assets/label_blog.bmp"
+            <BoxString
+              string="blog"
+              color={labelsColorShadow}
               hideSurfaces={hideSurfacesShadows}
-              cellsColor={labelsColorShadow}
               hideGradient={true}
               {...commonLabelsProps}
             />
 
-            <BoxImage
-              imagePath="src/assets/label_resume.bmp"
+            <BoxString
+              string="resume"
+              color={labelsColorShadow}
               hideSurfaces={hideSurfacesShadows}
-              cellsColor={labelsColorShadow}
               hideGradient={true}
               {...commonLabelsProps}
             />
@@ -64,12 +63,7 @@ const commonLabelsProps = {
             borderOffset="var(--padding-xlg)"
             borderSize="calc(4 * var(--padding-lg))"
           >
-            <BoxImage
-              imagePath="src/assets/label_blog.bmp"
-              hideSurfaces={hideSurfacesLabels}
-              cellsColor={labelsColor}
-              {...commonLabelsProps}
-            />
+            <BoxString string="blog" color={labelsColor} hideSurfaces={hideSurfacesLabels} {...commonLabelsProps} />
           </SectionLink>
 
           <SectionLink
@@ -80,12 +74,7 @@ const commonLabelsProps = {
             borderOffset="var(--padding-xlg)"
             borderSize="calc(4 * var(--padding-lg))"
           >
-            <BoxImage
-              imagePath="src/assets/label_resume.bmp"
-              hideSurfaces={hideSurfacesLabels}
-              cellsColor={labelsColor}
-              {...commonLabelsProps}
-            />
+            <BoxString string="resume" color={labelsColor} hideSurfaces={hideSurfacesLabels} {...commonLabelsProps} />
           </SectionLink>
         </div>
       </section>

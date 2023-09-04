@@ -1,0 +1,22 @@
+---
+import BoxString from '../components/BoxString.astro';
+import Room from '../components/Room.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Hi mom">
+  <Room>
+    <h1>Whatever</h1>
+    <h2>Hello</h2>
+    <p>world</p>
+
+    <BoxString string={'1 < 5 > 2'} />
+  </Room>
+</Layout>
+
+<style lang="scss" is:global>
+  html,
+  body {
+    overflow-x: hidden;
+  }
+</style>

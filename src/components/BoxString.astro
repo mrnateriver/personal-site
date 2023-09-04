@@ -1,0 +1,128 @@
+---
+import type { Color } from '../colors';
+import { ImagePixelFrames, readBmpImage } from '../images';
+import type { Props as BoxGridProps } from './BoxGrid.astro';
+import BoxGrid from './BoxGrid.astro';
+
+export interface Props extends Pick<BoxGridProps, 'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient'> {
+  class?: string;
+  string: string;
+  color?: Color;
+}
+
+const { class: className, string, color = 'currentColor', gap, cellSize, hideSurfaces, hideGradient } = Astro.props;
+
+const lettersOffsets: Record<string, { x?: number; w?: number; specialCase?: boolean }> = {
+  a: { x: 0 },
+  b: { x: 4 },
+  c: { x: 8 },
+  d: { x: 12 },
+  e: { x: 16 },
+  f: { x: 20 },
+  g: { x: 24 },
+  h: { x: 28 },
+  i: { x: 32, w: 1 },
+  j: { x: 33 },
+  k: { x: 37 },
+  l: { x: 41 },
+  m: { x: 45, w: 5 },
+  n: { x: 50 },
+  o: { x: 54 },
+  p: { x: 58 },
+  q: { x: 62 },
+  r: { x: 66 },
+  s: { x: 70 },
+  t: { x: 74, w: 5 },
+  u: { x: 79 },
+  v: { x: 83, w: 5 },
+  w: { x: 88, w: 5 },
+  x: { x: 93, w: 5 },
+  y: { x: 98 },
+  z: { x: 102 },
+  '1': { x: 106, w: 1 },
+  '2': { x: 107 },
+  '3': { x: 111 },
+  '4': { x: 115 },
+  '5': { x: 119 },
+  '6': { x: 123 },
+  '7': { x: 127 },
+  '8': { x: 131 },
+  '9': { x: 135 },
+  '0': { x: 139 },
+  '.': { x: 143, w: 1 },
+  ',': { x: 144, w: 1 },
+  '!': { x: 145, w: 1 },
+  '?': { x: 146, w: 3 },
+  ':': { x: 149, w: 1 },
+  ';': { x: 150, w: 1 },
+  '-': { x: 151, w: 2 },
+  _: { x: 153, w: 2 },
+  '+': { x: 155, w: 3 },
+  '=': { x: 158, w: 3 },
+  '@': { x: 161, w: 5 },
+  '(': { x: 166, w: 2 },
+  ')': { x: 168, w: 2 },
+  '[': { x: 170, w: 2 },
+  ']': { x: 172, w: 2 },
+  "'": { x: 174, w: 1 },
+  '"': { x: 174, w: 1, specialCase: true },
+  '`': { x: 174, w: 1 },
+  '&': { x: 175, w: 4 },
+  '*': { x: 179, w: 3 },
+  '/': { x: 182, w: 5 },
+  '\\': { x: 186, w: 5 },
+  '|': { x: 191, w: 1 },
+  '<': { x: 192, w: 3 },
+  '>': { x: 194, w: 3 },
+  ' ': { specialCase: true },
+};
+
+const alphabet = await readBmpImage('src/assets/alphabet.bmp');
+
+const whiteColor: Color = 0xffffffff;
+
+const letters = Object.fromEntries(
+  Object.entries(lettersOffsets).map(([letter, { x, w, specialCase }]) => {
+    const width = w ?? 4;
+
+    let pixels: Color[][];
+    if (specialCase && letter === '"') {
+      pixels = alphabet.map((row) => [...row.slice(x, (x ?? 0) + width), whiteColor, row[x ?? 0]]);
+    } else if (specialCase && letter === ' ') {
+      pixels = alphabet.map(() => [whiteColor, whiteColor, whiteColor]);
+    } else {
+      pixels = alphabet.map((row) => row.slice(x, (x ?? 0) + width));
+    }
+
+    return [letter, pixels];
+  }),
+);
+
+const stringPixels = string
+  .toLocaleLowerCase()
+  .split('')
+  .map((letter) => [letter in letters ? letter : ' ', letters[letter] ?? letters[' ']] as const);
+
+const pixels = stringPixels.reduce((acc, [letter, letterPixels], letterIdx) => {
+  letterPixels.forEach((row, i) => {
+    acc[i] = [
+      ...(acc[i] ?? []),
+      ...row.map((c) => [c === whiteColor ? whiteColor : color ?? c] as [Color]),
+      ...(letter === ' ' || letterIdx === stringPixels.length - 1 || stringPixels[letterIdx + 1][0] === ' '
+        ? []
+        : [[whiteColor] as [Color]]),
+    ];
+  });
+  return acc;
+}, [] as ImagePixelFrames[][]);
+---
+
+<figure class={`box-string ${className ?? ''}`} title={string}>
+  <BoxGrid rows={pixels} hideSurfaces={hideSurfaces} hideGradient={hideGradient} cellSize={cellSize} gap={gap} />
+</figure>
+
+<style lang="scss">
+  figure {
+    transform-style: preserve-3d;
+  }
+</style>
