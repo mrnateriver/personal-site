@@ -1,22 +1,211 @@
 ---
+import type { BaseBoxProps } from '../components/Box.astro';
 import BoxString from '../components/BoxString.astro';
-import Room from '../components/Room.astro';
 import Layout from '../layouts/Layout.astro';
+
+interface ResumeRecord {
+  year: number;
+  title: string;
+  description: string;
+  techStack?: string[];
+}
+
+const hideSurfaces: BaseBoxProps['hideSurfaces'] = {
+  right: true,
+  back: true,
+};
+
+const records: ResumeRecord[] = [
+  {
+    year: 2007,
+    title: 'Lorem ipsum dolor',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
+  },
+  {
+    year: 2010,
+    title: 'Lorem ipsum dolor',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
+  },
+  {
+    year: 2012,
+    title: 'Lorem ipsum dolor',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
+  },
+  {
+    year: 2016,
+    title: 'Lorem ipsum dolor',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
+  },
+  {
+    year: 2017,
+    title: 'Lorem ipsum dolor',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
+  },
+  {
+    year: 2020,
+    title: 'Lorem ipsum dolor',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
+  },
+  {
+    year: 2021,
+    title: 'Lorem ipsum dolor',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
+  },
+];
 ---
 
 <Layout title="Hi mom">
-  <Room>
-    <h1>Whatever</h1>
-    <h2>Hello</h2>
-    <p>world</p>
+  <div class="resume-plane" style={{ '--resume-records-length': records.length }}>
+    {
+      records.map((r, i) => (
+        <div class="resume-record" style={{ '--i': records.length - i - 1 }}>
+          <div class="resume-record-surface resume-record-surface-top" />
+          <div class="resume-record-surface resume-record-surface-top-angle" />
+          <div class="resume-record-surface resume-record-surface-front" />
+          <div class="resume-record-surface resume-record-surface-front-angle" />
+          <div class="resume-record-surface resume-record-surface-left-angle" />
 
-    <BoxString string={'1 < 5 > 2'} />
-  </Room>
+          <BoxString
+            class="resume-record-year"
+            string={r.year.toString()}
+            hideSurfaces={hideSurfaces}
+            color={'var(--color-text-anchor)'}
+            gap={0}
+            waveDisabled
+          />
+          <div class="resume-record-description">
+            <h2 title="Career step">{r.title}</h2>
+            <p title="Description of the duties performed">{r.description}</p>
+            {r.techStack?.length && (
+              <div class="resume-record-tech" title="Technical stack">
+                {r.techStack.map((s) => (
+                  <span class="resume-record-tech-entry">{s}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ))
+    }
+  </div>
 </Layout>
 
 <style lang="scss" is:global>
   html,
   body {
     overflow-x: hidden;
+  }
+
+  body {
+    perspective: calc(var(--resume-parallax-offset) * 1.5);
+    perspective-origin: center;
+  }
+</style>
+
+<style lang="scss">
+  :root {
+    --resume-parallax-offset: 1000px;
+    --resume-records-width: 1200px;
+    --resume-year-angle: 40deg;
+    --resume-year-width: 460px;
+    --resume-year-description-gap: calc(var(--padding-xlg) * 3);
+  }
+
+  .resume {
+    &-plane {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      transform-style: preserve-3d;
+      padding: 0 0 0 calc(var(--padding-xlg) * 5);
+      min-width: var(--resume-records-width);
+    }
+
+    &-record {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--resume-year-description-gap);
+      transform-style: preserve-3d;
+      transform: translateZ(calc(-1 * var(--i) * var(--resume-parallax-offset)));
+      margin-bottom: calc(var(--padding-xlg) * (1 + var(--i)) * 7);
+      scale: calc(1 + var(--i) * 0.5);
+
+      &-year {
+        display: flex;
+        justify-content: flex-end;
+        min-width: var(--resume-year-width);
+        transform: rotateY(var(--resume-year-angle)) translateZ(48px);
+        transform-origin: right center;
+      }
+
+      &-description {
+        transform-origin: top left;
+        transform-style: preserve-3d;
+
+        h2 {
+          margin-top: 0;
+        }
+      }
+
+      &-surface {
+        --resume-angled-surface-right: calc(100% - var(--resume-year-width) - var(--resume-year-description-gap) / 1.5);
+
+        position: absolute;
+        top: calc(-1 * var(--padding-xlg));
+        left: 0;
+        right: 0;
+        height: var(--resume-records-width);
+        transform-origin: center top;
+
+        &-top {
+          background: darkcyan;
+          transform: rotateX(90deg) translateY(calc(-1 * var(--resume-records-width)));
+          left: calc(-1 * var(--resume-records-width) * 0.125); // TODO: use proper trigonometry
+
+          &-angle {
+            background: brown;
+            transform: rotateX(-90deg) rotateZ(var(--resume-year-angle));
+            transform-origin: right top;
+            right: var(--resume-angled-surface-right);
+          }
+        }
+
+        &-front {
+          background: bisque;
+
+          &-angle {
+            background: violet;
+            transform: rotateY(var(--resume-year-angle));
+            transform-origin: right top;
+            right: var(--resume-angled-surface-right);
+          }
+        }
+
+        &-left-angle {
+          background: midnightblue;
+          transform: rotateY(calc(-90deg + var(--resume-year-angle)))
+            translateZ(calc(var(--resume-year-width) + var(--resume-year-description-gap) / 1.5));
+          transform-origin: right top;
+          right: var(--resume-angled-surface-right);
+          width: var(--resume-records-width);
+          left: auto;
+        }
+      }
+    }
   }
 </style>

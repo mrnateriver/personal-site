@@ -4,13 +4,23 @@ import { ImagePixelFrames, readBmpImage } from '../images';
 import type { Props as BoxGridProps } from './BoxGrid.astro';
 import BoxGrid from './BoxGrid.astro';
 
-export interface Props extends Pick<BoxGridProps, 'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient'> {
+export interface Props
+  extends Pick<BoxGridProps, 'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient' | 'waveDisabled'> {
   class?: string;
   string: string;
   color?: Color;
 }
 
-const { class: className, string, color = 'currentColor', gap, cellSize, hideSurfaces, hideGradient } = Astro.props;
+const {
+  class: className,
+  string,
+  color = 'currentColor',
+  gap,
+  cellSize,
+  hideSurfaces,
+  hideGradient,
+  waveDisabled,
+} = Astro.props;
 
 const lettersOffsets: Record<string, { x?: number; w?: number; specialCase?: boolean }> = {
   a: { x: 0 },
@@ -118,7 +128,14 @@ const pixels = stringPixels.reduce((acc, [letter, letterPixels], letterIdx) => {
 ---
 
 <figure class={`box-string ${className ?? ''}`} title={string}>
-  <BoxGrid rows={pixels} hideSurfaces={hideSurfaces} hideGradient={hideGradient} cellSize={cellSize} gap={gap} />
+  <BoxGrid
+    rows={pixels}
+    hideSurfaces={hideSurfaces}
+    hideGradient={hideGradient}
+    waveDisabled={waveDisabled}
+    cellSize={cellSize}
+    gap={gap}
+  />
 </figure>
 
 <style lang="scss">

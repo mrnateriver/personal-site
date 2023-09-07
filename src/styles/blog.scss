@@ -1,0 +1,35 @@
+p,
+blockquote {
+  margin: var(--padding-lg) 0;
+  text-indent: var(--padding-lg);
+}
+
+blockquote {
+  display: block;
+  font-style: italic;
+  padding-inline-start: var(--padding-lg);
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--padding-xs);
+    background-color: var(--color-text-tertiary);
+  }
+
+  cite {
+    display: block;
+    text-indent: 0;
+    text-align: end;
+    color: var(--color-text-secondary);
+
+    &::before {
+      content: '—';
+      padding-inline-end: var(--padding-sm);
+    }
+  }
+}
