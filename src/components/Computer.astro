@@ -60,6 +60,7 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
   @use 'sass:math';
 
   .computer {
+    // TODO: refactor to use a single "base" size and derive everything else from it
     --computer-monitor-width: 64px;
     --computer-monitor-depth: 64px;
     --computer-monitor-depth-front: 24px;
