@@ -1,21 +1,14 @@
 ---
 import type { BaseBoxProps } from '../components/Box.astro';
-import BoxString from '../components/BoxString.astro';
+import ResumeEntry, { type ResumeEntryInfo } from '../components/ResumeEntry.astro';
 import Layout from '../layouts/Layout.astro';
-
-interface ResumeRecord {
-  year: number;
-  title: string;
-  description: string;
-  techStack?: string[];
-}
 
 const hideSurfaces: BaseBoxProps['hideSurfaces'] = {
   right: true,
   back: true,
 };
 
-const records: ResumeRecord[] = [
+const entries: ResumeEntryInfo[] = [
   {
     year: 2007,
     title: 'Lorem ipsum dolor',
@@ -69,39 +62,10 @@ const records: ResumeRecord[] = [
 ---
 
 <Layout title="Hi mom">
-  <div class="resume-plane" style={{ '--resume-records-length': records.length }}>
+  <div class="resume-plane">
     {
-      records.map((r, i) => (
-        <div class="resume-record" style={{ '--i': records.length - i - 1 }}>
-          <div class="resume-record-surface resume-record-surface-top" />
-          <div class="resume-record-surface resume-record-surface-top-left-angle" />
-          <div class="resume-record-surface resume-record-surface-top-right-angle" />
-          <div class="resume-record-surface resume-record-surface-front" />
-          <div class="resume-record-surface resume-record-surface-front-left-angle" />
-          <div class="resume-record-surface resume-record-surface-front-right-angle" />
-          <div class="resume-record-surface resume-record-surface-left-angle" />
-          <div class="resume-record-surface resume-record-surface-right-angle" />
-
-          <BoxString
-            class="resume-record-year"
-            string={r.year.toString()}
-            hideSurfaces={hideSurfaces}
-            color={'var(--color-text-anchor)'}
-            gap={0}
-            waveDisabled
-          />
-          <div class="resume-record-description">
-            <h2 title="Career step">{r.title}</h2>
-            <p title="Description of the duties performed">{r.description}</p>
-            {r.techStack?.length && (
-              <div class="resume-record-tech" title="Technical stack">
-                {r.techStack.map((s) => (
-                  <span class="resume-record-tech-entry">{s}</span>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+      entries.map((r, i) => (
+        <ResumeEntry style={{ '--i': entries.length - i - 1 }} entry={r} yearGridProperties={{ hideSurfaces }} />
       ))
     }
   </div>
@@ -122,164 +86,15 @@ const records: ResumeRecord[] = [
 <style lang="scss">
   :root {
     --resume-parallax-offset: 1000px;
-    --resume-records-width: 1200px;
-    --resume-year-angle: 40deg;
-    --resume-year-width: 500px;
-    --resume-year-description-gap: calc(var(--padding-xlg) * 3);
+    --resume-entry-width: 1200px;
   }
 
-  .resume {
-    &-plane {
-      display: flex;
-      flex-flow: column;
-      align-items: center;
-      transform-style: preserve-3d;
-      padding: 0 0 0 calc(var(--padding-xlg) * 5);
-      min-width: var(--resume-records-width);
-    }
-
-    &-record {
-      position: relative;
-      display: flex;
-      align-items: flex-start;
-      gap: var(--resume-year-description-gap);
-      transform-style: preserve-3d;
-      transform: translateZ(calc(-1 * var(--i) * var(--resume-parallax-offset)));
-      margin-bottom: calc(var(--padding-xlg) * (1 + var(--i)) * 7);
-      scale: calc(1 + var(--i) * 0.5);
-      padding-right: var(--resume-year-width);
-      padding-top: 90px;
-
-      &-year {
-        display: flex;
-        justify-content: flex-end;
-        min-width: var(--resume-year-width);
-        transform: rotateY(var(--resume-year-angle)) translateZ(48px);
-        transform-origin: right center;
-      }
-
-      &-description {
-        transform-origin: top left;
-        transform-style: preserve-3d;
-
-        h2 {
-          margin-top: 0;
-        }
-      }
-
-      &-surface {
-        --resume-angled-surface-right: calc(100% - var(--resume-year-width) - var(--resume-year-description-gap) / 1.5);
-        --resume-top-surface-color: var(--color-background);
-        --resume-tint-slightly-darker: rgba(0, 0, 0, 0.05);
-        --resume-tint-much-darker: rgba(0, 0, 0, 0.1);
-
-        @media (prefers-color-scheme: dark) {
-          --resume-top-surface-color: #0f0f0f;
-          --resume-tint-slightly-darker: rgba(128, 128, 128, 0.03);
-          --resume-tint-much-darker: rgba(255, 255, 255, 0.03);
-        }
-
-        position: absolute;
-        top: calc(-1 * var(--padding-xlg));
-        left: 0;
-        right: 0;
-        height: var(--resume-records-width);
-        transform-origin: center top;
-
-        &-top {
-          background: linear-gradient(to top, transparent, transparent 50%, var(--resume-tint-slightly-darker)),
-            linear-gradient(to top, var(--resume-top-surface-color), var(--resume-top-surface-color));
-
-          transform: rotateX(90deg) translateY(calc(-1 * var(--resume-records-width)));
-
-          // TODO: use proper trigonometry
-          left: calc(-1 * var(--resume-records-width) * 0.125);
-          right: calc(-1 * var(--resume-records-width) * 0.125);
-
-          &-left-angle {
-            background: linear-gradient(
-                to bottom left,
-                transparent,
-                transparent 50%,
-                var(--resume-tint-slightly-darker)
-              ),
-              linear-gradient(to bottom, var(--resume-top-surface-color), var(--resume-top-surface-color));
-
-            transform: rotateX(-90deg) rotateZ(var(--resume-year-angle));
-            transform-origin: right top;
-            right: var(--resume-angled-surface-right);
-          }
-
-          &-right-angle {
-            background: linear-gradient(
-                to bottom right,
-                transparent,
-                transparent 50%,
-                var(--resume-tint-slightly-darker)
-              ),
-              linear-gradient(to bottom, var(--resume-top-surface-color), var(--resume-top-surface-color));
-
-            transform: rotateX(-90deg) rotateZ(calc(-1 * var(--resume-year-angle)));
-            transform-origin: left top;
-            left: var(--resume-angled-surface-right);
-          }
-        }
-
-        &-front {
-          background: linear-gradient(to bottom left, transparent, transparent 30%, var(--resume-tint-much-darker)),
-            linear-gradient(to bottom, transparent, var(--resume-tint-slightly-darker)),
-            linear-gradient(to bottom, var(--color-surface), var(--color-surface));
-
-          &-left-angle {
-            background: linear-gradient(to bottom right, transparent, transparent 40%, var(--resume-tint-much-darker)),
-              linear-gradient(to bottom, transparent, var(--resume-tint-slightly-darker)),
-              linear-gradient(to bottom, var(--color-surface), var(--color-surface));
-
-            transform: rotateY(var(--resume-year-angle));
-            transform-origin: right top;
-            right: var(--resume-angled-surface-right);
-          }
-
-          &-right-angle {
-            background: linear-gradient(
-                to bottom left,
-                transparent,
-                transparent 60%,
-                var(--resume-tint-slightly-darker)
-              ),
-              linear-gradient(to bottom, transparent, var(--resume-tint-slightly-darker)),
-              linear-gradient(to bottom, var(--color-surface), var(--color-surface));
-
-            transform: rotateY(calc(-1 * var(--resume-year-angle)));
-            transform-origin: left top;
-            left: var(--resume-angled-surface-right);
-          }
-        }
-
-        &-left-angle {
-          background: linear-gradient(to right, var(--resume-tint-slightly-darker), var(--resume-tint-slightly-darker)),
-            linear-gradient(to bottom, var(--color-surface), var(--color-surface));
-
-          transform: rotateY(calc(-90deg + var(--resume-year-angle)))
-            translateZ(calc(var(--resume-year-width) + var(--resume-year-description-gap) / 1.5));
-          transform-origin: right top;
-          right: var(--resume-angled-surface-right);
-          width: var(--resume-records-width);
-          left: auto;
-        }
-
-        &-right-angle {
-          background: linear-gradient(to right, var(--resume-tint-slightly-darker), var(--resume-tint-slightly-darker)),
-            linear-gradient(to bottom, var(--color-surface), var(--color-surface));
-
-          transform: rotateY(calc(90deg - var(--resume-year-angle)))
-            translateZ(calc(var(--resume-year-width) + var(--resume-year-description-gap) / 1.5));
-          transform-origin: left top;
-          left: var(--resume-angled-surface-right);
-          width: var(--resume-records-width);
-          right: auto;
-        }
-      }
-    }
+  .resume-plane {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    transform-style: preserve-3d;
+    padding: 0 0 0 calc(var(--padding-xlg) * 5);
+    min-width: var(--resume-entry-width);
   }
 </style>

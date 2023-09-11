@@ -1,0 +1,211 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import type { Props as BoxGridProps } from './BoxGrid.astro';
+import BoxString from './BoxString.astro';
+
+export interface ResumeEntryInfo {
+  year: number;
+  title: string;
+  description: string;
+  techStack?: string[];
+}
+
+export interface Props {
+  class?: string;
+  style?: HTMLAttributes<'div'>['style'];
+  yearGridProperties?: Partial<Omit<BoxGridProps, 'rows'>>;
+  entry: ResumeEntryInfo;
+}
+
+const { class: className, style, yearGridProperties, entry } = Astro.props;
+---
+
+<div class={`resume-entry ${className ?? ''}`} style={style}>
+  <div class="resume-entry-surface resume-entry-surface-top"></div>
+  <div class="resume-entry-surface resume-entry-surface-top-left-angle"></div>
+  <div class="resume-entry-surface resume-entry-surface-top-right-angle"></div>
+  <div class="resume-entry-surface resume-entry-surface-front"></div>
+  <div class="resume-entry-surface resume-entry-surface-front-left-angle"></div>
+  <div class="resume-entry-surface resume-entry-surface-front-right-angle"></div>
+  <div class="resume-entry-surface resume-entry-surface-left-angle"></div>
+  <div class="resume-entry-surface resume-entry-surface-right-angle"></div>
+
+  <BoxString
+    class="resume-entry-year"
+    string={entry.year.toString()}
+    color={'var(--color-text-anchor)'}
+    waveDisabled
+    gap={0}
+    {...yearGridProperties}
+  />
+  <div class="resume-entry-description">
+    <h2 title="Career step">{entry.title}</h2>
+    <p title="Description of the duties performed">{entry.description}</p>
+    {
+      entry.techStack?.length && (
+        <div class="resume-entry-tech" title="Technical stack">
+          {entry.techStack.map((s) => (
+            <span class="resume-entry-tech-entry">{s}</span>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</div>
+
+<style lang="scss">
+  .resume {
+    &-entry {
+      --resume-entry-parallax-offset: var(--resume-parallax-offset, 1000px);
+      --resume-entry-entry-width: var(--resume-entry-width, 1200px);
+      --resume-entry-year-angle: var(--resume-year-angle, 40deg);
+      --resume-entry-year-width: var(--resume-year-width, 500px);
+      --resume-entry-year-description-gap: var(--resume-year-description-gap, calc(var(--padding-xlg) * 3));
+      --record-i: var(--i, 0);
+
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--resume-entry-year-description-gap);
+      transform-style: preserve-3d;
+      transform: translateZ(calc(-1 * var(--record-i) * var(--resume-entry-parallax-offset)));
+      margin-bottom: calc(var(--padding-xlg) * (1 + var(--record-i)) * 7);
+      scale: calc(1 + var(--record-i) * 0.5);
+      padding-right: var(--resume-entry-year-width);
+      padding-top: 90px;
+
+      &-year {
+        display: flex;
+        justify-content: flex-end;
+        min-width: var(--resume-entry-year-width);
+        transform: rotateY(var(--resume-entry-year-angle)) translateZ(48px);
+        transform-origin: right center;
+      }
+
+      &-description {
+        transform-origin: top left;
+        transform-style: preserve-3d;
+
+        h2 {
+          margin-top: 0;
+        }
+      }
+
+      &-surface {
+        --resume-angled-surface-right: calc(
+          100% - var(--resume-entry-year-width) - var(--resume-entry-year-description-gap) / 1.5
+        );
+        --resume-top-surface-color: var(--color-background);
+        --resume-tint-slightly-darker: rgba(0, 0, 0, 0.05);
+        --resume-tint-much-darker: rgba(0, 0, 0, 0.1);
+
+        @media (prefers-color-scheme: dark) {
+          --resume-top-surface-color: #0f0f0f;
+          --resume-tint-slightly-darker: rgba(128, 128, 128, 0.03);
+          --resume-tint-much-darker: rgba(255, 255, 255, 0.03);
+        }
+
+        position: absolute;
+        top: calc(-1 * var(--padding-xlg));
+        left: 0;
+        right: 0;
+        height: var(--resume-entry-entry-width);
+        transform-origin: center top;
+
+        &-top {
+          background: linear-gradient(to top, transparent, transparent 50%, var(--resume-tint-slightly-darker)),
+            linear-gradient(to top, var(--resume-top-surface-color), var(--resume-top-surface-color));
+
+          transform: rotateX(90deg) translateY(calc(-1 * var(--resume-entry-entry-width)));
+
+          // TODO: use proper trigonometry
+          left: calc(-1 * var(--resume-entry-entry-width) * 0.125);
+          right: calc(-1 * var(--resume-entry-entry-width) * 0.125);
+
+          &-left-angle {
+            background: linear-gradient(
+                to bottom left,
+                transparent,
+                transparent 50%,
+                var(--resume-tint-slightly-darker)
+              ),
+              linear-gradient(to bottom, var(--resume-top-surface-color), var(--resume-top-surface-color));
+
+            transform: rotateX(-90deg) rotateZ(var(--resume-entry-year-angle));
+            transform-origin: right top;
+            right: var(--resume-angled-surface-right);
+          }
+
+          &-right-angle {
+            background: linear-gradient(
+                to bottom right,
+                transparent,
+                transparent 50%,
+                var(--resume-tint-slightly-darker)
+              ),
+              linear-gradient(to bottom, var(--resume-top-surface-color), var(--resume-top-surface-color));
+
+            transform: rotateX(-90deg) rotateZ(calc(-1 * var(--resume-entry-year-angle)));
+            transform-origin: left top;
+            left: var(--resume-angled-surface-right);
+          }
+        }
+
+        &-front {
+          background: linear-gradient(to bottom left, transparent, transparent 30%, var(--resume-tint-much-darker)),
+            linear-gradient(to bottom, transparent, var(--resume-tint-slightly-darker)),
+            linear-gradient(to bottom, var(--color-surface), var(--color-surface));
+
+          &-left-angle {
+            background: linear-gradient(to bottom right, transparent, transparent 40%, var(--resume-tint-much-darker)),
+              linear-gradient(to bottom, transparent, var(--resume-tint-slightly-darker)),
+              linear-gradient(to bottom, var(--color-surface), var(--color-surface));
+
+            transform: rotateY(var(--resume-entry-year-angle));
+            transform-origin: right top;
+            right: var(--resume-angled-surface-right);
+          }
+
+          &-right-angle {
+            background: linear-gradient(
+                to bottom left,
+                transparent,
+                transparent 60%,
+                var(--resume-tint-slightly-darker)
+              ),
+              linear-gradient(to bottom, transparent, var(--resume-tint-slightly-darker)),
+              linear-gradient(to bottom, var(--color-surface), var(--color-surface));
+
+            transform: rotateY(calc(-1 * var(--resume-entry-year-angle)));
+            transform-origin: left top;
+            left: var(--resume-angled-surface-right);
+          }
+        }
+
+        &-left-angle {
+          background: linear-gradient(to right, var(--resume-tint-slightly-darker), var(--resume-tint-slightly-darker)),
+            linear-gradient(to bottom, var(--color-surface), var(--color-surface));
+
+          transform: rotateY(calc(-90deg + var(--resume-entry-year-angle)))
+            translateZ(calc(var(--resume-entry-year-width) + var(--resume-entry-year-description-gap) / 1.5));
+          transform-origin: right top;
+          right: var(--resume-angled-surface-right);
+          width: var(--resume-entry-entry-width);
+          left: auto;
+        }
+
+        &-right-angle {
+          background: linear-gradient(to right, var(--resume-tint-slightly-darker), var(--resume-tint-slightly-darker)),
+            linear-gradient(to bottom, var(--color-surface), var(--color-surface));
+
+          transform: rotateY(calc(90deg - var(--resume-entry-year-angle)))
+            translateZ(calc(var(--resume-entry-year-width) + var(--resume-entry-year-description-gap) / 1.5));
+          transform-origin: left top;
+          left: var(--resume-angled-surface-right);
+          width: var(--resume-entry-entry-width);
+          right: auto;
+        }
+      }
+    }
+  }
+</style>
