@@ -1,5 +1,8 @@
 ---
+import Acknowledgments from '../components/Acknowledgments.astro';
 import type { BaseBoxProps } from '../components/Box.astro';
+import BoxString from '../components/BoxString.astro';
+import Chair from '../components/Chair.astro';
 import Computer from '../components/Computer.astro';
 import Ficus from '../components/Ficus.astro';
 import ResumeEntry, { type ResumeEntryInfo } from '../components/ResumeEntry.astro';
@@ -61,30 +64,64 @@ const entries: ResumeEntryInfo[] = [
     techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
   },
 ];
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+const entriesDecorations: Array<{ Component: Function; class: string; seatColor?: string; frameColor?: string }> = [
+  { Component: Computer, class: 'resume-decoration resume-decoration-left resume-computer' },
+  {
+    Component: Ficus,
+    class: 'resume-decoration resume-decoration-right resume-ficus',
+  },
+  {
+    Component: Chair,
+    class: 'resume-decoration resume-decoration-left resume-chair',
+    seatColor: 'var(--seat-color)',
+    frameColor: 'var(--seat-frame-color)',
+  },
+];
+
+let entriesDecorationIndex = 0;
 ---
 
 <Layout title="Hi mom">
-  <div class="resume-plane">
-    {
-      entries.map((r, i) => (
-        <ResumeEntry style={{ '--i': entries.length - i - 1 }} entry={r} yearGridProperties={{ hideSurfaces }} />
-      ))
-    }
+  <div class="resume-viewport" style={{ '--resume-entries-count': entries.length }}>
+    <h1>
+      <BoxString string="Resume" cellSize={32} color="var(--color-text-anchor-visited)" />
+    </h1>
 
-    <Ficus class="resume-ficus" />
-    <Computer class="resume-computer" />
+    <div class="resume-plane">
+      {
+        entries.map((r, i) => {
+          let renderDecoration = false;
+          const {
+            Component,
+            class: className,
+            seatColor,
+            frameColor,
+          } = entriesDecorations[entriesDecorationIndex % entriesDecorations.length];
+
+          if (i > 0 && i % 2 !== 0) {
+            entriesDecorationIndex++;
+            renderDecoration = true;
+          }
+
+          return (
+            <ResumeEntry style={{ '--i': entries.length - i - 1 }} entry={r} yearGridProperties={{ hideSurfaces }}>
+              {renderDecoration && <Component class={className} seatColor={seatColor} frameColor={frameColor} />}
+            </ResumeEntry>
+          );
+        })
+      }
+    </div>
   </div>
+  <Acknowledgments class="acks" />
 </Layout>
 
 <style lang="scss" is:global>
   html,
   body {
     overflow-x: hidden;
-  }
-
-  body {
-    perspective: calc(var(--resume-parallax-offset) * 1.5);
-    perspective-origin: center;
+    height: 100%;
   }
 </style>
 
@@ -95,37 +132,79 @@ const entries: ResumeEntryInfo[] = [
   }
 
   .resume {
+    &-viewport {
+      --resume-tilt-angle: -15deg;
+
+      position: relative;
+      height: 100%;
+      perspective: calc(var(--resume-parallax-offset) * 1.5);
+      perspective-origin: center;
+      transform-style: preserve-3d;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      h1 {
+        transform: translateZ(-250px) rotateX(var(--resume-tilt-angle));
+        transform-style: preserve-3d;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
     &-plane {
+      --seat-color: #dcdcdc;
+      --seat-frame-color: #707070;
+
+      @media (prefers-color-scheme: dark) {
+        --seat-color: #190b00;
+        --seat-frame-color: #212121;
+      }
+
+      position: relative;
       display: flex;
       flex-flow: column;
       align-items: center;
       transform-style: preserve-3d;
-      padding: 0 0 0 calc(var(--padding-xlg) * 5);
-      min-width: var(--resume-entry-width);
-      transform: rotateX(-15deg);
+      transform: rotateX(var(--resume-tilt-angle));
       margin-top: 80vh;
     }
 
-    &-ficus {
+    &-decoration {
       position: absolute;
+      bottom: 100%;
 
-      // TODO: refactor to CSS vars that determine resume entries positioning
-      --resume-ficus-scale: 10; // TODO: wouldn't be needed if <Ficus /> used CSS vars for its size
-      top: 2196px;
-      left: -1860px;
-      transform: translateZ(-4200px) rotateY(40deg) scaleX(var(--resume-ficus-scale)) scaleY(var(--resume-ficus-scale))
-        scaleZ(var(--resume-ficus-scale));
+      transform: rotateY(var(--rotate, 0deg)) scaleX(var(--scale, 1)) scaleY(var(--scale, 1)) scaleZ(var(--scale, 1));
+      transform-origin: bottom;
+
+      &-left {
+        --rotate: 40deg;
+        left: calc(var(--resume-entry-width) * 0.1);
+      }
+
+      &-right {
+        --rotate: -35deg;
+        right: calc(var(--resume-entry-width) * 0.1);
+      }
+    }
+
+    &-ficus {
+      --scale: 3;
     }
 
     &-computer {
-      position: absolute;
-
-      // TODO: refactor to CSS vars that determine resume entries positioning
-      --resume-computer-scale: 7; // TODO: wouldn't be needed if <Ficus /> used CSS vars for its size
-      top: 4285px;
-      right: -660px;
-      transform: translateZ(-2300px) rotateY(-35deg) scaleX(var(--resume-computer-scale))
-        scaleY(var(--resume-computer-scale)) scaleZ(var(--resume-computer-scale));
+      --scale: 2;
     }
+
+    &-chair {
+      --scale: 1.5;
+    }
+  }
+
+  .acks {
+    position: fixed;
+    bottom: var(--padding-md);
+    right: 0;
+    left: 0;
   }
 </style>

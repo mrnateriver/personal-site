@@ -8,6 +8,7 @@
 @mixin typography() {
   --font-family-header: 'Catamaran', sans-serif;
   --font-family-paragraph: 'Source Sans 3', sans-serif;
+  --font-family-decoration: 'Handjet', cursive;
   --font-size-base: 20px;
 
   --font-size-xs: 0.7rem; // caption

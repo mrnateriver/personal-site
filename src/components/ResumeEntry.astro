@@ -1,5 +1,6 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
+
 import type { Props as BoxGridProps } from './BoxGrid.astro';
 import BoxString from './BoxString.astro';
 
@@ -21,6 +22,8 @@ const { class: className, style, yearGridProperties, entry } = Astro.props;
 ---
 
 <div class={`resume-entry ${className ?? ''}`} style={style}>
+  <slot />
+
   <div class="resume-entry-surface resume-entry-surface-top"></div>
   <div class="resume-entry-surface resume-entry-surface-top-left-angle"></div>
   <div class="resume-entry-surface resume-entry-surface-top-right-angle"></div>
@@ -41,15 +44,9 @@ const { class: className, style, yearGridProperties, entry } = Astro.props;
   <div class="resume-entry-description">
     <h2 title="Career step">{entry.title}</h2>
     <p title="Description of the duties performed">{entry.description}</p>
-    {
-      entry.techStack?.length && (
-        <div class="resume-entry-tech" title="Technical stack">
-          {entry.techStack.map((s) => (
-            <span class="resume-entry-tech-entry">{s}</span>
-          ))}
-        </div>
-      )
-    }
+  </div>
+  <div class="resume-entry-stack">
+    {entry.techStack?.map((s) => <div class="resume-entry-stack-entry">{s}</div>)}
   </div>
 </div>
 
@@ -71,8 +68,7 @@ const { class: className, style, yearGridProperties, entry } = Astro.props;
       transform: translateZ(calc(-1 * var(--record-i) * var(--resume-entry-parallax-offset)));
       margin-bottom: calc(var(--padding-xlg) * (1 + var(--record-i)) * 7);
       scale: calc(1 + var(--record-i) * 0.5);
-      padding-right: var(--resume-entry-year-width);
-      padding-top: 90px;
+      padding-top: calc(var(--padding-xlg) * 2);
 
       &-year {
         display: flex;
@@ -82,7 +78,21 @@ const { class: className, style, yearGridProperties, entry } = Astro.props;
         transform-origin: right center;
       }
 
+      &-stack {
+        min-width: var(--resume-entry-year-width);
+        transform: rotateY(calc(-1 * var(--resume-entry-year-angle))) translateZ(48px);
+        transform-origin: left center;
+
+        &-entry {
+          font-weight: bold;
+          font-size: var(--font-size-lg);
+          font-family: var(--font-family-decoration);
+          line-height: var(--font-size-xl);
+        }
+      }
+
       &-description {
+        flex: 1;
         transform-origin: top left;
         transform-style: preserve-3d;
 
@@ -106,7 +116,7 @@ const { class: className, style, yearGridProperties, entry } = Astro.props;
         }
 
         position: absolute;
-        top: calc(-1 * var(--padding-xlg));
+        top: 0;
         left: 0;
         right: 0;
         height: var(--resume-entry-entry-width);

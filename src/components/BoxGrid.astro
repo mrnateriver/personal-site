@@ -60,7 +60,7 @@ const {
   animationFrameMs = 3000,
   animationDelayMs = 0,
   waveDisabled = false,
-  waveGapOffset = 2,
+  waveGapOffset = `calc(${normalizeCssValue(cellSize, 'px')} / 12)`,
   waveAnimationDelayMs = 5000,
 } = Astro.props;
 

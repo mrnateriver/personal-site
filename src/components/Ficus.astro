@@ -1,15 +1,18 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
+
 import { normalizeColor, type Color } from '../colors';
 
 export interface Props {
   color?: Color;
   class?: string;
+  style?: Exclude<HTMLAttributes<'div'>['style'], string>;
 }
 
-const { class: className, color = 'var(--color-surface)' } = Astro.props;
+const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
 ---
 
-<div class={`ficus ${className ?? ''}`} style={{ '--side-color': normalizeColor(color) }}>
+<div class={`ficus ${className ?? ''}`} style={{ ...(style ?? {}), '--side-color': normalizeColor(color) }}>
   <img class="ficus-plant" src="src/assets/plant.png" />
   <div class="ficus-pot">
     <i class="ficus-pot-side-left"></i>
@@ -38,6 +41,7 @@ const { class: className, color = 'var(--color-surface)' } = Astro.props;
   @use 'sass:list';
 
   // We have to use SCSS vars instead of native CSS properties because we need trigonometric functions for calculations
+  // TODO: refactor to CSS trigonometric functions (https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Functions#trigonometric_functions)
   $pot-side-width: 16px;
   $pot-side-height: 32px;
   $pot-side-angle: 15deg;

@@ -1,4 +1,6 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
+
 import { normalizeColor, type Color } from '../colors';
 
 import Box from './Box.astro';
@@ -6,14 +8,18 @@ import Box from './Box.astro';
 export interface Props {
   class?: string;
   plasticColor?: Color;
+  style?: Exclude<HTMLAttributes<'div'>['style'], string>;
 }
 
-const { class: className, plasticColor = 'beige' } = Astro.props;
+const { class: className, style, plasticColor = 'beige' } = Astro.props;
 
 const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
 ---
 
-<div class={`computer ${className ?? ''}`} style={{ '--computer-plastic-color': plasticColorNormalized }}>
+<div
+  class={`computer ${className ?? ''}`}
+  style={{ ...(style ?? {}), '--computer-plastic-color': plasticColorNormalized }}
+>
   <div class="computer-screen">
     <Box
       class="computer-screen-front"
