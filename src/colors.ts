@@ -88,7 +88,7 @@ function parseColorParens(color: string): [number, number, number, number] {
 
   return color
     .slice(color.indexOf('(') + 1, -1)
-    .replaceAll(/\s+/, ',')
+    .replaceAll(/\s+/g, ',')
     .split(',')
     .map((v) => v.trim())
     .filter(Boolean)
