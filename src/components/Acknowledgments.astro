@@ -17,7 +17,7 @@ const { class: className } = Astro.props;
       borderWidth={4}
     >
       <span>Made with CSS and</span>
-      <AstroLogo color="var(--color-text-primary)" width={75} height={25} />
+      <AstroLogo color="var(--color-text-primary)" width={65} height={20} />
     </SectionLink>
     <SectionLink
       class="stack-entry stack-github"
@@ -27,7 +27,7 @@ const { class: className } = Astro.props;
       borderWidth={4}
     >
       <span>Source code</span>
-      <GitHubLogo color="var(--color-text-primary)" width={20} height={20} />
+      <GitHubLogo color="var(--color-text-primary)" width={16} height={16} />
     </SectionLink>
   </div>
 </section>
@@ -35,8 +35,7 @@ const { class: className } = Astro.props;
 <style lang="scss">
   .acks-container {
     font-family: var(--font-family-decoration);
-    font-size: var(--font-size-lg);
-    font-weight: bold;
+    font-size: var(--font-size-xs);
 
     @media (max-width: 650px) {
       font-size: var(--font-size-sm);
@@ -48,7 +47,7 @@ const { class: className } = Astro.props;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: var(--padding-lg);
+    gap: var(--padding-sm);
 
     @media (max-width: 650px) {
       gap: var(--padding-xs);
@@ -74,7 +73,7 @@ const { class: className } = Astro.props;
   .copyrights {
     font-weight: normal;
     text-align: center;
-    margin-bottom: var(--padding-sm);
+    margin-bottom: var(--padding-xs);
     color: var(--color-text-tertiary);
   }
 </style>
