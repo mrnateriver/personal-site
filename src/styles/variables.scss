@@ -11,6 +11,7 @@
   --font-family-decoration: 'Silkscreen', cursive;
   --font-size-base: 20px;
 
+  --font-size-xss: 0.5rem; // caption
   --font-size-xs: 0.7rem; // caption
   --font-size-sm: 0.85rem; // small
   --font-size-md: 1rem; // p
@@ -39,7 +40,7 @@
 
 @mixin palette() {
   --color-primary: #5091d7;
-  --color-accent: darkorange;
+  --color-accent: darkcyan;
   --color-background: #fafafa;
   --color-surface: white;
   --color-text-primary: black;
