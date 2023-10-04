@@ -28,11 +28,25 @@ const Element = href ? 'a' : 'div';
 
 <style lang="scss">
   .section-preview {
+    --section-preview-max-width: 300px;
+    --section-preview-win98-background: #c0c0c0;
+    --section-preview-win98-title-start: #000281;
+    --section-preview-win98-title-end: #0f80ce;
+    --section-preview-win98-border-light: #dfdfdf;
+    --section-preview-win98-border-dark: #434343;
+
+    color: black;
+    max-width: var(--section-preview-max-width);
     box-shadow: var(--box-shadow-base);
-    background: var(--color-surface);
+    background: var(--section-preview-win98-background);
     position: relative;
     display: block;
     line-height: 1;
+
+    border-top: 2pt solid var(--section-preview-win98-border-light);
+    border-left: 2pt solid var(--section-preview-win98-border-light);
+    border-bottom: 2pt solid var(--section-preview-win98-border-dark);
+    border-right: 2pt solid var(--section-preview-win98-border-dark);
 
     &-clickable {
       --border-width: 8px;
@@ -40,12 +54,11 @@ const Element = href ? 'a' : 'div';
 
       cursor: pointer;
       text-decoration: none;
-      color: var(--color-text-primary);
       -webkit-tap-highlight-color: transparent;
       outline: none;
 
       &:visited {
-        color: var(--color-text-primary);
+        color: black;
       }
 
       @keyframes section-preview-arrow-grow {
@@ -94,33 +107,69 @@ const Element = href ? 'a' : 'div';
     }
 
     h2,
-    p {
+    p,
+    &-caption {
+      font-family: var(--font-family-decoration);
       margin: 0;
     }
 
     h2 {
-      font-size: var(--font-size-md);
+      font-size: var(--font-size-sm);
       margin-bottom: var(--padding-sm);
     }
 
     p {
-      font-size: var(--font-size-sm);
+      font-size: var(--font-size-xs);
       text-indent: 0;
     }
 
     &-caption {
+      --section-preview-caption-height: 25px;
+      --section-preview-caption-close-button-color: #c1c1c1;
+      --section-preview-caption-close-button-offset: 4px;
+
       display: block;
-      font-size: var(--font-size-xs);
-      background: var(--color-accent);
+      box-sizing: border-box;
+      font-size: var(--font-size-xss);
+      height: var(--section-preview-caption-height);
+      background: linear-gradient(
+        to right,
+        var(--section-preview-win98-title-start),
+        var(--section-preview-win98-title-end)
+      );
       padding: var(--padding-sm) var(--padding-md);
+      position: relative;
       color: white;
+
+      &::after {
+        --section-preview-close-button-size: calc(
+          var(--section-preview-caption-height) - var(--section-preview-caption-close-button-offset) * 2
+        );
+
+        content: 'x';
+        color: black;
+        display: block;
+        position: absolute;
+        font-weight: bold;
+        box-sizing: border-box;
+        padding: 0.5px 0 0 1px;
+        border-top: 1pt solid var(--section-preview-win98-border-light);
+        border-left: 1pt solid var(--section-preview-win98-border-light);
+        border-bottom: 1pt solid var(--section-preview-win98-border-dark);
+        border-right: 1pt solid var(--section-preview-win98-border-dark);
+        font-size: calc(var(--section-preview-close-button-size) * 0.7);
+        background: var(--section-preview-caption-close-button-color);
+        right: var(--section-preview-caption-close-button-offset);
+        top: var(--section-preview-caption-close-button-offset);
+        width: var(--section-preview-close-button-size);
+        height: var(--section-preview-close-button-size);
+      }
     }
 
     &-content {
       padding: var(--padding-md);
 
       &-wrapper {
-        border-radius: var(--border-radius-base);
         overflow: hidden;
       }
     }
