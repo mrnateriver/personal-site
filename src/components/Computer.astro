@@ -63,8 +63,6 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
 </div>
 
 <style lang="scss">
-  @use 'sass:math';
-
   .computer {
     // TODO: refactor to use a single "base" size and derive everything else from it
     --computer-monitor-width: 64px;
@@ -73,9 +71,9 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
     --computer-keyboard-length: 96px;
     --computer-keyboard-width: 32px;
     --computer-keyboard-height: 4px;
+    --computer-back-sides-angle: 10deg;
 
-    $back-sides-angle: 10deg;
-    --back-sides-padding: calc(var(--computer-monitor-depth) * #{math.sin($back-sides-angle)});
+    --back-sides-padding: calc(var(--computer-monitor-depth) * sin(var(--computer-back-sides-angle)));
 
     transform-style: preserve-3d;
     position: relative;
@@ -138,13 +136,15 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
 
         &-top {
           top: var(--side-offset);
-          transform: translateZ(calc(var(--computer-monitor-depth-front) / -2)) rotateX(-#{90deg - $back-sides-angle});
+          transform: translateZ(calc(var(--computer-monitor-depth-front) / -2))
+            rotateX(calc(var(--computer-back-sides-angle) - 90deg));
           transform-origin: center top;
         }
 
         &-bottom {
           bottom: var(--side-offset);
-          transform: translateZ(calc(var(--computer-monitor-depth-front) / -2)) rotateX(#{90deg - $back-sides-angle});
+          transform: translateZ(calc(var(--computer-monitor-depth-front) / -2))
+            rotateX(calc(90deg - var(--computer-back-sides-angle)));
           transform-origin: center bottom;
         }
 

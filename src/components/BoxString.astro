@@ -1,6 +1,7 @@
 ---
 import type { Color } from '../colors';
-import { ImagePixelFrames, readBmpImage } from '../images';
+import { readBmpImage, type ImagePixelFrames } from '../images';
+
 import type { Props as BoxGridProps } from './BoxGrid.astro';
 import BoxGrid from './BoxGrid.astro';
 
@@ -113,7 +114,7 @@ const stringPixels = string
   .split('')
   .map((letter) => [letter in letters ? letter : ' ', letters[letter] ?? letters[' ']] as const);
 
-const pixels = stringPixels.reduce((acc, [letter, letterPixels], letterIdx) => {
+const pixels = stringPixels.reduce<ImagePixelFrames[][]>((acc, [letter, letterPixels], letterIdx) => {
   letterPixels.forEach((row, i) => {
     acc[i] = [
       ...(acc[i] ?? []),
@@ -124,7 +125,7 @@ const pixels = stringPixels.reduce((acc, [letter, letterPixels], letterIdx) => {
     ];
   });
   return acc;
-}, [] as ImagePixelFrames[][]);
+}, []);
 ---
 
 <figure class={`box-string ${className ?? ''}`} title={string}>
