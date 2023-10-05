@@ -37,14 +37,7 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
 </div>
 
 <style lang="scss">
-  @use 'sass:math';
   @use 'sass:list';
-
-  // We have to use SCSS vars instead of native CSS properties because we need trigonometric functions for calculations
-  // TODO: refactor to CSS trigonometric functions (https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Functions#trigonometric_functions)
-  $pot-side-width: 16px;
-  $pot-side-height: 32px;
-  $pot-side-angle: 15deg;
 
   /*
   Top view:
@@ -66,47 +59,52 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
  O|/
 
   AD, CD - top lines of front and left sides corresp. if they were not rotated.
-  BE, HF - top lines of said planes after they are rotated to *angle R*.
+  BE, GF - top lines of said planes after they are rotated to *angle R*.
   GE - top line of the corner plane which we need to size and rotate.
   DH - line between intersection of A and B and which is orthogonal to GE (bisector of E-D-G right angle + centroid of E-D-G triangle).
 
-  We know the angle R, we know the length of the vertical side OD==OE (OE is rotated OD), so we can find DE==DG using trigonometry (sin(R) = DE/OE -> DE = sin(R) * OE).
-  Knowing DE and DG, we can find GE length using Pythagorean theorem.
-  Angle H-D-E is 45deg, D-H-E is 90 degrees, so we can use trigonometry again to find DH length from DE, since HE = GE/2.
-  DH is part of the triangle with vertical line of the pot's side, so we can use Pythagorean again to find required width of the corner plane (which will be the hypotenuse).
-  Using the same trivial trigonometry, we can find the angle between the corner plane and the pot's side.
+  Using the angle R and the pot's height, we can find DE == DG.
+  Since DE == DG, angles DGE and DEG are also equal and are 45deg.
+  Thus, using trigonometry, GE = DE / cos(45deg). We could also use Pythagorean theorem to find GE, but CSS sqrt function is not supported in major browsers as of writing.
+  HDE is 45deg, DHE is 90 degrees, so we can find DH length from DE: DH = DE * sin(45deg).
+  DH is part of the triangle with vertical line of the pot's side, so we can use trigonometry again to find required width of the corner plane (which will be the hypotenuse).
+  Using an atan2 function (see reference below), we can find the angle between the corner plane and the pot's side.
   And finally we need to shift the corner plane by OD-DX. OX can be found using cos(R) = OX/(OE=OD) -> OX = cos(R) * OD.
+
+  atan2 reference: https://drafts.csswg.org/css-values-4/#trig-funcs
+  > NOTE: atan2(Y, X) is generally equivalent to atan(Y / X)...
   */
-  @function strip-units($number) {
-    @return math.div($number, ($number * 0 + 1));
-  }
-
-  $od: strip-units($pot-side-height);
-  $r: $pot-side-angle;
-
-  $de: math.sin($r) * $od;
-  $dg: $de;
-  $ge: math.sqrt($de * $de + $dg * $dg);
-  $ox: math.cos($r) * $od;
-  $dx: $od - $ox;
-
-  $he: math.div($ge, 2);
-  $dh: math.sqrt($de * $de - $he * $he);
-
-  $corner-plane-width: $ge;
-  $corner-plane-angle: math.atan(math.div($dh, $od));
-  $corner-plane-height: math.div($dh, math.sin($corner-plane-angle));
 
   .ficus {
+    --pot-side-width: 16px;
+    --pot-side-height: 32px;
+    --pot-side-angle: 15deg;
+
+    --r: var(--pot-side-angle);
+    --od: var(--pot-side-height);
+    --ox: calc(cos(var(--r)) * var(--od));
+
+    --de: calc(sin(var(--r)) * var(--od));
+    --dx: calc(var(--od) - var(--ox));
+
+    --he: calc(var(--ge) / 2);
+
+    --ge: calc(var(--de) / cos(45deg));
+    --dh: calc(var(--de) * sin(45deg));
+
+    --corner-plane-angle: calc(atan2(var(--dh), var(--od)));
+    --corner-plane-width: var(--ge);
+    --corner-plane-height: calc(var(--dh) / sin(var(--corner-plane-angle)));
+
     transform-style: preserve-3d;
-    width: $pot-side-width + $de * 2;
+    width: calc(var(--pot-side-width) + var(--de) * 2);
 
     &-plant {
-      width: $pot-side-width * 2.5;
-      transform: translateX(50%) translateZ(math.div(-$pot-side-width, 2)) rotateY(-20deg);
+      width: calc(var(--pot-side-width) * 2.5);
+      transform: translateX(50%) translateZ(calc(var(--pot-side-width) / -2)) rotateY(-20deg);
       transform-origin: bottom center;
       position: absolute;
-      bottom: $pot-side-height - $dx;
+      bottom: calc(var(--pot-side-height) - var(--dx));
       right: 50%;
 
       @media (prefers-color-scheme: dark) {
@@ -119,56 +117,58 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
 
       transform-style: preserve-3d;
       position: relative;
-      height: $pot-side-height;
-      width: $pot-side-width + $de * 2;
+      height: var(--pot-side-height);
+      width: calc(var(--pot-side-width) + var(--de) * 2);
 
       [class^='ficus-pot-side-'] {
         display: block;
         position: absolute;
         transform-style: preserve-3d;
         transform-origin: left bottom;
-        height: $pot-side-height;
-        width: $pot-side-width;
+        height: var(--pot-side-height);
+        width: var(--pot-side-width);
         bottom: 0;
       }
 
       [class*='ficus-pot-side-'][class*='-corner'] {
         clip-path: polygon(0 0, 100% 0, 50% 100%);
-        height: $corner-plane-height - $dx + px;
-        width: $corner-plane-width + px;
+        height: calc(var(--corner-plane-height) - var(--dx));
+        width: var(--corner-plane-width);
       }
 
       &-side {
         &-left {
-          transform: translateX($de + px) rotateY(90deg) translateZ(0) rotateX($pot-side-angle);
+          transform: translateX(var(--de)) rotateY(90deg) translateZ(0) rotateX(var(--pot-side-angle));
 
           &-corner {
-            transform: translateX($de + px) rotateY(45deg * 3) rotateX($corner-plane-angle)
-              translateX(math.div(-$corner-plane-width, 2) + px);
+            transform: translateX(var(--de)) rotateY(45deg * 3) rotateX(var(--corner-plane-angle))
+              translateX(calc(var(--corner-plane-width) / -2));
           }
         }
         &-right {
-          transform: translateX($de + px) rotateY(90deg) translateZ($pot-side-width) rotateX(-$pot-side-angle);
+          transform: translateX(var(--de)) rotateY(90deg) translateZ(var(--pot-side-width))
+            rotateX(calc(-1 * var(--pot-side-angle)));
 
           &-corner {
-            transform: translateX($de + px) translateZ(-$pot-side-width) translateX($pot-side-width) rotateY(45deg * 3)
-              rotateX(-$corner-plane-angle) translateX(math.div(-$corner-plane-width, 2) + px);
+            transform: translateX(var(--de)) translateZ(calc(-1 * var(--pot-side-width)))
+              translateX(var(--pot-side-width)) rotateY(45deg * 3) rotateX(calc(-1 * var(--corner-plane-angle)))
+              translateX(calc(var(--corner-plane-width) / -2));
           }
         }
         &-back {
-          transform: translateX($de + px) translateZ(-$pot-side-width) rotateX($pot-side-angle);
+          transform: translateX(var(--de)) translateZ(calc(-1 * var(--pot-side-width))) rotateX(var(--pot-side-angle));
 
           &-corner {
-            transform: translateX($de + px) translateZ(-$pot-side-width) rotateY(45deg) rotateX($corner-plane-angle)
-              translateX(math.div(-$corner-plane-width, 2) + px);
+            transform: translateX(var(--de)) translateZ(calc(-1 * var(--pot-side-width))) rotateY(45deg)
+              rotateX(var(--corner-plane-angle)) translateX(calc(var(--corner-plane-width) / -2));
           }
         }
         &-front {
-          transform: translateX($de + px) rotateX(-$pot-side-angle);
+          transform: translateX(var(--de)) rotateX(calc(-1 * var(--pot-side-angle)));
 
           &-corner {
-            transform: translateX($pot-side-width + $de) rotateY(45deg) rotateX(-$corner-plane-angle)
-              translateX(math.div(-$corner-plane-width, 2) + px);
+            transform: translateX(calc(var(--pot-side-width) + var(--de))) rotateY(45deg)
+              rotateX(calc(-1 * var(--corner-plane-angle))) translateX(calc(var(--corner-plane-width) / -2));
           }
         }
 
@@ -194,31 +194,32 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
       }
 
       &-lid {
-        $lid-size: $pot-side-width + $de * 2;
+        --lid-size: calc(var(--pot-side-width) + var(--de) * 2);
+
         display: block;
         position: absolute;
         transform-style: preserve-3d;
         transform-origin: center bottom;
         position: absolute;
-        width: $lid-size;
-        height: $lid-size;
-        transform: translateX($de + px) rotateX(90deg) translateZ($lid-size - $dx) translateY($de + px)
-          translateX(-$de + px);
+        width: var(--lid-size);
+        height: var(--lid-size);
+        transform: translateX(var(--de)) rotateX(90deg) translateZ(calc(var(--lid-size) - var(--dx)))
+          translateY(var(--de)) translateX(calc(-1 * var(--de)));
 
         --lid-background: linear-gradient(to bottom right, transparent 0%, transparent 50%, var(--warm-light)),
           linear-gradient(to top left, transparent, #00000020),
           linear-gradient(to top, var(--side-color), var(--side-color));
         background-image: var(--lid-background);
         clip-path: polygon(
-          $de + px 0,
-          $de + $pot-side-width 0,
-          $de + $pot-side-width + $de $de + px,
-          $de + $pot-side-width + $de $de + $pot-side-width,
-          $de + $pot-side-width $de + $pot-side-width + $de,
-          $de + px $de + $pot-side-width + $de,
-          0 $de + $pot-side-width,
-          0 $de + px,
-          $de + px 0
+          var(--de) 0,
+          calc(var(--de) + var(--pot-side-width)) 0,
+          calc(var(--de) * 2 + var(--pot-side-width)) var(--de),
+          calc(var(--de) * 2 + var(--pot-side-width)) calc(var(--de) + var(--pot-side-width)),
+          calc(var(--de) + var(--pot-side-width)) calc(var(--de) * 2 + var(--pot-side-width)),
+          var(--de) calc(var(--de) * 2 + var(--pot-side-width)),
+          0 calc(var(--de) + var(--pot-side-width)),
+          0 var(--de),
+          var(--de) 0
         );
 
         &:not(&-soil) {
@@ -233,15 +234,15 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
           }
           100% {
             clip-path: polygon(
-              $de + px 0,
-              $de + $pot-side-width 0,
-              $de + $pot-side-width + $de $de + px,
-              $de + $pot-side-width + $de $de + $pot-side-width,
-              $de + $pot-side-width $de + $pot-side-width + $de,
-              $de + px $de + $pot-side-width + $de,
-              0 $de + $pot-side-width,
-              0 $de + px,
-              $de + px 0
+              var(--de) 0,
+              calc(var(--de) + var(--pot-side-width)) 0,
+              calc(var(--de) * 2 + var(--pot-side-width)) var(--de),
+              calc(var(--de) * 2 + var(--pot-side-width)) calc(var(--de) + var(--pot-side-width)),
+              calc(var(--de) + var(--pot-side-width)) calc(var(--de) * 2 + var(--pot-side-width)),
+              var(--de) calc(var(--de) * 2 + var(--pot-side-width)),
+              0 calc(var(--de) + var(--pot-side-width)),
+              0 var(--de),
+              var(--de) 0
             );
           }
         }
@@ -250,8 +251,8 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
           --soil-color: #1e1e1e7e;
 
           transform-origin: center;
-          transform: translateX($de + px) rotateX(90deg) translateZ($lid-size - $dx - math.div($lid-size, 2))
-            translateY($de - math.div($lid-size, 2)) translateX(-$de + px) scale(0.85);
+          transform: translateX(var(--de)) rotateX(90deg) translateZ(calc(var(--lid-size) / 2 - var(--dx)))
+            translateY(calc(var(--de) - var(--lid-size) / 2)) translateX(calc(-1 * var(--de))) scale(0.85);
           background: var(--soil-color);
         }
       }
