@@ -1,0 +1,89 @@
+---
+export interface Props {
+  class?: string;
+  caption?: string;
+  ariaHidden?: boolean;
+}
+
+const { class: className, caption, ariaHidden = true } = Astro.props;
+---
+
+<div class={`win98-window ${className ?? ''}`} aria-hidden={ariaHidden} title={caption}>
+  {
+    caption && (
+      <div class="win98-window-caption">
+        <span>{caption}</span>
+      </div>
+    )
+  }
+  <div class="win98-window-content">
+    <slot />
+  </div>
+</div>
+
+<style lang="scss">
+  .win98-window {
+    --win98-caption-height: 25px;
+    --win98-caption-close-button-color: #c1c1c1;
+    --win98-caption-close-button-offset: 4px;
+    --win98-caption-close-button-size: calc(var(--win98-caption-height) - var(--win98-caption-close-button-offset) * 2);
+    --win98-background: #c0c0c0;
+    --win98-title-start: #000281;
+    --win98-title-end: #0f80ce;
+    --win98-border-light: #dfdfdf;
+    --win98-border-dark: #434343;
+    --win98-border-width: 2pt;
+
+    color: black;
+    line-height: 1;
+    box-shadow: var(--box-shadow-base);
+    background: var(--win98-background);
+
+    border-top: var(--win98-border-width) solid var(--win98-border-light);
+    border-left: var(--win98-border-width) solid var(--win98-border-light);
+    border-bottom: var(--win98-border-width) solid var(--win98-border-dark);
+    border-right: var(--win98-border-width) solid var(--win98-border-dark);
+
+    &-caption {
+      font-family: var(--font-family-decoration);
+      margin: 0;
+    }
+
+    &-caption {
+      color: white;
+      background: linear-gradient(to right, var(--win98-title-start), var(--win98-title-end));
+      padding: var(--win98-caption-close-button-offset) var(--win98-caption-close-button-offset)
+        var(--win98-caption-close-button-offset) var(--padding-md);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      > span {
+        flex: 1;
+        font-size: var(--font-size-xss);
+      }
+
+      &::after {
+        content: 'x';
+        color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        font-weight: bold;
+        font-size: calc(var(--win98-caption-close-button-size) * 0.7);
+        border-top: calc(var(--win98-border-width) / 2) solid var(--win98-border-light);
+        border-left: calc(var(--win98-border-width) / 2) solid var(--win98-border-light);
+        border-bottom: calc(var(--win98-border-width) / 2) solid var(--win98-border-dark);
+        border-right: calc(var(--win98-border-width) / 2) solid var(--win98-border-dark);
+        background: var(--win98-caption-close-button-color);
+        padding: calc(var(--win98-caption-close-button-offset) / 2);
+      }
+    }
+
+    &-content {
+      padding: var(--padding-md);
+      overflow: hidden;
+    }
+  }
+</style>

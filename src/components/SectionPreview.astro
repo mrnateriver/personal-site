@@ -1,4 +1,5 @@
 ---
+import Win98Window from './Win98Window.astro';
 export interface Props {
   class?: string;
   caption?: string;
@@ -17,36 +18,19 @@ const Element = href ? 'a' : 'div';
   title={href ? `${caption ? `${caption} - ` : ''}${title}` : undefined}
   href={href}
 >
-  <div class="section-preview-content-wrapper" aria-hidden="true">
-    {caption && <span class="section-preview-caption">{caption}</span>}
-    <div class="section-preview-content">
-      <h2>{title}</h2>
-      <p>{description}</p>
-    </div>
-  </div>
+  <Win98Window caption={caption} ariaHidden>
+    <h2>{title}</h2>
+    <p>{description}</p>
+  </Win98Window>
 </Element>
 
 <style lang="scss">
   .section-preview {
     --section-preview-max-width: 300px;
-    --section-preview-win98-background: #c0c0c0;
-    --section-preview-win98-title-start: #000281;
-    --section-preview-win98-title-end: #0f80ce;
-    --section-preview-win98-border-light: #dfdfdf;
-    --section-preview-win98-border-dark: #434343;
 
-    color: black;
     max-width: var(--section-preview-max-width);
-    box-shadow: var(--box-shadow-base);
-    background: var(--section-preview-win98-background);
-    position: relative;
     display: block;
-    line-height: 1;
-
-    border-top: 2pt solid var(--section-preview-win98-border-light);
-    border-left: 2pt solid var(--section-preview-win98-border-light);
-    border-bottom: 2pt solid var(--section-preview-win98-border-dark);
-    border-right: 2pt solid var(--section-preview-win98-border-dark);
+    position: relative;
 
     &-clickable {
       --border-width: 8px;
@@ -107,8 +91,7 @@ const Element = href ? 'a' : 'div';
     }
 
     h2,
-    p,
-    &-caption {
+    p {
       font-family: var(--font-family-decoration);
       margin: 0;
     }
@@ -121,57 +104,6 @@ const Element = href ? 'a' : 'div';
     p {
       font-size: var(--font-size-xs);
       text-indent: 0;
-    }
-
-    &-caption {
-      --section-preview-caption-height: 25px;
-      --section-preview-caption-close-button-color: #c1c1c1;
-      --section-preview-caption-close-button-offset: 4px;
-
-      display: block;
-      box-sizing: border-box;
-      font-size: var(--font-size-xss);
-      height: var(--section-preview-caption-height);
-      background: linear-gradient(
-        to right,
-        var(--section-preview-win98-title-start),
-        var(--section-preview-win98-title-end)
-      );
-      padding: var(--padding-sm) var(--padding-md);
-      position: relative;
-      color: white;
-
-      &::after {
-        --section-preview-close-button-size: calc(
-          var(--section-preview-caption-height) - var(--section-preview-caption-close-button-offset) * 2
-        );
-
-        content: 'x';
-        color: black;
-        display: block;
-        position: absolute;
-        font-weight: bold;
-        box-sizing: border-box;
-        padding: 0.5px 0 0 1px;
-        border-top: 1pt solid var(--section-preview-win98-border-light);
-        border-left: 1pt solid var(--section-preview-win98-border-light);
-        border-bottom: 1pt solid var(--section-preview-win98-border-dark);
-        border-right: 1pt solid var(--section-preview-win98-border-dark);
-        font-size: calc(var(--section-preview-close-button-size) * 0.7);
-        background: var(--section-preview-caption-close-button-color);
-        right: var(--section-preview-caption-close-button-offset);
-        top: var(--section-preview-caption-close-button-offset);
-        width: var(--section-preview-close-button-size);
-        height: var(--section-preview-close-button-size);
-      }
-    }
-
-    &-content {
-      padding: var(--padding-md);
-
-      &-wrapper {
-        overflow: hidden;
-      }
     }
   }
 </style>
