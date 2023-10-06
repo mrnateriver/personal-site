@@ -3,16 +3,20 @@ export interface Props {
   class?: string;
   caption?: string;
   ariaHidden?: boolean;
+  fullWindowControls?: boolean;
 }
 
-const { class: className, caption, ariaHidden = true } = Astro.props;
+const { class: className, caption, ariaHidden = true, fullWindowControls = false } = Astro.props;
 ---
 
 <div class={`win98-window ${className ?? ''}`} aria-hidden={ariaHidden} title={caption}>
   {
     caption && (
       <div class="win98-window-caption">
-        <span>{caption}</span>
+        <span class="win98-window-caption-label">{caption}</span>
+        {fullWindowControls && <span class="win98-window-caption-button win98-window-caption-button-minimize" />}
+        {fullWindowControls && <span class="win98-window-caption-button win98-window-caption-button-expand" />}
+        <span class="win98-window-caption-button win98-window-caption-button-close" />
       </div>
     )
   }
@@ -24,9 +28,9 @@ const { class: className, caption, ariaHidden = true } = Astro.props;
 <style lang="scss">
   .win98-window {
     --win98-caption-height: 25px;
-    --win98-caption-close-button-color: #c1c1c1;
-    --win98-caption-close-button-offset: 4px;
-    --win98-caption-close-button-size: calc(var(--win98-caption-height) - var(--win98-caption-close-button-offset) * 2);
+    --win98-caption-button-color: #c1c1c1;
+    --win98-caption-button-offset: 4px;
+    --win98-caption-button-size: calc(var(--win98-caption-height) - var(--win98-caption-button-offset) * 2);
     --win98-background: #c0c0c0;
     --win98-title-start: #000281;
     --win98-title-end: #0f80ce;
@@ -34,6 +38,8 @@ const { class: className, caption, ariaHidden = true } = Astro.props;
     --win98-border-dark: #434343;
     --win98-border-width: 2pt;
 
+    display: flex;
+    flex-flow: column nowrap;
     color: black;
     line-height: 1;
     box-shadow: var(--box-shadow-base);
@@ -52,38 +58,67 @@ const { class: className, caption, ariaHidden = true } = Astro.props;
     &-caption {
       color: white;
       background: linear-gradient(to right, var(--win98-title-start), var(--win98-title-end));
-      padding: var(--win98-caption-close-button-offset) var(--win98-caption-close-button-offset)
-        var(--win98-caption-close-button-offset) var(--padding-md);
+      padding: var(--win98-caption-button-offset) var(--win98-caption-button-offset) var(--win98-caption-button-offset)
+        var(--padding-md);
       display: flex;
       align-items: center;
       justify-content: flex-start;
 
-      > span {
+      &-label {
         flex: 1;
         font-size: var(--font-size-xss);
       }
 
-      &::after {
-        content: 'x';
+      &-button {
         color: black;
         display: flex;
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
+        line-height: 1;
         font-weight: bold;
-        font-size: calc(var(--win98-caption-close-button-size) * 0.7);
+        font-size: calc(var(--win98-caption-button-size) * 0.7);
         border-top: calc(var(--win98-border-width) / 2) solid var(--win98-border-light);
         border-left: calc(var(--win98-border-width) / 2) solid var(--win98-border-light);
         border-bottom: calc(var(--win98-border-width) / 2) solid var(--win98-border-dark);
         border-right: calc(var(--win98-border-width) / 2) solid var(--win98-border-dark);
-        background: var(--win98-caption-close-button-color);
-        padding: calc(var(--win98-caption-close-button-offset) / 2);
+        background: var(--win98-caption-button-color);
+        height: var(--win98-caption-button-size);
+        width: var(--win98-caption-button-size);
+
+        &-minimize::after,
+        &-expand::after {
+          display: block;
+          width: 8px;
+          height: 6px;
+        }
+
+        &-minimize::after {
+          content: '';
+          border-bottom: 2pt solid black;
+        }
+
+        &-expand::after {
+          content: '';
+          border: 1pt solid black;
+          border-top: 2pt solid black;
+        }
+
+        &-close {
+          margin-left: calc(var(--win98-caption-button-offset) / 2);
+
+          &::after {
+            content: 'x';
+          }
+        }
       }
     }
 
     &-content {
       padding: var(--padding-md);
+      position: relative;
       overflow: hidden;
+      flex: 1;
     }
   }
 </style>
