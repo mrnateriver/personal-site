@@ -11,7 +11,7 @@ export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient
   title?: string;
   /**
    * Gap between boxes.
-   * @default 2
+   * @default 2px
    */
   gap?: string | number;
   /**
@@ -26,13 +26,13 @@ export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient
    */
   transparentColor?: Color;
   /**
-   * @default 3000
+   * @default 3s
    */
-  animationFrameMs?: number;
+  animationFrame?: string | number;
   /**
    * @default 0
    */
-  animationDelayMs?: number;
+  animationDelay?: string | number;
   /**
    * @default false
    */
@@ -42,9 +42,9 @@ export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient
    */
   waveGapOffset?: string | number;
   /**
-   * @default 5000
+   * @default 5s
    */
-  waveAnimationDelayMs?: number;
+  waveAnimationDelay?: number;
   rows: ImagePixelFrames[][]; // Pixel Rows -> Columns -> Frames+
 }
 
@@ -57,11 +57,11 @@ const {
   class: className,
   hideSurfaces,
   hideGradient,
-  animationFrameMs = 3000,
-  animationDelayMs = 0,
+  animationFrame = 3000,
+  animationDelay = 0,
   waveDisabled = false,
   waveGapOffset = `calc(${normalizeCssValue(cellSize, 'px')} / 12)`,
-  waveAnimationDelayMs = 5000,
+  waveAnimationDelay = 5000,
 } = Astro.props;
 
 const normalizedGap = normalizeCssValue(gap, 'px');
@@ -147,9 +147,9 @@ const style = {
   '--cell-size': normalizeCssValue(cellSize, 'px'),
   '--rows-count': rowsWithVisibleCells.length,
   '--columns-count': rowLength,
-  '--animation-frame-ms': `${animationFrameMs}ms`,
-  '--animation-delay-ms': `${animationDelayMs}ms`,
-  '--wave-animation-delay-ms': `${waveAnimationDelayMs}ms`,
+  '--animation-frame-ms': normalizeCssValue(animationFrame, 'ms'),
+  '--animation-delay-ms': normalizeCssValue(animationDelay, 'ms'),
+  '--wave-animation-delay-ms': normalizeCssValue(waveAnimationDelay, 'ms'),
 } as const;
 
 const baseSectionProps: BoxProps = {

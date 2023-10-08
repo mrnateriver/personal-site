@@ -7,7 +7,7 @@ import BoxGrid, { type Props as BoxGridProps } from './BoxGrid.astro';
 interface BaseProps
   extends Pick<
     BoxGridProps,
-    'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient' | 'animationFrameMs' | 'animationDelayMs'
+    'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient' | 'animationFrame' | 'animationDelay'
   > {
   class?: string;
   title?: string;
@@ -31,8 +31,8 @@ const {
   cellsColor,
   hideSurfaces,
   hideGradient,
-  animationFrameMs,
-  animationDelayMs,
+  animationFrame,
+  animationDelay,
   gap,
   cellSize,
 } = props;
@@ -70,8 +70,8 @@ if ('imagePath' in props) {
   hideSurfaces={hideSurfaces}
   hideGradient={hideGradient}
   transparentColor={defaultTransparentColor}
-  animationDelayMs={animationDelayMs}
-  animationFrameMs={animationFrameMs}
+  animationDelay={animationDelay}
+  animationFrame={animationFrame}
   cellSize={cellSize}
   gap={gap}
 />
