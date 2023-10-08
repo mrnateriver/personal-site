@@ -1,210 +1,97 @@
 ---
 import Acknowledgments from '../components/Acknowledgments.astro';
-import type { BaseBoxProps } from '../components/Box.astro';
 import BoxString from '../components/BoxString.astro';
-import Chair from '../components/Chair.astro';
-import Computer from '../components/Computer.astro';
-import Ficus from '../components/Ficus.astro';
-import ResumeEntry, { type ResumeEntryInfo } from '../components/ResumeEntry.astro';
+import Terminal, { type TerminalLine } from '../components/Terminal.astro';
+import Win98Window from '../components/Win98Window.astro';
 import Layout from '../layouts/Layout.astro';
 
-const hideSurfaces: BaseBoxProps['hideSurfaces'] = {
-  right: true,
-  back: true,
-};
-
-const entries: ResumeEntryInfo[] = [
+const terminalLines: TerminalLine[] = [
+  { prompt: true, os: 'windows', line: 'ssh brain.io.local' },
   {
-    year: 2007,
-    title: 'Lorem ipsum dolor',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
+    prompt: false,
+    os: 'linux',
+    delay: 1000,
+    line:
+      'Welcome to Brain 1.01 LTS (GNU/Linux 4.15.0-55-generic x86_64)\n\n * Documentation:  https://github.com/mrnateriver/personal-site\n * Support:        https://github.com/mrnateriver\n\nLast login: ' +
+      new Date().toISOString(),
+  },
+  { prompt: true, os: 'linux', host: 'nate@brain.io.local', line: 'tree /career' },
+  { prompt: false, os: 'linux', host: 'nate@brain.io.local', line: 'zsh: command not found: tree' },
+  { prompt: true, os: 'linux', host: 'nate@brain.io.local', line: 'sudo apt-get install tree' },
+  {
+    prompt: false,
+    os: 'linux',
+    host: 'nate@brain.io.local',
+    line: 'Reading package lists... Done\nBuilding dependency tree... Done\nThe following NEW packages will be installed:\n  tree\nNeed to get 47.9 kB of archives.\nGet:1 http://archive.ubuntu.com/ubuntu jammy/universe amd64 tree amd64 2.0.2-1 [47.9 kB]',
   },
   {
-    year: 2010,
-    title: 'Lorem ipsum dolor',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
+    prompt: false,
+    os: 'linux',
+    host: 'nate@brain.io.local',
+    delay: 1000,
+    line: 'Fetched 47.9 kB in 0s (203 kB/s)\nPreparing to unpack .../tree_2.0.2-1_amd64.deb ...\nUnpacking tree (2.0.2-1) ...\nSetting up tree (2.0.2-1) ...',
   },
+  { prompt: true, os: 'linux', host: 'nate@brain.io.local', line: 'tree /career' },
   {
-    year: 2012,
-    title: 'Lorem ipsum dolor',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
-  },
-  {
-    year: 2016,
-    title: 'Lorem ipsum dolor',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
-  },
-  {
-    year: 2017,
-    title: 'Lorem ipsum dolor',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
-  },
-  {
-    year: 2020,
-    title: 'Lorem ipsum dolor',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
-  },
-  {
-    year: 2021,
-    title: 'Lorem ipsum dolor',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    techStack: ['Java', 'C#', 'Visual Basic', 'PHP'],
+    prompt: false,
+    os: 'linux',
+    host: 'nate@brain.io.local',
+    line: '.\n├── apitable-demo\n├── calculator\n│   ├── build_cra\n│   │   └── static\n│   │       ├── css\n│   │       └── js\n│   ├── build_eject\n│   │   └── static\n│   │       ├── css\n│   │       └── js\n│   ├── build_esbuil\n│   ├── build_parcel\n│   ├── build_vite\n│   │   └── assets\n│   ├── config\n│   │   └── jest\n│   ├── cypress\n│   │   ├── integrat\n│   │   ├── plugins\n│   │   └── support\n',
   },
 ];
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-const entriesDecorations: Array<{ Component: Function; class: string; seatColor?: string; frameColor?: string }> = [
-  { Component: Computer, class: 'resume-decoration resume-decoration-left resume-computer' },
-  {
-    Component: Ficus,
-    class: 'resume-decoration resume-decoration-right resume-ficus',
-  },
-  {
-    Component: Chair,
-    class: 'resume-decoration resume-decoration-left resume-chair',
-    seatColor: 'var(--seat-color)',
-    frameColor: 'var(--seat-frame-color)',
-  },
-];
-
-let entriesDecorationIndex = 0;
 ---
 
-<Layout title="Hi mom">
-  <div class="resume-viewport" style={{ '--resume-entries-count': entries.length }}>
+<Layout title="Resume">
+  <main>
     <h1>
-      <BoxString string="Resume" cellSize={32} color="var(--color-text-anchor-visited)" />
+      <BoxString string="Resume" color="var(--color-text-anchor)" />
     </h1>
 
-    <div class="resume-plane">
-      {
-        entries.map((r, i) => {
-          let renderDecoration = false;
-          const {
-            Component,
-            class: className,
-            seatColor,
-            frameColor,
-          } = entriesDecorations[entriesDecorationIndex % entriesDecorations.length];
+    <Win98Window class="terminal-window" caption="Command Prompt" fullWindowControls>
+      <Terminal class="terminal-content" lines={terminalLines} />
+    </Win98Window>
+  </main>
 
-          if (i > 0 && i % 2 !== 0) {
-            entriesDecorationIndex++;
-            renderDecoration = true;
-          }
-
-          return (
-            <ResumeEntry style={{ '--i': entries.length - i - 1 }} entry={r} yearGridProperties={{ hideSurfaces }}>
-              {renderDecoration && <Component class={className} seatColor={seatColor} frameColor={frameColor} />}
-            </ResumeEntry>
-          );
-        })
-      }
-    </div>
-  </div>
   <Acknowledgments class="acks" />
 </Layout>
 
-<style lang="scss" is:global>
-  html,
-  body {
-    overflow-x: hidden;
-    height: 100%;
-  }
-</style>
-
 <style lang="scss">
-  :root {
-    --resume-parallax-offset: 1000px;
-    --resume-entry-width: 1200px;
-  }
-
-  .resume {
-    &-viewport {
-      --resume-tilt-angle: -15deg;
-
-      position: relative;
-      height: 100%;
-      perspective: calc(var(--resume-parallax-offset) * 1.5);
-      perspective-origin: center;
-      transform-style: preserve-3d;
-      overflow-x: hidden;
-      overflow-y: auto;
-
-      h1 {
-        transform: translateZ(-250px) rotateX(var(--resume-tilt-angle));
-        transform-style: preserve-3d;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-      }
-    }
-
-    &-plane {
-      --seat-color: #dcdcdc;
-      --seat-frame-color: #707070;
-
-      @media (prefers-color-scheme: dark) {
-        --seat-color: #190b00;
-        --seat-frame-color: #212121;
-      }
-
-      position: relative;
-      display: flex;
-      flex-flow: column;
-      align-items: center;
-      transform-style: preserve-3d;
-      transform: rotateX(var(--resume-tilt-angle));
-      margin-top: 80vh;
-    }
-
-    &-decoration {
-      position: absolute;
-      bottom: 100%;
-
-      transform: rotateY(var(--rotate, 0deg)) scaleX(var(--scale, 1)) scaleY(var(--scale, 1)) scaleZ(var(--scale, 1));
-      transform-origin: bottom;
-
-      &-left {
-        --rotate: 40deg;
-        left: calc(var(--resume-entry-width) * 0.1);
-      }
-
-      &-right {
-        --rotate: -35deg;
-        right: calc(var(--resume-entry-width) * 0.1);
-      }
-    }
-
-    &-ficus {
-      --scale: 3;
-    }
-
-    &-computer {
-      --scale: 2;
-    }
-
-    &-chair {
-      --scale: 1.5;
-    }
-  }
-
   .acks {
     position: fixed;
     bottom: var(--padding-md);
     right: 0;
     left: 0;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--padding-xlg);
+    padding: 0 var(--padding-xlg);
+    height: 100%;
+
+    h1 {
+      margin: 1em 0;
+    }
+  }
+
+  .terminal {
+    &-window {
+      flex: 1;
+      width: 100%;
+      min-height: 300px;
+      max-width: 1000px;
+      margin-bottom: calc(var(--padding-xlg) * 6);
+    }
+
+    &-content {
+      position: absolute;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      border: 1pt solid gray;
+      inset: 1pt;
+    }
   }
 </style>

@@ -60,7 +60,7 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
     }
     return {
       ...line,
-      host: line.os === 'windows' ? defaultWindowsPrompt : defaultLinuxPrompt,
+      host: line.host ?? (line.os === 'windows' ? defaultWindowsPrompt : defaultLinuxPrompt),
       lineDelay,
       inputDelay,
       promptInputDuration,
@@ -161,9 +161,12 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
 
     p {
       animation: line-appear var(--terminal-line-appear-delay) steps(3) forwards;
-      margin: 0 0 var(--padding-sm);
       font-size: var(--font-size-md);
       line-height: 1.1;
+    }
+
+    &-prompt {
+      margin: var(--padding-sm) 0;
     }
 
     &-cursor {
