@@ -1,0 +1,45 @@
+---
+import { normalizeCssValue } from '../styles';
+
+export interface Props {
+  class?: string;
+  string: string;
+  animationDurationPerChar?: string | number;
+  animationDelay?: string | number;
+}
+
+const { class: className, string, animationDelay = 0, animationDurationPerChar = 150 } = Astro.props;
+
+const normalizedAnimationDelay = normalizeCssValue(animationDelay, 'ms');
+const normalizedAnimationDuration = normalizeCssValue(animationDurationPerChar, 'ms');
+---
+
+<span
+  class={`typewriter-string ${className ?? ''}`}
+  style={{
+    '--typewriter-string-length': string.length,
+    '--typewriter-animation-delay': normalizedAnimationDelay,
+    '--typewriter-animation-char-duration': normalizedAnimationDuration,
+  }}>{string}</span
+>
+
+<style lang="scss">
+  @keyframes typewriter {
+    0% {
+      width: 0ch;
+    }
+    100% {
+      width: calc(1ch * var(--typewriter-string-length));
+    }
+  }
+
+  .typewriter-string {
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: clip;
+    vertical-align: bottom;
+    animation: typewriter calc(var(--typewriter-string-length) * var(--typewriter-animation-char-duration, 150ms))
+      steps(var(--typewriter-string-length), end) var(--typewriter-animation-delay, 0s) 1 normal both;
+  }
+</style>
