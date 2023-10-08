@@ -1,0 +1,191 @@
+---
+import TypewriterString from './TypewriterString.astro';
+
+export interface TerminalLine {
+  os?: 'windows' | 'linux';
+  host?: string;
+  prompt?: boolean;
+  delay?: string | number;
+  line: string;
+}
+
+export interface Props {
+  class?: string;
+  lines: TerminalLine[];
+}
+
+const { class: className, lines } = Astro.props;
+
+interface TerminalOutputLine extends TerminalLine {
+  lineDelay: string;
+  inputDelay: string;
+  promptInputDuration: string;
+}
+
+const typewriterAnimationLengthPerCharMs = 100;
+const defaultWindowsPrompt = 'C:\\Users\\system';
+const defaultLinuxPrompt = 'root@localhost';
+const delayBetweenPromptSubmissionMs = 500;
+
+let delayMs = 0;
+let delayVars = [] as string[];
+
+const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
+  const addDelayMs = typeof line.delay === 'number' ? line.delay : 0;
+  const addDelayVars = [...delayVars, ...(typeof line.delay === 'string' ? [line.delay] : [])];
+
+  const joinedVars = delayVars.join(' + ');
+  const addJoinedVars = addDelayVars.join(' + ');
+
+  try {
+    let lineDelay: string, inputDelay: string, promptInputDuration: string;
+
+    if (line.prompt) {
+      const inputDelayExpr = `${addDelayMs + delayBetweenPromptSubmissionMs}ms${
+        typeof line.delay === 'string' ? ` + ${line.delay}` : ''
+      }`;
+
+      promptInputDuration =
+        i < lines.length - 1
+          ? `calc(${
+              typewriterAnimationLengthPerCharMs * line.line.length + delayBetweenPromptSubmissionMs
+            }ms + ${inputDelayExpr})`
+          : '0';
+      lineDelay = `calc(${delayMs}ms${joinedVars ? ' + ' + joinedVars : ''})`;
+      inputDelay = `calc(${inputDelayExpr})`;
+    } else {
+      promptInputDuration = '0';
+      lineDelay = `calc(${delayMs + addDelayMs}ms${addJoinedVars ? ' + ' + addJoinedVars : ''})`;
+      inputDelay = lineDelay;
+    }
+    return {
+      ...line,
+      host: line.os === 'windows' ? defaultWindowsPrompt : defaultLinuxPrompt,
+      lineDelay,
+      inputDelay,
+      promptInputDuration,
+    };
+  } finally {
+    delayMs +=
+      addDelayMs +
+      (line.prompt ? typewriterAnimationLengthPerCharMs * line.line.length + delayBetweenPromptSubmissionMs * 2 : 0);
+    delayVars = addDelayVars;
+  }
+});
+---
+
+<div class={`terminal ${className ?? ''}`}>
+  {
+    outputLines.map((o) => (
+      <p
+        class:list={{
+          'terminal-prompt': !!o.prompt,
+          'terminal-windows': o.os === 'windows',
+          'terminal-linux': o.os === 'linux',
+        }}
+        style={{ '--terminal-line-appear-delay': o.lineDelay }}
+      >
+        {o.prompt && (
+          <>
+            <!-- prettier-ignore -->
+            <span class="terminal-host">{o.host}</span><span class="terminal-host-suffix">{
+              o.os === 'windows' ? ('>') : o.os === 'linux' ? (<>:<span class="terminal-host-suffix-dir">~</span>#</>) : null
+            }</span>
+          </>
+        )}
+        {o.prompt && (
+          <>
+            <TypewriterString
+              string={o.line}
+              animationDelay={o.inputDelay}
+              animationDurationPerChar={typewriterAnimationLengthPerCharMs}
+            />
+            <i
+              class="terminal-cursor"
+              style={{
+                '--terminal-line-cursor-disappear-delay': o.promptInputDuration,
+              }}
+            />
+          </>
+        )}
+        {!o.prompt && (
+          <span class="terminal-line">
+            {o.line.split('\n').map((l, i, parts) => (
+              <>
+                {l}
+                {i < parts.length - 1 ? <br /> : null}
+              </>
+            ))}
+          </span>
+        )}
+      </p>
+    ))
+  }
+</div>
+
+<style lang="scss">
+  @keyframes line-appear {
+    0%,
+    99.999% {
+      display: none;
+    }
+    100% {
+      display: block;
+    }
+  }
+
+  @keyframes cursor-blink {
+    0% {
+      visibility: hidden;
+    }
+    100% {
+      visibility: visible;
+    }
+  }
+
+  @keyframes cursor-disappear {
+    0%,
+    99.999% {
+      display: inline-block;
+    }
+    100% {
+      display: none;
+    }
+  }
+
+  .terminal {
+    padding: var(--padding-xs);
+    font-family: 'VT323', monospace;
+    background-color: black;
+    color: white;
+
+    p {
+      animation: line-appear var(--terminal-line-appear-delay) steps(3) forwards;
+      margin: 0 0 var(--padding-sm);
+      font-size: var(--font-size-md);
+      line-height: 1.1;
+    }
+
+    &-cursor {
+      animation: cursor-blink 1s steps(2) infinite,
+        cursor-disappear var(--terminal-line-cursor-disappear-delay) steps(3) forwards;
+      width: 1ch;
+      height: 1em;
+      background: white;
+      display: inline-block;
+      vertical-align: bottom;
+      margin-left: -1ch;
+    }
+
+    $self: &;
+    &-linux {
+      #{$self}-host {
+        color: greenyellow;
+
+        &-suffix-dir {
+          color: #1670ff;
+        }
+      }
+    }
+  }
+</style>
