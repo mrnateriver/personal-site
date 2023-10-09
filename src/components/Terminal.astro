@@ -11,10 +11,11 @@ export interface TerminalLine {
 
 export interface Props {
   class?: string;
+  header?: string;
   lines: TerminalLine[];
 }
 
-const { class: className, lines } = Astro.props;
+const { class: className, header, lines } = Astro.props;
 
 interface TerminalOutputLine extends TerminalLine {
   lineDelay: string;
@@ -76,6 +77,13 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
 
 <div class={`terminal ${className ?? ''}`}>
   {
+    header && (
+      <div class="terminal-header">
+        <pre>{header}</pre>
+      </div>
+    )
+  }
+  {
     outputLines.map((o) => (
       <p
         class:list={{
@@ -86,16 +94,23 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
         style={{ '--terminal-line-appear-delay': o.lineDelay }}
       >
         {o.prompt && (
-          <>
-            <!-- prettier-ignore -->
-            <span class="terminal-host">{o.host}</span><span class="terminal-host-suffix">{
-              o.os === 'windows' ? ('>') : o.os === 'linux' ? (<>:<span class="terminal-host-suffix-dir">~</span>#</>) : null
-            }</span>
-          </>
+          <span class="terminal-prompt-prefix">
+            <span class="terminal-host">{o.host}</span>
+            <span class="terminal-host-suffix">
+              {o.os === 'windows' ? (
+                '>'
+              ) : o.os === 'linux' ? (
+                <>
+                  :<span class="terminal-host-suffix-dir">~</span>#
+                </>
+              ) : null}
+            </span>
+          </span>
         )}
         {o.prompt && (
           <>
             <TypewriterString
+              class="terminal-prompt-input"
               string={o.line}
               animationDelay={o.inputDelay}
               animationDurationPerChar={typewriterAnimationLengthPerCharMs}
@@ -156,8 +171,37 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
   .terminal {
     padding: var(--padding-xs);
     font-family: 'VT323', monospace;
-    background-color: black;
-    color: white;
+
+    background-color: var(--color-background);
+    color: black;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: black;
+      color: white;
+    }
+
+    &-header {
+      text-align: center;
+      margin: var(--padding-lg) 0;
+
+      pre {
+        font-size: var(--font-size-xss);
+        font-family: monospace;
+        font-weight: bold;
+        display: inline-block;
+        text-align: left;
+
+        @media screen and (max-width: 920px) {
+          font-size: calc(var(--font-size-xss) * 0.8);
+        }
+        @media screen and (max-width: 740px) {
+          font-size: calc(var(--font-size-xss) * 0.5);
+        }
+        @media screen and (max-width: 500px) {
+          font-size: calc(var(--font-size-xss) * 0.3);
+        }
+      }
+    }
 
     p {
       animation: line-appear var(--terminal-line-appear-delay) steps(3) forwards;
@@ -167,6 +211,11 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
 
     &-prompt {
       margin: var(--padding-sm) 0;
+      white-space: nowrap;
+
+      &-prefix {
+        display: inline-flex; // Needed merely because Prettier adds whitespace when wrapping HTML elements
+      }
     }
 
     &-cursor {
@@ -174,19 +223,31 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
         cursor-disappear var(--terminal-line-cursor-disappear-delay) steps(3) forwards;
       width: 1ch;
       height: 1em;
-      background: white;
       display: inline-block;
       vertical-align: bottom;
       margin-left: -1ch;
+
+      background: black;
+      @media (prefers-color-scheme: dark) {
+        background: white;
+      }
     }
 
     $self: &;
     &-linux {
       #{$self}-host {
-        color: greenyellow;
+        color: #009805;
 
         &-suffix-dir {
-          color: #1670ff;
+          color: blue;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          color: greenyellow;
+
+          &-suffix-dir {
+            color: #1670ff;
+          }
         }
       }
     }

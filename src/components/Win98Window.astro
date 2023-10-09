@@ -3,16 +3,17 @@ export interface Props {
   class?: string;
   caption?: string;
   ariaHidden?: boolean;
+  ariaTitle?: string;
   fullWindowControls?: boolean;
 }
 
-const { class: className, caption, ariaHidden = true, fullWindowControls = false } = Astro.props;
+const { class: className, caption, ariaTitle, ariaHidden = true, fullWindowControls = false } = Astro.props;
 ---
 
-<div class={`win98-window ${className ?? ''}`} aria-hidden={ariaHidden} title={caption}>
+<div class={`win98-window ${className ?? ''}`} aria-hidden={ariaHidden} title={ariaTitle ?? caption}>
   {
     caption && (
-      <div class="win98-window-caption">
+      <div class="win98-window-caption" aria-hidden={true}>
         <span class="win98-window-caption-label">{caption}</span>
         {fullWindowControls && <span class="win98-window-caption-button win98-window-caption-button-minimize" />}
         {fullWindowControls && <span class="win98-window-caption-button win98-window-caption-button-expand" />}
