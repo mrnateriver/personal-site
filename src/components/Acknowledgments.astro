@@ -35,10 +35,13 @@ const { class: className } = Astro.props;
 <style lang="scss">
   .acks-container {
     font-family: var(--font-family-decoration);
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
 
     @media (max-width: 650px) {
-      font-size: var(--font-size-sm);
+      font-size: var(--font-size-xs);
+    }
+    @media (max-width: 500px) {
+      font-size: var(--font-size-xss);
     }
   }
 
