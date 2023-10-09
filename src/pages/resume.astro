@@ -1,6 +1,5 @@
 ---
 import Acknowledgments from '../components/Acknowledgments.astro';
-import BoxString from '../components/BoxString.astro';
 import Terminal, { type TerminalLine } from '../components/Terminal.astro';
 import Win98Window from '../components/Win98Window.astro';
 import Layout from '../layouts/Layout.astro';
@@ -39,17 +38,19 @@ const terminalLines: TerminalLine[] = [
     line: '.\n├── apitable-demo\n├── calculator\n│   ├── build_cra\n│   │   └── static\n│   │       ├── css\n│   │       └── js\n│   ├── build_eject\n│   │   └── static\n│   │       ├── css\n│   │       └── js\n│   ├── build_esbuil\n│   ├── build_parcel\n│   ├── build_vite\n│   │   └── assets\n│   ├── config\n│   │   └── jest\n│   ├── cypress\n│   │   ├── integrat\n│   │   ├── plugins\n│   │   └── support\n',
   },
 ];
+
+const terminalPrefix = `          _____                    _____                    _____                    _____                    _____                    _____\n         /\\    \\                  /\\    \\                  /\\    \\                  /\\    \\                  /\\    \\                  /\\    \\\n        /::\\    \\                /::\\    \\                /::\\    \\                /::\\____\\                /::\\____\\                /::\\    \\\n       /::::\\    \\              /::::\\    \\              /::::\\    \\              /:::/    /               /::::|   |               /::::\\    \\\n      /::::::\\    \\            /::::::\\    \\            /::::::\\    \\            /:::/    /               /:::::|   |              /::::::\\    \\\n     /:::/\\:::\\    \\          /:::/\\:::\\    \\          /:::/\\:::\\    \\          /:::/    /               /::::::|   |             /:::/\\:::\\    \\\n    /:::/__\\:::\\    \\        /:::/__\\:::\\    \\        /:::/__\\:::\\    \\        /:::/    /               /:::/|::|   |            /:::/__\\:::\\    \\\n   /::::\\   \\:::\\    \\      /::::\\   \\:::\\    \\       \\:::\\   \\:::\\    \\      /:::/    /               /:::/ |::|   |           /::::\\   \\:::\\    \\\n  /::::::\\   \\:::\\    \\    /::::::\\   \\:::\\    \\    ___\\:::\\   \\:::\\    \\    /:::/    /      _____    /:::/  |::|___|______    /::::::\\   \\:::\\    \\\n /:::/\\:::\\   \\:::\\____\\  /:::/\\:::\\   \\:::\\    \\  /\\   \\:::\\   \\:::\\    \\  /:::/____/      /\\    \\  /:::/   |::::::::\\    \\  /:::/\\:::\\   \\:::\\    \\\n/:::/  \\:::\\   \\:::|    |/:::/__\\:::\\   \\:::\\____\\/::\\   \\:::\\   \\:::\\____\\|:::|    /      /::\\____\\/:::/    |:::::::::\\____\\/:::/__\\:::\\   \\:::\\____\\\n\\::/   |::::\\  /:::|____|\\:::\\   \\:::\\   \\::/    /\\:::\\   \\:::\\   \\::/    /|:::|____\\     /:::/    /\\::/    / ~~~~~/:::/    /\\:::\\   \\:::\\   \\::/    /\n \\/____|:::::\\/:::/    /  \\:::\\   \\:::\\   \\/____/  \\:::\\   \\:::\\   \\/____/  \\:::\\    \\   /:::/    /  \\/____/      /:::/    /  \\:::\\   \\:::\\   \\/____/\n       |:::::::::/    /    \\:::\\   \\:::\\    \\       \\:::\\   \\:::\\    \\       \\:::\\    \\ /:::/    /               /:::/    /    \\:::\\   \\:::\\    \\\n       |::|\\::::/    /      \\:::\\   \\:::\\____\\       \\:::\\   \\:::\\____\\       \\:::\\    /:::/    /               /:::/    /      \\:::\\   \\:::\\____\\\n       |::| \\::/____/        \\:::\\   \\::/    /        \\:::\\  /:::/    /        \\:::\\__/:::/    /               /:::/    /        \\:::\\   \\::/    /\n       |::|  ~|               \\:::\\   \\/____/          \\:::\\/:::/    /          \\::::::::/    /               /:::/    /          \\:::\\   \\/____/\n       |::|   |                \\:::\\    \\               \\::::::/    /            \\::::::/    /               /:::/    /            \\:::\\    \\\n       \\::|   |                 \\:::\\____\\               \\::::/    /              \\::::/    /               /:::/    /              \\:::\\____\\\n        \\:|   |                  \\::/    /                \\::/    /                \\::/____/                \\::/    /                \\::/    /\n         \\|___|                   \\/____/                  \\/____/                  ~~                       \\/____/                  \\/____/`;
 ---
 
 <Layout title="Resume">
   <main>
-    <h1>
-      <BoxString string="Resume" color="var(--color-text-anchor)" />
-    </h1>
+    <h1>Resume</h1>
 
     <Win98Window class="terminal-window" caption="Command Prompt" fullWindowControls>
-      <Terminal class="terminal-content" lines={terminalLines} />
+      <Terminal class="terminal-content" lines={terminalLines} header={terminalPrefix} />
     </Win98Window>
+
+    <!-- TODO: announce resume contents for screen readers -->
   </main>
 
   <Acknowledgments class="acks" />
@@ -73,7 +74,8 @@ const terminalLines: TerminalLine[] = [
     height: 100%;
 
     h1 {
-      margin: 1em 0;
+      position: absolute;
+      opacity: 0;
     }
   }
 
@@ -83,7 +85,8 @@ const terminalLines: TerminalLine[] = [
       width: 100%;
       min-height: 300px;
       max-width: 1000px;
-      margin-bottom: calc(var(--padding-xlg) * 6);
+      margin-top: calc(var(--padding-xlg) * 2);
+      margin-bottom: calc(var(--padding-xlg) * 4);
     }
 
     &-content {
