@@ -182,7 +182,7 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
 
     &-header {
       text-align: center;
-      margin: var(--padding-lg) 0;
+      margin: var(--padding-xlg) 0 calc(var(--padding-xlg) * 2);
 
       pre {
         font-size: var(--font-size-xss);
@@ -195,10 +195,10 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
           font-size: calc(var(--font-size-xss) * 0.8);
         }
         @media screen and (max-width: 740px) {
-          font-size: calc(var(--font-size-xss) * 0.5);
+          font-size: calc(var(--font-size-xss) * 0.6);
         }
         @media screen and (max-width: 500px) {
-          font-size: calc(var(--font-size-xss) * 0.3);
+          font-size: calc(var(--font-size-xss) * 0.4);
         }
       }
     }
