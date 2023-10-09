@@ -48,6 +48,8 @@ const terminalLines: TerminalLine[] = [
   <main>
     <h1>Resume</h1>
 
+    <a class="back-home" href="/">{'<'} INDEX</a>
+
     <Win98Window class="terminal-window" caption="Command Prompt" fullWindowControls>
       <Terminal class="terminal-content" lines={terminalLines} header={terminalPrefix} />
     </Win98Window>
@@ -64,6 +66,16 @@ const terminalLines: TerminalLine[] = [
     bottom: var(--padding-md);
     right: 0;
     left: 0;
+  }
+
+  .back-home {
+    font-family: var(--font-family-decoration);
+    margin-top: var(--padding-xlg);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   main {
@@ -87,7 +99,6 @@ const terminalLines: TerminalLine[] = [
       width: 100%;
       min-height: 300px;
       max-width: 1000px;
-      margin-top: calc(var(--padding-xlg) * 2);
       margin-bottom: calc(var(--padding-xlg) * 4);
     }
 
