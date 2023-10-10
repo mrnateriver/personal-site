@@ -33,6 +33,7 @@
     "no-console": "warn",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
+    "import/no-unresolved": "off",
     "import/order": [
       "error",
       {
