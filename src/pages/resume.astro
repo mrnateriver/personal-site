@@ -1,12 +1,16 @@
 ---
 import * as fs from 'fs/promises';
 
+import { getCollection } from 'astro:content';
+
 import Acknowledgments from '../components/Acknowledgments.astro';
 import Terminal, { type TerminalLine } from '../components/Terminal.astro';
 import Win98Window from '../components/Win98Window.astro';
 import Layout from '../layouts/Layout.astro';
 
 const terminalPrefix = await fs.readFile('src/assets/terminal-header.txt', 'utf-8');
+
+const entries = await getCollection('resume');
 
 const terminalLines: TerminalLine[] = [
   { prompt: true, os: 'windows', line: 'ssh brain.io.local' },
@@ -70,8 +74,10 @@ const terminalLines: TerminalLine[] = [
 
   .back-home {
     font-family: var(--font-family-decoration);
-    margin-top: var(--padding-xlg);
+    margin-top: var(--padding-sm);
     text-decoration: none;
+    position: relative;
+    z-index: 2;
 
     &:hover {
       text-decoration: underline;
@@ -83,7 +89,7 @@ const terminalLines: TerminalLine[] = [
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--padding-xlg);
+    gap: var(--padding-sm);
     padding: 0 var(--padding-xlg);
     height: 100%;
 
@@ -100,6 +106,8 @@ const terminalLines: TerminalLine[] = [
       min-height: 300px;
       max-width: 1000px;
       margin-bottom: calc(var(--padding-xlg) * 4);
+      position: relative;
+      z-index: 1;
     }
 
     &-content {
