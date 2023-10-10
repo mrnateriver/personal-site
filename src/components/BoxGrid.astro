@@ -1,9 +1,9 @@
 ---
+import { getBoxStyleVars, type BoxProps } from '../box-properties';
 import { normalizeColor, type Color } from '../colors';
 import type { ImagePixelFrames } from '../images';
 import { normalizeCssValue } from '../styles';
 
-import { getBoxStyleVars, type BoxProps } from './box-properties';
 import Box, { type BaseBoxProps } from './Box.astro';
 
 export interface Props extends Pick<BaseBoxProps, 'hideSurfaces' | 'hideGradient'> {

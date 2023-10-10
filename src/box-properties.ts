@@ -1,5 +1,5 @@
-import { normalizeColor, type Color, type CssColor } from '../colors';
-import { normalizeCssValue } from '../styles';
+import { normalizeColor, type Color, type CssColor } from './colors';
+import { normalizeCssValue } from './styles';
 
 export interface BoxSurfaceColors {
   top: Color;
