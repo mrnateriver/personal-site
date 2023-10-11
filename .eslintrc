@@ -30,7 +30,7 @@
   "ignorePatterns": ["node_modules/", "dist/", "public/", "*.d.ts"],
   "rules": {
     "semi": ["error", "always"],
-    "no-console": "warn",
+    "no-console": "off", // JS code is for the server side during builds anyway, so logging stuff is fine
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "import/no-unresolved": "off",
