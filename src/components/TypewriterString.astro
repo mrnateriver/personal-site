@@ -41,5 +41,9 @@ const normalizedAnimationDuration = normalizeCssValue(animationDurationPerChar, 
     vertical-align: bottom;
     animation: typewriter calc(var(--typewriter-string-length) * var(--typewriter-animation-char-duration, 150ms))
       steps(var(--typewriter-string-length), end) var(--typewriter-animation-delay, 0s) 1 normal both;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
   }
 </style>

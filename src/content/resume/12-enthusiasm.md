@@ -12,4 +12,4 @@ stack:
   - CNCF
 ---
 
-Realised had to climb up the Slope of Enlightenment, so started learning, reading, watching and otherwise consuming anything that seemed cool.
+Realised had to climb up the Slope of Enlightenment, so started learning, reading, watching and otherwise consuming anything that seemed cool. Got StackOverflow credits at that time as well.

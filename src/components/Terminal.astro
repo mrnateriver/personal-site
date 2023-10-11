@@ -7,6 +7,7 @@ export interface TerminalLine {
   prompt?: boolean;
   delay?: string | number;
   line: string;
+  suffix?: string;
 }
 
 export interface Props {
@@ -124,13 +125,26 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
           </>
         )}
         {!o.prompt && (
-          <span class="terminal-line">
-            {o.line.split('\n').map((l, i, parts) => (
-              <>
-                {l}
-                {i < parts.length - 1 ? <br /> : null}
-              </>
-            ))}
+          <span class="terminal-line" class:list={{ 'terminal-line-split': !!o.suffix }}>
+            {(() => {
+              const lines = o.line.split('\n').map((l, i, parts) => (
+                <>
+                  {l.split(/\*(?=\w)|(?<=\w)\*/g).map((p, i) => (i % 2 === 0 ? p : <b>{p}</b>))}
+                  {i < parts.length - 1 ? <br /> : null}
+                </>
+              ));
+
+              if (o.suffix) {
+                return (
+                  <>
+                    <span class="terminal-line-prefix">{lines}</span>
+                    <span class="terminal-line-suffix">{o.suffix}</span>
+                  </>
+                );
+              }
+
+              return lines;
+            })()}
           </span>
         )}
       </p>
@@ -207,6 +221,10 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
       animation: line-appear var(--terminal-line-appear-delay) steps(3) forwards;
       font-size: var(--font-size-sm);
       line-height: 1.1;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
     }
 
     &-prompt {
@@ -231,6 +249,10 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
       @media (prefers-color-scheme: dark) {
         background: white;
       }
+
+      @media (prefers-reduced-motion: reduce) {
+        display: none;
+      }
     }
 
     $self: &;
@@ -249,6 +271,27 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
             color: #1670ff;
           }
         }
+      }
+    }
+
+    &-line {
+      &-split {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      &-prefix,
+      &-suffix {
+        flex: 1;
+      }
+
+      &-suffix {
+        text-align: right;
+      }
+
+      b {
+        font-weight: 600;
       }
     }
   }

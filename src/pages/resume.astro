@@ -12,6 +12,24 @@ const terminalPrefix = await fs.readFile('src/assets/terminal-header.txt', 'utf-
 
 const entries = await getCollection('resume');
 
+const screenReaderResume = entries
+  .map((entry, i) => [
+    `${i + 1}. ${entry.body.trim()}`,
+    `Tech stack:`,
+    ...(entry.data.stack ?? ['N/A']).map((s) => `- ${s}`),
+  ])
+  .flat();
+
+const terminalResume: TerminalLine[] = entries.map((entry) => ({
+  line: [
+    `├── *${entry.data.period}*`,
+    ...(entry.data.stack?.map((s, i, stack) => `│   ${i < stack.length - 1 ? '├──' : '└──'} ${s}`) ?? []),
+    `│`,
+    `│`,
+  ].join('\n'),
+  suffix: entry.body.trim(),
+}));
+
 const terminalLines: TerminalLine[] = [
   { prompt: true, os: 'windows', line: 'ssh brain.io.local' },
   {
@@ -39,26 +57,22 @@ const terminalLines: TerminalLine[] = [
     line: 'Fetched 47.9 kB in 0s (203 kB/s)\nPreparing to unpack .../tree_2.0.2-1_amd64.deb ...\nUnpacking tree (2.0.2-1) ...\nSetting up tree (2.0.2-1) ...',
   },
   { prompt: true, os: 'linux', host: 'nate@brain.io.local', line: 'tree /career' },
-  {
-    prompt: false,
-    os: 'linux',
-    host: 'nate@brain.io.local',
-    line: '.\n├── apitable-demo\n├── calculator\n│   ├── build_cra\n│   │   └── static\n│   │       ├── css\n│   │       └── js\n│   ├── build_eject\n│   │   └── static\n│   │       ├── css\n│   │       └── js\n│   ├── build_esbuil\n│   ├── build_parcel\n│   ├── build_vite\n│   │   └── assets\n│   ├── config\n│   │   └── jest\n│   ├── cypress\n│   │   ├── integrat\n│   │   ├── plugins\n│   │   └── support\n',
-  },
+  ...terminalResume,
 ];
 ---
 
 <Layout title="Resume">
   <main>
-    <h1>Resume</h1>
-
     <a class="back-home" href="/">{'<'} INDEX</a>
+
+    <article class="screen-reader">
+      <h1>Resume</h1>
+      {screenReaderResume.map((line) => <p>{line}</p>)}
+    </article>
 
     <Win98Window class="terminal-window" caption="Command Prompt" fullWindowControls>
       <Terminal class="terminal-content" lines={terminalLines} header={terminalPrefix} />
     </Win98Window>
-
-    <!-- TODO: announce resume contents for screen readers -->
   </main>
 
   <Acknowledgments class="acks" />
@@ -93,9 +107,11 @@ const terminalLines: TerminalLine[] = [
     padding: 0 var(--padding-xlg);
     height: 100%;
 
-    h1 {
+    .screen-reader {
       position: absolute;
+      overflow: hidden;
       opacity: 0;
+      height: 0;
     }
   }
 
