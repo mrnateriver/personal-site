@@ -13,7 +13,7 @@ import Layout from '../layouts/Layout.astro';
 const hideSurfacesLabels = { right: true, back: true, bottom: true };
 const hideSurfacesShadows = { right: true, left: true, back: true, bottom: true, top: true };
 
-const labelsColor = 'var(--color-text-anchor)';
+const labelsColor = 'var(--color-primary)';
 const labelsColorShadow = 'var(--labels-shadow-color)';
 
 const commonLabelsProps = {
@@ -285,14 +285,11 @@ const commonLabelsProps = {
           --base-rotate-y: -30deg;
         }
         @media (max-width: 450px) {
-          --base-offset-x: -120%;
+          --base-offset-x: -90%;
+          --base-offset-z: 500px;
         }
         @media (max-width: 270px) {
           --base-offset-x: -140%;
-        }
-
-        @media (max-height: 810px) {
-          --base-offset-z: 500px;
         }
 
         --seat-color: #dcdcdc;

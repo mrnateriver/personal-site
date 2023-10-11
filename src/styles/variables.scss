@@ -46,7 +46,7 @@
   --color-text-primary: black;
   --color-text-secondary: gray;
   --color-text-tertiary: darkgray;
-  --color-text-anchor: var(--color-primary);
+  --color-text-anchor: var(--color-accent);
   --color-text-anchor-visited: var(--color-accent);
 
   @media (prefers-color-scheme: dark) {
