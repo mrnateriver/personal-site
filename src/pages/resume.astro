@@ -89,13 +89,8 @@ const terminalLines: TerminalLine[] = [
   .back-home {
     font-family: var(--font-family-decoration);
     margin-top: var(--padding-sm);
-    text-decoration: none;
     position: relative;
     z-index: 2;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 
   main {
@@ -121,7 +116,7 @@ const terminalLines: TerminalLine[] = [
       width: 100%;
       min-height: 300px;
       max-width: 1000px;
-      margin-bottom: calc(var(--padding-xlg) * 4);
+      margin-bottom: calc(var(--padding-xlg) * 2);
       position: relative;
       z-index: 1;
     }

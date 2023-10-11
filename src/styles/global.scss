@@ -34,6 +34,11 @@ $sizes: xxxxl, xxxl, xxl, xl, lg;
 
 a {
   color: var(--color-text-anchor);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 
   &:visited {
     color: var(--color-text-anchor-visited);
