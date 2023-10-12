@@ -107,7 +107,7 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
               ) : null}
             </span>
           </span>
-        )}
+        )}{' '}
         {o.prompt && (
           <>
             <TypewriterString
@@ -243,7 +243,6 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
       height: 1em;
       display: inline-block;
       vertical-align: bottom;
-      margin-left: calc(-1 * var(--terminal-line-cursor-width));
 
       background: black;
       @media (prefers-color-scheme: dark) {

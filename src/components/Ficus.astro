@@ -14,7 +14,7 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
 ---
 
 <div class={`ficus ${className ?? ''}`} style={{ ...(style ?? {}), '--side-color': normalizeColor(color) }}>
-  <img class="ficus-plant" src={plantImage} />
+  <img class="ficus-plant" src={plantImage.src} />
   <div class="ficus-pot">
     <i class="ficus-pot-side-left"></i>
     <i class="ficus-pot-side-right"></i>
