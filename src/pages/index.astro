@@ -65,13 +65,13 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
 
         <div class="labels-links">
           <div class="labels-shadows" aria-hidden="true">
-            <BoxString
+            <!-- <BoxString
               string="blog"
               color={labelsColorShadow}
               hideSurfaces={hideSurfacesShadows}
               hideGradient={true}
               {...commonLabelsProps}
-            />
+            /> -->
 
             <BoxString
               string="resume"
@@ -82,7 +82,7 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
             />
           </div>
 
-          <SectionLink
+          <!-- <SectionLink
             title="Blog"
             class="labels-blog"
             href="/blog"
@@ -91,7 +91,7 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
             borderSize="calc(4 * var(--padding-lg))"
           >
             <BoxString string="blog" color={labelsColor} hideSurfaces={hideSurfacesLabels} {...commonLabelsProps} />
-          </SectionLink>
+          </SectionLink> -->
 
           <SectionLink
             title="Resume"
@@ -107,13 +107,13 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
       </section>
 
       <section title="Recent Content" class="section-preview-container">
-        <SectionPreview
+        <!-- <SectionPreview
           href="/blog"
           class="section-preview-blog"
           caption="Latest Blog Entry"
           title="Meaning of life"
           description="Lorem ipsum and other stuff like this."
-        />
+        /> -->
         <SectionPreview
           href="/resume"
           class="section-preview-resume"
