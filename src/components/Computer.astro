@@ -1,6 +1,8 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
+import keyboardImage from '../assets/keyboard.png';
+import win98Screenshot from '../assets/win98.png';
 import { normalizeColor, type Color } from '../colors';
 
 import Box from './Box.astro';
@@ -37,7 +39,7 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
     <i class="computer-screen-back-right"></i>
     <i class="computer-screen-back-back"></i>
 
-    <img class="computer-screen-image" src="src/assets/win98.png" alt="Windows 98 Screenshot" />
+    <img class="computer-screen-image" src={win98Screenshot} alt="Windows 98 Screenshot" />
   </div>
 
   <Box
@@ -59,7 +61,7 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
       wy: 'var(--computer-keyboard-height)',
     }}
   />
-  <img class="computer-keyboard-texture" src="src/assets/keyboard.png" alt="Computer Keyboard Texture" />
+  <img class="computer-keyboard-texture" src={keyboardImage} alt="Computer Keyboard Texture" />
 </div>
 
 <style lang="scss">

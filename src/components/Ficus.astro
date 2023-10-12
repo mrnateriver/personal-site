@@ -1,6 +1,7 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
+import plantImage from '../assets/plant.png';
 import { normalizeColor, type Color } from '../colors';
 
 export interface Props {
@@ -13,7 +14,7 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
 ---
 
 <div class={`ficus ${className ?? ''}`} style={{ ...(style ?? {}), '--side-color': normalizeColor(color) }}>
-  <img class="ficus-plant" src="src/assets/plant.png" />
+  <img class="ficus-plant" src={plantImage} />
   <div class="ficus-pot">
     <i class="ficus-pot-side-left"></i>
     <i class="ficus-pot-side-right"></i>
