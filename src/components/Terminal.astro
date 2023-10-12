@@ -45,7 +45,7 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
     if (line.prompt) {
       const inputDelayExpr = `${addDelayMs + delayBetweenPromptSubmissionMs}ms${
         typeof line.delay === 'string' ? ` + ${line.delay}` : ''
-      }`;
+      } + ${delayMs}ms${joinedVars ? ' + ' + joinedVars : ''}`;
 
       promptInputDuration =
         i < lines.length - 1
@@ -155,30 +155,31 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
 <style lang="scss">
   @keyframes line-appear {
     0%,
-    99.999% {
-      display: none;
+    50% {
+      opacity: 0;
+      position: absolute;
     }
     100% {
-      display: block;
+      opacity: 1;
+      position: static;
     }
   }
 
   @keyframes cursor-blink {
-    0% {
-      visibility: hidden;
+    from {
+      opacity: 0;
     }
-    100% {
-      visibility: visible;
+    to {
+      opacity: 1;
     }
   }
 
   @keyframes cursor-disappear {
-    0%,
-    99.999% {
-      display: inline-block;
+    from {
+      visibility: visible;
     }
-    100% {
-      display: none;
+    to {
+      visibility: hidden;
     }
   }
 
@@ -199,15 +200,12 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
       margin: var(--padding-xlg) 0 calc(var(--padding-xlg) * 2);
 
       pre {
-        font-size: var(--font-size-xss);
+        font-size: calc(var(--font-size-xss) * 0.8);
         font-family: monospace;
         font-weight: bold;
         display: inline-block;
         text-align: left;
 
-        @media screen and (max-width: 920px) {
-          font-size: calc(var(--font-size-xss) * 0.8);
-        }
         @media screen and (max-width: 740px) {
           font-size: calc(var(--font-size-xss) * 0.6);
         }
@@ -218,7 +216,7 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
     }
 
     p {
-      animation: line-appear var(--terminal-line-appear-delay) steps(3) forwards;
+      animation: line-appear var(--terminal-line-appear-delay) steps(1, jump-end) forwards;
       font-size: var(--font-size-sm);
       line-height: 1.1;
 
@@ -237,13 +235,15 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
     }
 
     &-cursor {
-      animation: cursor-blink 1s steps(2) infinite,
-        cursor-disappear var(--terminal-line-cursor-disappear-delay) steps(3) forwards;
-      width: 1ch;
+      --terminal-line-cursor-width: 0.8ch;
+
+      animation: cursor-blink 0.75s steps(2, jump-none) infinite,
+        cursor-disappear var(--terminal-line-cursor-disappear-delay) steps(2, jump-both) forwards;
+      width: var(--terminal-line-cursor-width);
       height: 1em;
       display: inline-block;
       vertical-align: bottom;
-      margin-left: -1ch;
+      margin-left: calc(-1 * var(--terminal-line-cursor-width));
 
       background: black;
       @media (prefers-color-scheme: dark) {

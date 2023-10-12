@@ -56,7 +56,7 @@ const terminalLines: TerminalLine[] = [
     delay: 1000,
     line: 'Fetched 47.9 kB in 0s (203 kB/s)\nPreparing to unpack .../tree_2.0.2-1_amd64.deb ...\nUnpacking tree (2.0.2-1) ...\nSetting up tree (2.0.2-1) ...',
   },
-  { prompt: true, os: 'linux', host: 'nate@brain.io.local', line: 'tree /career' },
+  { prompt: true, os: 'linux', host: 'nate@brain.io.local', line: 'tree /career ' }, // Space at the end is a workaround for Chrome not rendering the full string due to a bug it seems
   ...terminalResume,
 ];
 ---
