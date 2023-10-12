@@ -33,6 +33,7 @@
     "no-console": "off", // JS code is for the server side during builds anyway, so logging stuff is fine
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
     "import/no-unresolved": "off",
     "import/order": [
       "error",

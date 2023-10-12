@@ -7,10 +7,16 @@ import type { ChatCompletionCreateParamsBase } from 'openai/resources/chat/compl
 
 type GPTModels = ChatCompletionCreateParamsBase['model'];
 
-export async function generateCompletion(prompt: string): Promise<string> {
+export interface FunctionCallRequestArgument {
+  name: string;
+  description?: string;
+}
+
+export async function generateAICompletion(prompt: string, temperature = 0): Promise<string> {
   return await cacheResponse(`completion-${prompt}`, async (openai, model) => {
     const completion = await openai.chat.completions.create({
       messages: [{ role: 'user', content: prompt }],
+      temperature,
       model,
       n: 1,
     });
@@ -27,11 +33,71 @@ export async function generateCompletion(prompt: string): Promise<string> {
   });
 }
 
-export async function callFunction(prompt: string, args: string[]): Promise<Record<string, string>> {
-  // TODO: user message -> prompt
-  // TODO: functions: `set_result(args[0]: string, args[1]: string...)`
-  // TODO: function_call: { name: set_result } to force GPT to use the function
-  // TODO: presumably parse JSON for `arguments` property and return it as the end result
+export async function callAIFunction(
+  prompt: string,
+  args: FunctionCallRequestArgument[],
+  temperature = 0,
+): Promise<Record<string, string>> {
+  if (args.some((arg) => !/^[\w_]+$/.test(arg.name))) {
+    throw new Error(
+      'Argument names must only contain letters, numbers, and underscores for consistency with the response',
+    );
+  }
+
+  return await cacheResponse(
+    `function-${prompt}-${args.map((arg) => `${arg.name}-${arg.description ?? 'no-desc'}`).join('-')}`,
+    async (openai, model) => {
+      const completion = await openai.chat.completions.create({
+        messages: [
+          { role: 'system', content: 'You must use function `set_result` in response.' },
+          { role: 'user', content: prompt },
+        ],
+        functions: [
+          {
+            name: 'set_result',
+            parameters: {
+              type: 'object',
+              properties: Object.fromEntries(
+                args.map((arg) => [arg.name, { type: 'string', description: arg.description }]),
+              ),
+              required: args.map((arg) => arg.name),
+            },
+          },
+        ],
+        function_call: { name: 'set_result' },
+        temperature,
+        model,
+        n: 1,
+      });
+
+      const result = completion.choices[0].message.function_call;
+      if (!result) {
+        if (!import.meta.env.PROD) {
+          console.log(inspect(completion, true, undefined, true));
+        }
+        throw new Error('Failed to generate completion, or the model failed to call the function');
+      }
+
+      if (result.name !== 'set_result') {
+        throw new Error(`Unexpected function call: ${result.name}`);
+      }
+
+      let decodedArguments: Record<string, string>;
+      try {
+        decodedArguments = JSON.parse(result.arguments);
+      } catch (e) {
+        throw new Error(`Failed to parse arguments: ${result.arguments}`);
+      }
+
+      if (args.some((arg) => !(arg.name in decodedArguments))) {
+        throw new Error(
+          `Missing arguments in completion: ${args.filter((arg) => !(arg.name in decodedArguments)).join(', ')}`,
+        );
+      }
+
+      return decodedArguments;
+    },
+  );
 }
 
 async function cacheResponse<T>(input: string, cb: (openai: OpenAI, model: GPTModels) => Promise<T>): Promise<T> {
