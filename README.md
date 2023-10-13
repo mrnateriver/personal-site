@@ -6,6 +6,19 @@ All of the effects are done purely in CSS, with no frontend JS whatsoever.
 
 Some of the site's content is generated using OpenAI API (not the resume part).
 
+## Tech Stack
+
+- Astro
+- TypeScript
+- SCSS
+
+## Dev Stack
+
+- Yarn
+- ESLint
+- Prettier
+- GitHub Actions
+
 ## Commands
 
 All commands are run from the root of the project, from a terminal:
