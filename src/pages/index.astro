@@ -246,7 +246,25 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
     }
 
     @keyframes main-rocking {
-      $pos: [[0, 0], [1, 0], [-1, 1], [1, -1], [1, 1], [-1, -1], [-1, 0], [1, 0], [0, 0]];
+      $pos:
+        [[0,
+        0],
+        [1,
+        0],
+        [-1,
+        1],
+        [1,
+        -1],
+        [1,
+        1],
+        [-1,
+        -1],
+        [-1,
+        0],
+        [1,
+        0],
+        [0,
+        0]];
       @for $i from 0 through 8 {
         #{$i * 12.5%} {
           $x: list.nth(list.nth($pos, $i + 1), 1);
@@ -265,7 +283,8 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
     place-items: flex-end center;
     transform-origin: center;
     transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(var(--animation-start-offset-y));
-    animation: var(--animation-1-duration) var(--animation-1-delay) forwards main-rotation var(--animation-curve-base),
+    animation:
+      var(--animation-1-duration) var(--animation-1-delay) forwards main-rotation var(--animation-curve-base),
       var(--animation-2-duration) var(--animation-2-delay) infinite main-rocking var(--animation-curve-base);
 
     &-content {

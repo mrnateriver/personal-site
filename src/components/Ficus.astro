@@ -178,8 +178,12 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
           &-#{list.nth($shadow-sides, $i)} {
             background-image: linear-gradient(to bottom left, transparent, #00000020),
               linear-gradient(to top, var(--side-color), var(--side-color));
-            background-size: 800% 100%, 100% 100%;
-            background-position: ($i - 1) * 100% 0, 0 100%;
+            background-size:
+              800% 100%,
+              100% 100%;
+            background-position:
+              ($i - 1) * 100% 0,
+              0 100%;
           }
         }
 

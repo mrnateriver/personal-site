@@ -237,7 +237,8 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
     &-cursor {
       --terminal-line-cursor-width: 0.8ch;
 
-      animation: cursor-blink 0.75s steps(2, jump-none) infinite,
+      animation:
+        cursor-blink 0.75s steps(2, jump-none) infinite,
         cursor-disappear var(--terminal-line-cursor-disappear-delay) steps(2, jump-both) forwards;
       width: var(--terminal-line-cursor-width);
       height: 1em;

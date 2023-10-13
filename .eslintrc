@@ -2,11 +2,10 @@
   "extends": [
     "plugin:astro/recommended",
     "standard-with-typescript",
-    "prettier",
+    "plugin:prettier/recommended",
     "plugin:import/recommended",
     "plugin:import/typescript"
   ],
-  "packageManager": "yarn",
   "env": {
     "es2021": true,
     "browser": false,

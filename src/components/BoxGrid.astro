@@ -190,7 +190,11 @@ const baseSectionProps: BoxProps = {
   @use 'sass:list';
 
   $max-animation-frames: 10;
-  $surface-color-var-names: [[ 't', 'f'], [ 'b', 'bk']];
+  $surface-color-var-names:
+    [[ 't',
+    'f'],
+    [ 'b',
+    'bk']];
 
   @mixin vars($frameIndex) {
     $surface-var-name-0: list.nth(list.nth($surface-color-var-names, $frameIndex % 2 + 1 /* indices are 1-based */), 1);

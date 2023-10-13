@@ -22,6 +22,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@astrojs/compiler@npm:^1.5.5":
+  version: 1.8.2
+  resolution: "@astrojs/compiler@npm:1.8.2"
+  checksum: 1d55879f8f7aadcad02f19353c085d4e74d5f9cd0d873c600e31ad58928e80d6ab7d6e80b997e2fecabd697f69b0ae166acac58178b833d2d8051a2e35800dc2
+  languageName: node
+  linkType: hard
+
 "@astrojs/compiler@npm:^2.0.0, @astrojs/compiler@npm:^2.1.0":
   version: 2.2.0
   resolution: "@astrojs/compiler@npm:2.2.0"
@@ -1517,6 +1524,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"astro-seo@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "astro-seo@npm:0.8.0"
+  checksum: ed79c09293e620f323afa17a3e86913143cd3e3955dce5cc1b8e9890e1f00abff9eefeac6c0ae7f5c4848b57158b67c67db262c018aa7e94070418773cf993d2
+  languageName: node
+  linkType: hard
+
 "astro@npm:^3.3.0":
   version: 3.3.0
   resolution: "astro@npm:3.3.0"
@@ -1690,6 +1704,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^6.7.5
     "@typescript-eslint/parser": ^6.7.5
     astro: ^3.3.0
+    astro-seo: ^0.8.0
     csstype: ^3.1.2
     eslint: ^8.51.0
     eslint-config-prettier: ^9.0.0
@@ -1698,9 +1713,11 @@ __metadata:
     eslint-plugin-astro: ^0.29.1
     eslint-plugin-import: ^2.28.1
     eslint-plugin-n: ^16.2.0
+    eslint-plugin-prettier: ^5.0.1
     eslint-plugin-promise: ^6.1.1
     openai: ^4.12.1
     prettier: ^3.0.3
+    prettier-plugin-astro: ^0.12.0
     sass: ^1.69.3
     typescript: ^5.2.2
   languageName: unknown
@@ -2917,6 +2934,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-prettier@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "eslint-plugin-prettier@npm:5.0.1"
+  dependencies:
+    prettier-linter-helpers: ^1.0.0
+    synckit: ^0.8.5
+  peerDependencies:
+    "@types/eslint": ">=8.0.0"
+    eslint: ">=8.0.0"
+    prettier: ">=3.0.0"
+  peerDependenciesMeta:
+    "@types/eslint":
+      optional: true
+    eslint-config-prettier:
+      optional: true
+  checksum: c2261033b97bafe99ccb7cc47c2fac6fa85b8bbc8b128042e52631f906b69e12afed2cdd9d7e3021cc892ee8dd4204a3574e1f32a0b718b4bb3b440944b6983b
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-promise@npm:^6.1.1":
   version: 6.1.1
   resolution: "eslint-plugin-promise@npm:6.1.1"
@@ -3162,6 +3198,13 @@ __metadata:
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
   checksum: e21a9d8d84f53493b6aa15efc9cfd53dd5b714a1f23f67fb5dc8f574af80df889b3bce25dc081887c6d25457cce704e636395333abad896ccdec03abaf1f3f9d
+  languageName: node
+  linkType: hard
+
+"fast-diff@npm:^1.1.2":
+  version: 1.3.0
+  resolution: "fast-diff@npm:1.3.0"
+  checksum: d22d371b994fdc8cce9ff510d7b8dc4da70ac327bcba20df607dd5b9cae9f908f4d1028f5fe467650f058d1e7270235ae0b8230809a262b4df587a3b3aa216c3
   languageName: node
   linkType: hard
 
@@ -6030,7 +6073,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.0.3":
+"prettier-linter-helpers@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "prettier-linter-helpers@npm:1.0.0"
+  dependencies:
+    fast-diff: ^1.1.2
+  checksum: 00ce8011cf6430158d27f9c92cfea0a7699405633f7f1d4a45f07e21bf78e99895911cbcdc3853db3a824201a7c745bd49bfea8abd5fb9883e765a90f74f8392
+  languageName: node
+  linkType: hard
+
+"prettier-plugin-astro@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "prettier-plugin-astro@npm:0.12.0"
+  dependencies:
+    "@astrojs/compiler": ^1.5.5
+    prettier: ^3.0.0
+    sass-formatter: ^0.7.6
+  checksum: 7282c8fed999ff232136126eceb98fd316a25386dba8dbe70bdccf529146f53ad20da6bc71fc6ff56ad444e73719a2a561ceb9ee6a1c8808ea6180b62dd0c2e9
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^3.0.0, prettier@npm:^3.0.3":
   version: 3.0.3
   resolution: "prettier@npm:3.0.3"
   bin:
@@ -6454,6 +6517,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"s.color@npm:0.0.15":
+  version: 0.0.15
+  resolution: "s.color@npm:0.0.15"
+  checksum: 28fc4896e446acc4a32c4146196493bc393b50990b5c17397cbb04b44e027db600ce5d1b241ba5f4619446f8523951cba22ae5abe19ce0b7e70e1533cde1f122
+  languageName: node
+  linkType: hard
+
 "sade@npm:^1.7.3":
   version: 1.8.1
   resolution: "sade@npm:1.8.1"
@@ -6497,6 +6567,15 @@ __metadata:
   version: 2.1.2
   resolution: "safer-buffer@npm:2.1.2"
   checksum: cab8f25ae6f1434abee8d80023d7e72b598cf1327164ddab31003c51215526801e40b66c5e65d658a0af1e9d6478cadcb4c745f4bd6751f97d8644786c0978b0
+  languageName: node
+  linkType: hard
+
+"sass-formatter@npm:^0.7.6":
+  version: 0.7.8
+  resolution: "sass-formatter@npm:0.7.8"
+  dependencies:
+    suf-log: ^2.5.3
+  checksum: 8fe8be934878b486a7ad6bcb103e78e26b7dad5d44ad322bbe8a72c9823e90e98acb578a97917cd44d558ef51da50fbb6d59664be40e5062cb86db46c7df93a1
   languageName: node
   linkType: hard
 
@@ -6965,6 +7044,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"suf-log@npm:^2.5.3":
+  version: 2.5.3
+  resolution: "suf-log@npm:2.5.3"
+  dependencies:
+    s.color: 0.0.15
+  checksum: 0545466dda882c6410857346640b0af46cb876951d4a5a5a2ff4be1910abf5bba73fb5d6bf72f72f2c7a0b8a96b1f2275553f2bcfefd25b98981549d492965ee
+  languageName: node
+  linkType: hard
+
 "supports-color@npm:^5.3.0":
   version: 5.5.0
   resolution: "supports-color@npm:5.5.0"
@@ -6990,7 +7078,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"synckit@npm:^0.8.0":
+"synckit@npm:^0.8.0, synckit@npm:^0.8.5":
   version: 0.8.5
   resolution: "synckit@npm:0.8.5"
   dependencies:
