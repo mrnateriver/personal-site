@@ -5,62 +5,88 @@
   "start_url": "/",
   "lang": "en-US",
   "theme_color": "#008080",
-  "display": "browser",
+  "background_color": "#ffffff",
+  "display": "standalone",
   "icons": [
     {
-      "src": "icon-512.jpg",
+      "src": "favicon-512.png",
       "sizes": "512x512",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "icon-384.jpg",
+      "src": "favicon-384.png",
       "sizes": "384x384",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "icon-192.jpg",
+      "src": "favicon-192.png",
       "sizes": "192x192",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "icon-180.jpg",
+      "src": "favicon-180.png",
       "sizes": "180x180",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "icon-152.jpg",
+      "src": "favicon-152.png",
       "sizes": "152x152",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "icon-144.jpg",
+      "src": "favicon-144.png",
       "sizes": "144x144",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "icon-128.jpg",
+      "src": "favicon-128.png",
       "sizes": "128x128",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "icon-120.jpg",
+      "src": "favicon-120.png",
       "sizes": "120x120",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "icon-96.jpg",
+      "src": "favicon-96.png",
       "sizes": "96x96",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "icon-72.jpg",
+      "src": "favicon-72.png",
       "sizes": "72x72",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "opengraph.jpg",
+      "src": "favicon-64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-24.png",
+      "sizes": "24x24",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "opengraph.png",
       "sizes": "1200x600",
-      "type": "image/jpeg"
+      "type": "image/png"
     }
   ]
 }
