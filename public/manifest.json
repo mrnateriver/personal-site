@@ -1,0 +1,66 @@
+{
+  "name": "Evgenii's Personal Site",
+  "description": "Personal website intended for selling oneself on the job market and spreading one's thoughts through a blog.",
+  "short_name": "mrnateriver.io",
+  "start_url": "/",
+  "lang": "en-US",
+  "theme_color": "#008080",
+  "display": "browser",
+  "icons": [
+    {
+      "src": "icon-512.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "icon-384.jpg",
+      "sizes": "384x384",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "icon-192.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "icon-180.jpg",
+      "sizes": "180x180",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "icon-152.jpg",
+      "sizes": "152x152",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "icon-144.jpg",
+      "sizes": "144x144",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "icon-128.jpg",
+      "sizes": "128x128",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "icon-120.jpg",
+      "sizes": "120x120",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "icon-96.jpg",
+      "sizes": "96x96",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "icon-72.jpg",
+      "sizes": "72x72",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "opengraph.jpg",
+      "sizes": "1200x600",
+      "type": "image/jpeg"
+    }
+  ]
+}
