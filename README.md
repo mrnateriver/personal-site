@@ -1,6 +1,8 @@
 # Personal Site
 
-Slightly creative personal site. Contains a career story, with plans for a blog as well.
+[Slightly creative personal site](https://mrnateriver.io).
+
+Contains a career story, with plans for a blog as well.
 
 All of the effects are done purely in CSS, with no frontend JS whatsoever.
 
@@ -8,13 +10,13 @@ Some of the site's content is generated using OpenAI API (not the resume part).
 
 ## Tech Stack
 
-- Astro
+- [Astro](https://astro.build/)
 - TypeScript
 - SCSS
 
 ## Dev Stack
 
-- Yarn
+- [Yarn](https://yarnpkg.com/)
 - ESLint
 - Prettier
 - GitHub Actions
