@@ -127,9 +127,40 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
         {!o.prompt && (
           <span class="terminal-line" class:list={{ 'terminal-line-split': !!o.suffix }}>
             {(() => {
-              const lines = o.line.split('\n').map((l, i, parts) => (
+              const lines = o.line.split('\n');
+
+              const mappedLines = lines.map((l, i, parts) => (
                 <>
-                  {l.split(/\*(?=\w)|(?<=\w)\*/g).map((p, i) => (i % 2 === 0 ? p : <b>{p}</b>))}
+                  {l
+                    .split(' ')
+                    .map((l) => {
+                      if (/^https?:\/\//.test(l)) {
+                        return <a href={l}>{l}</a>;
+                      }
+
+                      if (l.startsWith('*') && l.endsWith('*')) {
+                        return <b>{l.slice(1, -1)}</b>;
+                      }
+
+                      return l;
+                    })
+                    .reduce((prev, curr) => {
+                      const lastElement = prev[prev.length - 1];
+
+                      if (typeof curr === 'string') {
+                        curr = ` ${curr}`;
+                      } else if (typeof lastElement === 'string') {
+                        prev[prev.length - 1] += ' ';
+                      }
+
+                      if (typeof lastElement === 'string' && typeof curr === 'string') {
+                        prev[prev.length - 1] += curr;
+                      } else {
+                        prev.push(curr);
+                      }
+                      return prev;
+                    }, [])}
+
                   {i < parts.length - 1 ? <br /> : null}
                 </>
               ));
@@ -137,13 +168,13 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
               if (o.suffix) {
                 return (
                   <>
-                    <span class="terminal-line-prefix">{lines}</span>
+                    <span class="terminal-line-prefix">{mappedLines}</span>
                     <span class="terminal-line-suffix">{o.suffix}</span>
                   </>
                 );
               }
 
-              return lines;
+              return mappedLines;
             })()}
           </span>
         )}
