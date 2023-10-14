@@ -70,7 +70,7 @@ const terminalLines: TerminalLine[] = [
       {screenReaderResume.map((line) => <p>{line}</p>)}
     </article>
 
-    <Win98Window class="terminal-window" caption="Command Prompt" fullWindowControls>
+    <Win98Window class="terminal-window" caption="Command Prompt" closeButtonHref="/" fullWindowControls>
       <Terminal class="terminal-content" lines={terminalLines} header={terminalPrefix} />
     </Win98Window>
   </main>

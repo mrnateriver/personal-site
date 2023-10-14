@@ -5,9 +5,17 @@ export interface Props {
   ariaHidden?: boolean;
   ariaTitle?: string;
   fullWindowControls?: boolean;
+  closeButtonHref?: string;
 }
 
-const { class: className, caption, ariaTitle, ariaHidden = true, fullWindowControls = false } = Astro.props;
+const {
+  class: className,
+  caption,
+  ariaTitle,
+  ariaHidden = true,
+  fullWindowControls = false,
+  closeButtonHref,
+} = Astro.props;
 ---
 
 <div class={`win98-window ${className ?? ''}`} aria-hidden={ariaHidden} title={ariaTitle ?? caption}>
@@ -17,7 +25,10 @@ const { class: className, caption, ariaTitle, ariaHidden = true, fullWindowContr
         <span class="win98-window-caption-label">{caption}</span>
         {fullWindowControls && <span class="win98-window-caption-button win98-window-caption-button-minimize" />}
         {fullWindowControls && <span class="win98-window-caption-button win98-window-caption-button-expand" />}
-        <span class="win98-window-caption-button win98-window-caption-button-close" />
+        {closeButtonHref && (
+          <a href={closeButtonHref} class="win98-window-caption-button win98-window-caption-button-close" />
+        )}
+        {!closeButtonHref && <span class="win98-window-caption-button win98-window-caption-button-close" />}
       </div>
     )
   }
@@ -108,6 +119,14 @@ const { class: className, caption, ariaTitle, ariaHidden = true, fullWindowContr
 
         &-close {
           margin-left: calc(var(--win98-caption-button-offset) / 2);
+
+          &:hover {
+            text-decoration: none;
+          }
+
+          &:visited {
+            color: black;
+          }
 
           &::after {
             content: 'x';
