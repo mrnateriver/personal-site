@@ -16,7 +16,6 @@ Some of the site's content is generated using OpenAI API (not the resume part).
 
 ## Dev Stack
 
-- [Yarn](https://yarnpkg.com/)
 - ESLint
 - Prettier
 - GitHub Actions
@@ -25,11 +24,11 @@ Some of the site's content is generated using OpenAI API (not the resume part).
 
 All commands are run from the root of the project, from a terminal:
 
-| Command                    | Action                                           |
-| :------------------------- | :----------------------------------------------- |
-| `yarn install`             | Installs dependencies                            |
-| `yarn run dev`             | Starts local dev server at `localhost:3000`      |
-| `yarn run build`           | Build your production site to `./dist/`          |
-| `yarn run preview`         | Preview your build locally, before deploying     |
-| `yarn run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `yarn run astro -- --help` | Get help using the Astro CLI                     |
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm i`                   | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:3000`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
+| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help` | Get help using the Astro CLI                     |
