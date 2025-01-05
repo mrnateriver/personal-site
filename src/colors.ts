@@ -63,13 +63,13 @@ export function normalizeColor(color?: Color): CssColor | undefined {
       // rgb(r, g, b) / rgba(r, g, b, a) / rgba(r g b a) / rgb(r g b) / rgba(r g b / a)
       if (color.startsWith('rgb')) {
         const [r, g, b, a] = parseColorParens(color);
-        return stringifyColor({ r, g, b, a: a ?? 1 });
+        return stringifyColor({ r, g, b, a });
       }
 
       // hsl(h, s, l) / hsla(h, s, l, a) / hsla(h s l a) / hsl(h s l) / hsla(h s l / a)
       if (color.startsWith('hsl')) {
         const [h, s, l, a] = parseColorParens(color);
-        return stringifyColor(convertHSLAToRGBA({ h, s, l, a: a ?? 1 }));
+        return stringifyColor(convertHSLAToRGBA({ h, s, l, a }));
       }
     }
   }
@@ -106,7 +106,8 @@ function convertRGBATo32Bit(color: RGBA): number {
 }
 
 function convertHSLAToRGBA(color: HSLA): RGBA {
-  let { h, s, l, a } = color;
+  let { s, l } = color;
+  const { h, a } = color;
 
   // Must be fractions of 1
   s /= 100;

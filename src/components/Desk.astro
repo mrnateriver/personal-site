@@ -16,8 +16,8 @@ const { class: className, frameColor = '#282828', surfaceColor = '#190b00', heig
 
 const frameColorNormalized = normalizeColor(frameColor) ?? '#282828';
 const surfaceColorNormalized = normalizeColor(surfaceColor) ?? '#190b00';
-const heightNormalized = normalizeCssValue(height, 'px') ?? '128px';
-const lengthNormalized = normalizeCssValue(length, 'px') ?? '256px';
+const heightNormalized = normalizeCssValue(height, 'px');
+const lengthNormalized = normalizeCssValue(length, 'px');
 ---
 
 <div class={`desk ${className ?? ''}`} style={{ '--desk-height': heightNormalized, '--desk-length': lengthNormalized }}>

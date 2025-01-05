@@ -48,35 +48,39 @@ export async function callAIFunction(
     `function-${prompt}-${args.map((arg) => `${arg.name}-${arg.description ?? 'no-desc'}`).join('-')}`,
     async (openai, model) => {
       const completion = await openai.chat.completions.create({
-        messages: [
-          { role: 'system', content: 'You must use function `set_result` in response.' },
-          { role: 'user', content: prompt },
-        ],
-        functions: [
+        messages: [{ role: 'user', content: prompt }],
+        tool_choice: { type: 'function', function: { name: 'set_result' } },
+        tools: [
           {
-            name: 'set_result',
-            parameters: {
-              type: 'object',
-              properties: Object.fromEntries(
-                args.map((arg) => [arg.name, { type: 'string', description: arg.description }]),
-              ),
-              required: args.map((arg) => arg.name),
+            type: 'function',
+            function: {
+              name: 'set_result',
+              parameters: {
+                type: 'object',
+                properties: Object.fromEntries(
+                  args.map((arg) => [arg.name, { type: 'string', description: arg.description }]),
+                ),
+                required: args.map((arg) => arg.name),
+                additionalProperties: false,
+              },
+              strict: true,
             },
           },
         ],
-        function_call: { name: 'set_result' },
         temperature,
         model,
         n: 1,
       });
 
-      const result = completion.choices[0].message.function_call;
-      if (!result) {
+      const resultCalls = completion.choices[0].message.tool_calls;
+      if (!resultCalls?.length) {
         if (!import.meta.env.PROD) {
-          console.log(inspect(completion, true, undefined, true));
+          console.log(inspect(completion, true, null, true));
         }
         throw new Error('Failed to generate completion, or the model failed to call the function');
       }
+
+      const result = resultCalls[0].function;
 
       if (result.name !== 'set_result') {
         throw new Error(`Unexpected function call: ${result.name}`);
@@ -85,13 +89,16 @@ export async function callAIFunction(
       let decodedArguments: Record<string, string>;
       try {
         decodedArguments = JSON.parse(result.arguments);
-      } catch (e) {
+      } catch {
         throw new Error(`Failed to parse arguments: ${result.arguments}`);
       }
 
       if (args.some((arg) => !(arg.name in decodedArguments))) {
         throw new Error(
-          `Missing arguments in completion: ${args.filter((arg) => !(arg.name in decodedArguments)).join(', ')}`,
+          `Missing arguments in completion: ${args
+            .map((arg) => arg.name)
+            .filter((arg) => !(arg in decodedArguments))
+            .join(', ')}`,
         );
       }
 
@@ -106,7 +113,7 @@ async function cacheResponse<T>(input: string, cb: (openai: OpenAI, model: GPTMo
     throw new Error('OPENAI_API_KEY is not set');
   }
 
-  const model = (import.meta.env.OPENAI_GPT_MODEL || 'gpt-4') as GPTModels;
+  const model = (import.meta.env.OPENAI_GPT_MODEL || 'gpt-4o') as GPTModels;
 
   let inputHash: string, cacheFileName: string;
   if (!import.meta.env.PROD) {
@@ -119,7 +126,9 @@ async function cacheResponse<T>(input: string, cb: (openai: OpenAI, model: GPTMo
         console.debug(`using cached completion: ${cacheFileName}`);
         return JSON.parse(cached);
       }
-    } catch {}
+    } catch {
+      //
+    }
   }
 
   const openai = new OpenAI({

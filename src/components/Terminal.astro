@@ -144,17 +144,17 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
 
                       return l;
                     })
-                    .reduce((prev, curr) => {
+                    .reduce((prev: (string | Element)[], curr: string | Element) => {
                       const lastElement = prev[prev.length - 1];
 
                       if (typeof curr === 'string') {
                         curr = ` ${curr}`;
                       } else if (typeof lastElement === 'string') {
-                        prev[prev.length - 1] += ' ';
+                        prev[prev.length - 1] = lastElement + ' ';
                       }
 
                       if (typeof lastElement === 'string' && typeof curr === 'string') {
-                        prev[prev.length - 1] += curr;
+                        prev[prev.length - 1] = lastElement + curr;
                       } else {
                         prev.push(curr);
                       }

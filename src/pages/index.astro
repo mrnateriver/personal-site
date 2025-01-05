@@ -199,6 +199,27 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
     --labels-vertical-gap: 0px;
     --labels-shadow-color: rgba(0, 0, 0, 0.1);
 
+    --animation-1-delay: 1s;
+    --animation-1-duration: 2s;
+    --animation-2-delay: calc(var(--animation-1-delay) + var(--animation-1-duration));
+    --animation-2-duration: 20s;
+    --animation-end-offset-y: calc(-45vh + 20vw);
+    --animation-end-offset-x: 20vw;
+    --animation-end-offset-z: -40vw;
+    --animation-end-rotate-x: -20deg;
+    --animation-end-rotate-y: 30deg;
+    --animation-start-offset-y: -30vh;
+    --rocking-step: 1deg;
+
+    height: 100%;
+    display: grid;
+    place-items: flex-end center;
+    transform-origin: center;
+    transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(var(--animation-start-offset-y));
+    animation:
+      var(--animation-1-duration) var(--animation-1-delay) forwards main-rotation var(--animation-curve-base),
+      var(--animation-2-duration) var(--animation-2-delay) infinite main-rocking var(--animation-curve-base);
+
     @media (prefers-color-scheme: dark) {
       --labels-shadow-color: rgba(255, 255, 255, 0.1);
     }
@@ -217,18 +238,6 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
       --labels-offset: 0px;
       --labels-vertical-gap: var(--padding-xlg);
     }
-
-    --animation-1-delay: 1s;
-    --animation-1-duration: 2s;
-    --animation-2-delay: calc(var(--animation-1-delay) + var(--animation-1-duration));
-    --animation-2-duration: 20s;
-    --animation-end-offset-y: calc(-45vh + 20vw);
-    --animation-end-offset-x: 20vw;
-    --animation-end-offset-z: -40vw;
-    --animation-end-rotate-x: -20deg;
-    --animation-end-rotate-y: 30deg;
-    --animation-start-offset-y: -30vh;
-    --rocking-step: 1deg;
 
     @media (max-width: 460px) or (max-height: 520px) {
       --animation-end-offset-y: calc(-50vh + 25vw);
@@ -277,15 +286,6 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
         }
       }
     }
-
-    height: 100%;
-    display: grid;
-    place-items: flex-end center;
-    transform-origin: center;
-    transform: rotateX(0deg) rotateY(0deg) translateZ(0vw) translateY(var(--animation-start-offset-y));
-    animation:
-      var(--animation-1-duration) var(--animation-1-delay) forwards main-rotation var(--animation-curve-base),
-      var(--animation-2-duration) var(--animation-2-delay) infinite main-rocking var(--animation-curve-base);
 
     &-content {
       transform-style: preserve-3d;
@@ -338,6 +338,22 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
         --base-offset-z: 600px;
         --base-rotate-y: 0deg;
 
+        --seat-color: #dcdcdc;
+        --seat-frame-color: #707070;
+        --table-color: #aeaeae;
+        --table-frame-color: #707070;
+        --table-height: 128px;
+        --table-length: 256px;
+        --plastic-color: beige;
+
+        pointer-events: none;
+        transform-style: preserve-3d;
+        position: absolute;
+        width: var(--table-length);
+        height: 220px;
+        bottom: 0;
+        transform: translateX(var(--base-offset-x)) translateZ(var(--base-offset-z)) rotateY(var(--base-rotate-y));
+
         @media (max-width: 850px) {
           --base-offset-x: 50px;
           --base-offset-z: 650px;
@@ -354,14 +370,6 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
           --base-offset-x: -140%;
         }
 
-        --seat-color: #dcdcdc;
-        --seat-frame-color: #707070;
-        --table-color: #aeaeae;
-        --table-frame-color: #707070;
-        --table-height: 128px;
-        --table-length: 256px;
-        --plastic-color: beige;
-
         @media (prefers-color-scheme: dark) {
           --seat-color: #190b00;
           --seat-frame-color: #212121;
@@ -369,14 +377,6 @@ const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
           --table-frame-color: var(--seat-frame-color);
           --plastic-color: #8b8b74;
         }
-
-        pointer-events: none;
-        transform-style: preserve-3d;
-        position: absolute;
-        width: var(--table-length);
-        height: 220px;
-        bottom: 0;
-        transform: translateX(var(--base-offset-x)) translateZ(var(--base-offset-z)) rotateY(var(--base-rotate-y));
       }
 
       &-ficus {

@@ -18,7 +18,7 @@ export interface BoxDimensions {
 
 export interface BoxProps {
   size: string | number | BoxDimensions;
-  surfaceColor: Color | ({ all: Color } & Partial<BoxSurfaceColors>) | BoxSurfaceColors;
+  surfaceColor?: Color | ({ all: Color } & Partial<BoxSurfaceColors>) | BoxSurfaceColors;
 }
 
 export function getBoxStyleVars(props: BoxProps): Record<string, string> {

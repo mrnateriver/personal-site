@@ -6,28 +6,32 @@
 }
 
 @mixin typography() {
-  --font-family-header: 'Catamaran', sans-serif;
-  --font-family-paragraph: 'Source Sans 3', sans-serif;
-  --font-family-decoration: 'Silkscreen', cursive;
-  --font-size-base: 20px;
+  & {
+    --font-family-header: 'Catamaran', sans-serif;
+    --font-family-paragraph: 'Source Sans 3', sans-serif;
+    --font-family-decoration: 'Silkscreen', cursive;
+    --font-size-base: 20px;
 
-  --font-size-xss: 0.5rem; // caption
-  --font-size-xs: 0.7rem; // caption
-  --font-size-sm: 0.85rem; // small
-  --font-size-md: 1rem; // p
-  --font-size-lg: 1.25rem; // h5
-  --font-size-xl: 1.75rem; // h4
-  --font-size-xxl: 2.25rem; // h3
-  --font-size-xxxl: 2.75rem; // h2
-  --font-size-xxxxl: 3.5rem; // h1
+    --font-size-xss: 0.5rem; // caption
+    --font-size-xs: 0.7rem; // caption
+    --font-size-sm: 0.85rem; // small
+    --font-size-md: 1rem; // p
+    --font-size-lg: 1.25rem; // h5
+    --font-size-xl: 1.75rem; // h4
+    --font-size-xxl: 2.25rem; // h3
+    --font-size-xxxl: 2.75rem; // h2
+    --font-size-xxxxl: 3.5rem; // h1
+  }
 }
 
 @mixin dimensions() {
-  --padding-xs: 4px;
-  --padding-sm: 8px;
-  --padding-md: 12px;
-  --padding-lg: 16px;
-  --padding-xlg: 24px;
+  & {
+    --padding-xs: 4px;
+    --padding-sm: 8px;
+    --padding-md: 12px;
+    --padding-lg: 16px;
+    --padding-xlg: 24px;
+  }
 
   @media (max-width: 768px) or (max-height: 600px) {
     --padding-xs: 2px;
@@ -39,15 +43,17 @@
 }
 
 @mixin palette() {
-  --color-primary: #0f80ce;
-  --color-accent: #008080;
-  --color-background: #fafafa;
-  --color-surface: white;
-  --color-text-primary: black;
-  --color-text-secondary: gray;
-  --color-text-tertiary: darkgray;
-  --color-text-anchor: var(--color-accent);
-  --color-text-anchor-visited: var(--color-accent);
+  & {
+    --color-primary: #0f80ce;
+    --color-accent: #008080;
+    --color-background: #fafafa;
+    --color-surface: white;
+    --color-text-primary: black;
+    --color-text-secondary: gray;
+    --color-text-tertiary: darkgray;
+    --color-text-anchor: var(--color-accent);
+    --color-text-anchor-visited: var(--color-accent);
+  }
 
   @media (prefers-color-scheme: dark) {
     --color-background: #0c0c0c;
@@ -58,12 +64,14 @@
 }
 
 @mixin effects() {
-  --animation-curve-base: cubic-bezier(0.65, 0.05, 0.36, 1);
-  --animation-curve-playful: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  & {
+    --animation-curve-base: cubic-bezier(0.65, 0.05, 0.36, 1);
+    --animation-curve-playful: cubic-bezier(0.68, -0.55, 0.27, 1.55);
 
-  --border-radius-base: var(--padding-sm);
+    --border-radius-base: var(--padding-sm);
 
-  --box-shadow-base: 0 0 5rem rgba(0, 0, 0, 0.1);
+    --box-shadow-base: 0 0 5rem rgba(0, 0, 0, 0.1);
+  }
 
   @media (prefers-color-scheme: dark) {
     --box-shadow-base: 0 0 5rem rgba(0, 0, 0, 1);

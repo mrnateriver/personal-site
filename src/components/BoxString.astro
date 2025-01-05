@@ -9,7 +9,7 @@ export interface Props
   extends Pick<BoxGridProps, 'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient' | 'waveDisabled'> {
   class?: string;
   string: string;
-  color?: Color;
+  color?: Color | null;
 }
 
 const {
@@ -118,7 +118,7 @@ const pixels = stringPixels.reduce<ImagePixelFrames[][]>((acc, [letter, letterPi
   letterPixels.forEach((row, i) => {
     acc[i] = [
       ...(acc[i] ?? []),
-      ...row.map((c) => [c === whiteColor ? whiteColor : color ?? c] as [Color]),
+      ...row.map((c) => [c === whiteColor ? whiteColor : (color ?? c)] as [Color]),
       ...(letter === ' ' || letterIdx === stringPixels.length - 1 || stringPixels[letterIdx + 1][0] === ' '
         ? []
         : [[whiteColor] as [Color]]),
