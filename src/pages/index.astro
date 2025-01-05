@@ -38,8 +38,8 @@ const resumeText = entries
 
 const { title: resumeTitle, summary: resumeSummary } = await callAIFunction(
   `${import.meta.env.INDEX_RESUME_SUMMARY_PROMPT || ''}
-  You will be punished if your summarization is longer than 10 words.
-  Summarize the following resume of a software engineer:
+  You will be punished if your summarization is longer than 15 words.
+  Summarize the following resume of a software engineer in a creative, but not cringe manner:
   ${resumeText}`,
   [
     { name: 'title', description: "Describe the person's attitude behind the given resume." },
