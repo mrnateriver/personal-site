@@ -132,7 +132,8 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
         &-top,
         &-bottom {
           left: var(--side-offset);
-          background-image: linear-gradient(to top right, transparent, #00000015),
+          background-image:
+            linear-gradient(to top right, transparent, #00000015),
             linear-gradient(to top, var(--computer-plastic-color), var(--computer-plastic-color));
         }
 
@@ -178,7 +179,8 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
             translateY(calc(var(--computer-monitor-depth-front) / 2))
             translateZ(calc(-1 * var(--side-offset) - var(--side-width) / 2));
 
-          background-image: linear-gradient(to top right, transparent, #ffffff15),
+          background-image:
+            linear-gradient(to top right, transparent, #ffffff15),
             linear-gradient(to top, var(--computer-plastic-color), var(--computer-plastic-color));
         }
 
@@ -187,7 +189,8 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
             translateY(calc(var(--computer-monitor-depth-front) / 2))
             translateZ(calc(var(--side-width) / 2 - var(--side-offset)));
 
-          background-image: linear-gradient(to top right, transparent, #00000015),
+          background-image:
+            linear-gradient(to top right, transparent, #00000015),
             linear-gradient(to top, var(--computer-plastic-color), var(--computer-plastic-color));
         }
 
@@ -198,7 +201,8 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
           bottom: calc(var(--back-sides-padding) + var(--side-offset));
           left: var(--side-offset);
 
-          background-image: linear-gradient(to top, #00000030, #00000030),
+          background-image:
+            linear-gradient(to top, #00000030, #00000030),
             linear-gradient(to top, var(--computer-plastic-color), var(--computer-plastic-color));
         }
       }

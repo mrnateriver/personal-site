@@ -80,12 +80,14 @@ const sides = (['left', 'right', 'top', 'bottom', 'front', 'back'] as Array<keyo
         background-size: calc(var(--columns-count, 1) * 100%) 100%;
       }
       &-top {
-        background-image: linear-gradient(to top right, transparent, $lighten),
+        background-image:
+          linear-gradient(to top right, transparent, $lighten),
           linear-gradient(to right, var(--st, var(--sa)), var(--st, var(--sa)));
         transform: rotateX(-90deg) translateY(calc(var(--wz) / -2));
       }
       &-bottom {
-        background-image: linear-gradient(to top right, transparent, $lighten),
+        background-image:
+          linear-gradient(to top right, transparent, $lighten),
           linear-gradient(to right, var(--sb, var(--sa)), var(--sb, var(--sa)));
         transform: translateY(var(--wy)) rotateX(-90deg) translateY(calc(var(--wz) / -2));
       }
@@ -99,14 +101,14 @@ const sides = (['left', 'right', 'top', 'bottom', 'front', 'back'] as Array<keyo
       }
       &-front {
         transform: translateZ(calc(var(--wz) / 2));
-        background-image: linear-gradient(to bottom right, transparent, $darken),
-          linear-gradient(to top right, transparent, $lighten),
+        background-image:
+          linear-gradient(to bottom right, transparent, $darken), linear-gradient(to top right, transparent, $lighten),
           linear-gradient(to bottom, var(--sf, var(--sa)), var(--sf, var(--sa)));
       }
       &-back {
         transform: translateZ(calc(-1 * var(--wz) + var(--wz) / 2));
-        background-image: linear-gradient(to bottom right, transparent, $darken),
-          linear-gradient(to top right, transparent, $lighten),
+        background-image:
+          linear-gradient(to bottom right, transparent, $darken), linear-gradient(to top right, transparent, $lighten),
           linear-gradient(to bottom, var(--sbk, var(--sa)), var(--sbk, var(--sa)));
       }
 
@@ -121,12 +123,14 @@ const sides = (['left', 'right', 'top', 'bottom', 'front', 'back'] as Array<keyo
       }
       &-left {
         transform: translateZ(calc(var(--wz) / 2)) rotateY(90deg);
-        background-image: linear-gradient(to bottom right, transparent, $darken),
+        background-image:
+          linear-gradient(to bottom right, transparent, $darken),
           linear-gradient(to bottom, var(--sl, var(--sa)), var(--sl, var(--sa)));
       }
       &-right {
         transform: translateZ(calc(var(--wz) / 2)) translateX(var(--wx)) rotateY(90deg);
-        background-image: linear-gradient(to bottom right, transparent, $darken),
+        background-image:
+          linear-gradient(to bottom right, transparent, $darken),
           linear-gradient(to bottom, var(--sr, var(--sa)), var(--sr, var(--sa)));
       }
     }

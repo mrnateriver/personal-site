@@ -176,7 +176,8 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
         $shadow-sides: right-corner, right, front-corner, front, left-corner, left, back-corner, back;
         @for $i from 1 through 8 {
           &-#{list.nth($shadow-sides, $i)} {
-            background-image: linear-gradient(to bottom left, transparent, #00000020),
+            background-image:
+              linear-gradient(to bottom left, transparent, #00000020),
               linear-gradient(to top, var(--side-color), var(--side-color));
             background-size:
               800% 100%,
@@ -190,7 +191,8 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
         @media (prefers-color-scheme: dark) {
           @for $i from 1 through 8 {
             &-#{list.nth($shadow-sides, $i)} {
-              background-image: linear-gradient(to top right, transparent 0%, transparent 50%, var(--warm-light)),
+              background-image:
+                linear-gradient(to top right, transparent 0%, transparent 50%, var(--warm-light)),
                 linear-gradient(to bottom left, transparent, #00000020),
                 linear-gradient(to top, var(--side-color), var(--side-color));
             }
@@ -211,7 +213,8 @@ const { class: className, style, color = 'var(--color-surface)' } = Astro.props;
         transform: translateX(var(--de)) rotateX(90deg) translateZ(calc(var(--lid-size) - var(--dx)))
           translateY(var(--de)) translateX(calc(-1 * var(--de)));
 
-        --lid-background: linear-gradient(to bottom right, transparent 0%, transparent 50%, var(--warm-light)),
+        --lid-background:
+          linear-gradient(to bottom right, transparent 0%, transparent 50%, var(--warm-light)),
           linear-gradient(to top left, transparent, #00000020),
           linear-gradient(to top, var(--side-color), var(--side-color));
         background-image: var(--lid-background);
