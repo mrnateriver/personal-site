@@ -1,11 +1,11 @@
 // @ts-check
 
 import eslint from '@eslint/js';
-import eslintPluginAstro from 'eslint-plugin-astro';
+import * as eslintPluginAstro from 'eslint-plugin-astro';
 // @ts-expect-error No types available
 import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import eslintPluginTypescript from 'typescript-eslint';
+import * as eslintPluginTypescript from 'typescript-eslint';
 
 export default eslintPluginTypescript.config(
   eslint.configs.recommended,
