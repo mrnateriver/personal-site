@@ -14,7 +14,7 @@ const entries = await getCollection('resume');
 
 const screenReaderResume = entries
   .map((entry, i) => [
-    `${i + 1}. ${entry.body.trim()}`,
+    `${i + 1}. ${entry.body?.trim()}`,
     `Tech stack:`,
     ...(entry.data.stack ?? ['N/A']).map((s) => `- ${s}`),
   ])
@@ -27,7 +27,7 @@ const terminalResume: TerminalLine[] = entries.map((entry) => ({
     `│`,
     `│`,
   ].join('\n'),
-  suffix: entry.body.trim(),
+  suffix: entry.body?.trim(),
 }));
 
 const terminalLines: TerminalLine[] = [

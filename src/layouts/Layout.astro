@@ -11,8 +11,6 @@ export interface Props {
 
 const { title, description } = Astro.props;
 
-// TODO: split into LandingLayout / BlogLayout to use different global fonts
-
 const pageTitle = [title, manifest.name].filter(Boolean).join(' — ');
 const pageDescription = description ?? manifest.description;
 
