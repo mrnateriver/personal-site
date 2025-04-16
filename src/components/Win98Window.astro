@@ -1,12 +1,15 @@
 ---
-export interface Props {
+import type { JSX } from 'astro/jsx-runtime';
+
+export type Props<AsElem extends keyof JSX.IntrinsicElements> = JSX.IntrinsicElements[AsElem] & {
   class?: string;
   caption?: string;
   ariaHidden?: boolean;
   ariaTitle?: string;
   fullWindowControls?: boolean;
   closeButtonHref?: string;
-}
+  as?: AsElem;
+};
 
 const {
   class: className,
@@ -15,10 +18,17 @@ const {
   ariaHidden = true,
   fullWindowControls = false,
   closeButtonHref,
+  as: Container = 'div',
+  ...htmlProps
 } = Astro.props;
 ---
 
-<div class={`win98-window ${className ?? ''}`} aria-hidden={ariaHidden} title={ariaTitle ?? caption}>
+<Container
+  class={`win98-window ${className ?? ''}`}
+  aria-hidden={ariaHidden}
+  title={ariaTitle ?? caption}
+  {...htmlProps}
+>
   {
     caption && (
       <div class="win98-window-caption" aria-hidden={true}>
@@ -35,7 +45,7 @@ const {
   <div class="win98-window-content">
     <slot />
   </div>
-</div>
+</Container>
 
 <style lang="scss">
   .win98-window {

@@ -9,22 +9,20 @@ export interface Props {
 }
 
 const { class: className, href, caption, title, description } = Astro.props;
-
-const Element = href ? 'a' : 'div';
 ---
 
-<Element
+<Win98Window
+  as={href ? 'a' : 'div'}
   class={`section-preview ${href ? 'section-preview-clickable' : ''} ${className ?? ''}`}
-  title={href ? `${caption ? `${caption} - ` : ''}${title}` : undefined}
+  caption={caption}
+  ariaTitle={href ? `${caption ? `${caption} - ` : ''}${title}` : undefined}
   href={href}
 >
-  <Win98Window caption={caption} ariaHidden>
-    <h2>{title}</h2>
-    <p>{description}</p>
+  <h2>{title}</h2>
+  <p>{description}</p>
 
-    <slot />
-  </Win98Window>
-</Element>
+  <slot />
+</Win98Window>
 
 <style lang="scss">
   .section-preview {
