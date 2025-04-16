@@ -6,6 +6,7 @@ export type Props<AsElem extends keyof JSX.IntrinsicElements> = JSX.IntrinsicEle
   caption?: string;
   fullWindowControls?: boolean;
   closeButtonHref?: string;
+  canvasBackground?: boolean;
   as?: AsElem;
 };
 
@@ -13,6 +14,7 @@ const {
   class: className,
   caption,
   fullWindowControls = false,
+  canvasBackground = false,
   closeButtonHref,
   as: Container = 'div',
   ...htmlProps
@@ -33,7 +35,7 @@ const {
       </div>
     )
   }
-  <div class="win98-window-content">
+  <div class={`win98-window-content ${canvasBackground ? 'win98-window-content-white' : ''}`}>
     <slot />
   </div>
 </Container>
@@ -45,6 +47,7 @@ const {
     --win98-caption-button-offset: 4px;
     --win98-caption-button-size: calc(var(--win98-caption-height) - var(--win98-caption-button-offset) * 2);
     --win98-background: #c0c0c0;
+    --win98-background-dark: #a0a0a0;
     --win98-title-start: #000281;
     --win98-title-end: #0f80ce;
     --win98-border-light: #dfdfdf;
@@ -56,7 +59,6 @@ const {
     color: black;
     line-height: 1;
     box-sizing: border-box;
-    box-shadow: var(--box-shadow-base);
     background: var(--win98-background);
 
     border-top: var(--win98-border-width) solid var(--win98-border-light);
@@ -141,6 +143,50 @@ const {
       position: relative;
       overflow: hidden;
       flex: 1;
+
+      &-white {
+        margin: calc(var(--padding-xs) / 2);
+        padding: var(--padding-sm);
+        background-color: var(--color-background);
+        color: black;
+        border-style: solid;
+        border-width: 2pt;
+
+        --win98-border-style-shadow: var(--win98-background-dark);
+        --win98-border-style-light: var(--color-background);
+
+        @media (prefers-color-scheme: light) {
+          border-top-color: var(--win98-border-style-shadow);
+          border-left-color: var(--win98-border-style-shadow);
+          border-right-color: var(--win98-border-style-light);
+          border-bottom-color: var(--win98-border-style-light);
+
+          &::before {
+            content: '';
+            user-select: none;
+            pointer-events: none;
+            position: absolute;
+            inset: 0;
+            border-style: solid;
+            border-width: 2pt;
+
+            border-top-color: var(--win98-border-dark);
+            border-left-color: var(--win98-border-dark);
+            border-right-color: var(--win98-border-light);
+            border-bottom-color: var(--win98-border-light);
+          }
+        }
+
+        @media (prefers-color-scheme: dark) {
+          background-color: black;
+          color: white;
+
+          border-top-color: var(--win98-border-style-light);
+          border-left-color: var(--win98-border-style-light);
+          border-right-color: var(--win98-border-style-shadow);
+          border-bottom-color: var(--win98-border-style-shadow);
+        }
+      }
     }
   }
 </style>
