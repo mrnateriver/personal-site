@@ -70,7 +70,13 @@ const terminalLines: TerminalLine[] = [
       {screenReaderResume.map((line) => <p>{line}</p>)}
     </article>
 
-    <Win98Window class="terminal-window" caption="Command Prompt" closeButtonHref="/" fullWindowControls>
+    <Win98Window
+      class="terminal-window"
+      caption="Command Prompt"
+      closeButtonHref="/"
+      fullWindowControls
+      canvasBackground
+    >
       <Terminal class="terminal-content" lines={terminalLines} header={terminalPrefix} />
     </Win98Window>
   </main>
@@ -125,8 +131,7 @@ const terminalLines: TerminalLine[] = [
       position: absolute;
       overflow-x: hidden;
       overflow-y: scroll;
-      border: 1pt solid gray;
-      inset: 1pt;
+      inset: 0;
     }
   }
 </style>
