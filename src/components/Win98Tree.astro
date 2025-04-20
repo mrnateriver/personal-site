@@ -1,0 +1,116 @@
+---
+import win98iconFolder from '../assets/win98-icon-folder.png';
+
+export interface TreeNode {
+  iconSrc?: string;
+  label: string;
+  href?: string;
+  children?: TreeNode[];
+}
+
+export interface Props {
+  root?: boolean;
+  nodes?: TreeNode[];
+}
+
+const { root = true, nodes = [] } = Astro.props;
+---
+
+<ul class={`tree ${root ? 'tree-root' : 'tree-nested'}`}>
+  {
+    nodes.map((node) => (
+      <li class="tree-node">
+        <div class="tree-node-content">
+          <img class="tree-node-icon" src={node.iconSrc ?? win98iconFolder.src} alt="" aria-hidden="true" />
+          {node.href ? (
+            <a href={node.href} title={node.label}>
+              {node.label}
+            </a>
+          ) : (
+            <span>{node.label}</span>
+          )}
+        </div>
+        {node.children?.length && <Astro.self nodes={node.children} root={false} />}
+      </li>
+    ))
+  }
+</ul>
+
+<style lang="scss">
+  .tree {
+    --tree-vertical-offset: var(--padding-sm);
+    --tree-icon-size: 12px;
+    --tree-border-color: var(--color-text-secondary);
+
+    position: relative;
+    font-family: var(--font-family-decoration);
+    font-size: var(--font-size-xss);
+
+    @media (prefers-color-scheme: dark) {
+      --tree-border-color: var(--color-text-tertiary);
+    }
+
+    &-root {
+      --tree-level-offset: calc(var(--padding-sm) / 2);
+      margin-left: 0;
+      padding-top: 0;
+      padding-left: 0;
+    }
+
+    $self: &;
+    &-nested {
+      --tree-level-offset: var(--padding-sm);
+      margin-left: calc(var(--tree-icon-size) / 2);
+      padding-top: var(--tree-vertical-offset);
+      padding-left: var(--tree-level-offset);
+
+      &::before {
+        content: '';
+        position: absolute;
+        border-left: 1px dotted var(--tree-border-color);
+        bottom: 0;
+        left: 0;
+        top: 0;
+      }
+
+      #{$self}-node {
+        &::before {
+          content: '';
+          position: absolute;
+          border-top: 1px dotted var(--tree-border-color);
+          width: var(--tree-level-offset);
+          left: calc(-1 * var(--tree-level-offset));
+          top: calc(var(--tree-icon-size) / 2);
+        }
+      }
+    }
+
+    &-node {
+      position: relative;
+
+      &:not(:last-of-type) {
+        margin-bottom: var(--tree-vertical-offset);
+      }
+
+      &-content {
+        display: flex;
+        align-items: center;
+        gap: var(--padding-xs);
+
+        a {
+          color: var(--color-text-primary);
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline dotted;
+          }
+        }
+      }
+
+      &-icon {
+        width: var(--tree-icon-size);
+        height: var(--tree-icon-size);
+      }
+    }
+  }
+</style>

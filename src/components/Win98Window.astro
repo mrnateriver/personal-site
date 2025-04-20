@@ -26,8 +26,8 @@ const {
 <Container class={`win98-window ${className ?? ''}`} {...htmlProps} title={htmlProps.title ?? caption}>
   {
     caption && (
-      <div class="win98-window-caption" aria-hidden={true}>
-        {iconSrc && <img class="win98-window-caption-icon" src={iconSrc} alt="" aria-hidden={true} />}
+      <div class="win98-window-caption" aria-hidden="true">
+        {iconSrc && <img class="win98-window-caption-icon" src={iconSrc} alt="" aria-hidden="true" />}
         <span class="win98-window-caption-label">{caption}</span>
         {fullWindowControls && <span class="win98-window-caption-button win98-window-caption-button-minimize" />}
         {fullWindowControls && <span class="win98-window-caption-button win98-window-caption-button-expand" />}
