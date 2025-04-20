@@ -1,5 +1,6 @@
 ---
 import type { JSX } from 'astro/jsx-runtime';
+import Win98Button from './Win98Button.astro';
 
 export type Props<AsElem extends keyof JSX.IntrinsicElements = 'div'> = JSX.IntrinsicElements[AsElem] & {
   caption?: string;
@@ -7,6 +8,8 @@ export type Props<AsElem extends keyof JSX.IntrinsicElements = 'div'> = JSX.Intr
   closeButtonHref?: string;
   canvasBackground?: boolean;
   iconSrc?: string;
+  statusFields?: string[];
+  inactive?: boolean;
   as?: AsElem;
 };
 
@@ -17,34 +20,157 @@ const {
   canvasBackground = false,
   closeButtonHref,
   iconSrc,
+  statusFields,
+  inactive,
   as: Container = 'div',
   ...htmlProps
 } = Astro.props;
 ---
 
-<Container class={`win98-window ${className ?? ''}`} {...htmlProps} title={htmlProps.title ?? caption}>
+<Container
+  class={`win98-window ${inactive ? 'win98-window-inactive' : ''} ${className ?? ''}`}
+  {...htmlProps}
+  title={htmlProps.title ?? caption}
+>
   {
     caption && (
-      <div class="win98-window-caption" aria-hidden="true">
+      <div class="win98-window-caption">
         {iconSrc && <img class="win98-window-caption-icon" src={iconSrc} alt="" aria-hidden="true" />}
-        <span class="win98-window-caption-label">{caption}</span>
-        {fullWindowControls && <span class="win98-window-caption-button win98-window-caption-button-minimize" />}
-        {fullWindowControls && <span class="win98-window-caption-button win98-window-caption-button-expand" />}
+        <span class="win98-window-caption-label" role="heading">
+          {caption}
+        </span>
+
+        {fullWindowControls && <Win98Button class="win98-window-caption-button win98-window-caption-button-minimize" />}
+        {fullWindowControls && <Win98Button class="win98-window-caption-button win98-window-caption-button-expand" />}
         {closeButtonHref && (
-          <a href={closeButtonHref} class="win98-window-caption-button win98-window-caption-button-close" />
+          <Win98Button
+            as="a"
+            href={closeButtonHref}
+            class="win98-window-caption-button win98-window-caption-button-close"
+          />
         )}
-        {!closeButtonHref && <span class="win98-window-caption-button win98-window-caption-button-close" />}
+        {!closeButtonHref && <Win98Button class="win98-window-caption-button win98-window-caption-button-close" />}
       </div>
     )
   }
   <div class={`win98-window-content ${canvasBackground ? 'win98-window-content-white' : ''}`}>
     <slot />
   </div>
+  {
+    statusFields?.length && (
+      <div class="win98-window-status-bar">
+        {statusFields.map((field) => (
+          <div class="win98-window-status-bar-field">{field}</div>
+        ))}
+      </div>
+    )
+  }
 </Container>
 
 <style lang="scss">
   .win98-window {
-    --win98-caption-icon-size: 16px;
+    --win98-caption-icon-size: 11px;
+
+    -webkit-font-smoothing: none;
+    display: flex;
+    flex-flow: column nowrap;
+    line-height: 1;
+    box-sizing: border-box;
+    font-family: var(--font-family-win98);
+    font-size: var(--win98-element-font-size);
+    box-shadow: var(--win98-border-window-outer), var(--win98-border-window-inner);
+    background: var(--win98-surface);
+    padding: var(--padding-xss);
+
+    $self: &;
+    &-inactive {
+      #{$self}-caption {
+        background: linear-gradient(90deg, var(--dialog-gray), var(--dialog-gray-light));
+      }
+    }
+
+    &-caption {
+      background: linear-gradient(90deg, var(--win98-dialog-blue), var(--win98-dialog-blue-light));
+      padding: calc(var(--padding-xs) - 1px);
+      padding-right: var(--padding-xss);
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      &-icon {
+        width: var(--win98-caption-icon-size);
+        height: var(--win98-caption-icon-size);
+        margin-right: var(--padding-xs);
+      }
+
+      &-label {
+        font-weight: bold;
+        letter-spacing: 0;
+        margin-right: var(--padding-xlg);
+        color: white;
+        flex: 1;
+      }
+
+      &-button {
+        display: block;
+        min-width: 16px;
+        min-height: 14px;
+        padding: 0;
+
+        &:active {
+          padding: 0;
+        }
+        &:focus {
+          outline: none;
+        }
+
+        &-minimize {
+          background-image: url('../assets/win98-window-button-icon-minimize.svg');
+          background-repeat: no-repeat;
+          background-position: bottom 3px left 4px;
+        }
+        &-expand {
+          background-image: url('../assets/win98-window-button-icon-maximize.svg');
+          background-repeat: no-repeat;
+          background-position: top 2px left 3px;
+        }
+        &-close {
+          margin-left: var(--padding-xss);
+          background-image: url('../assets/win98-window-button-icon-close.svg');
+          background-repeat: no-repeat;
+          background-position: top 3px left 4px;
+        }
+      }
+    }
+
+    &-content {
+      padding: var(--padding-md);
+      position: relative;
+      overflow: hidden;
+      flex: 1;
+
+      &-white {
+        padding: var(--padding-sm);
+        margin: calc(var(--padding-xs) / 2);
+        background: var(--win98-button-highlight);
+        box-shadow: var(--win98-border-field);
+      }
+    }
+
+    &-status-bar {
+      margin: 0px 1px;
+      display: flex;
+      gap: 1px;
+
+      &-field {
+        flex-grow: 1;
+        box-shadow: var(--win98-border-status-field);
+        padding: var(--padding-xss) var(--padding-xs);
+        margin: 0;
+      }
+    }
+
+    /*
     --win98-caption-height: 25px;
     --win98-caption-button-color: #c1c1c1;
     --win98-caption-button-offset: 4px;
@@ -90,11 +216,6 @@ const {
       align-items: center;
       justify-content: flex-start;
 
-      &-icon {
-        width: var(--win98-caption-icon-size);
-        height: var(--win98-caption-icon-size);
-        margin-right: var(--padding-sm);
-      }
 
       &-label {
         flex: 1;
@@ -154,32 +275,6 @@ const {
       }
     }
 
-    &-content {
-      padding: var(--padding-md);
-      position: relative;
-      overflow: hidden;
-      flex: 1;
-
-      &-white {
-        margin: calc(var(--padding-xs) / 2);
-        padding: var(--padding-sm);
-        background-color: var(--color-background);
-        border-style: solid;
-        border-width: var(--win98-border-width);
-
-        --win98-border-style-shadow: var(--win98-border-dark);
-        --win98-border-style-light: #f4f4f4;
-
-        border-top-color: var(--win98-border-style-shadow);
-        border-left-color: var(--win98-border-style-shadow);
-        border-right-color: var(--win98-border-style-light);
-        border-bottom-color: var(--win98-border-style-light);
-
-        @media (prefers-color-scheme: dark) {
-          --win98-border-style-light: var(--win98-border-light);
-          background-color: black;
-        }
-      }
-    }
+     */
   }
 </style>
