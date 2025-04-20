@@ -20,8 +20,7 @@
 
 @mixin typography() {
   & {
-    --font-family-header: sans-serif; // FIXME: change to Hyperlegible
-    --font-family-paragraph: sans-serif; // FIXME: change to Hyperlegible
+    --font-family-content: 'Atkinson Hyperlegible', sans-serif;
     --font-family-win98: 'Pixelated MS Sans Serif', Arial;
     --font-family-terminal: 'VT323', monospace;
     --font-size-base: 20px;
