@@ -150,6 +150,8 @@ const {
     }
 
     &-content {
+      @include win98.scrollbars();
+
       padding: var(--padding-md);
       position: relative;
       overflow: hidden;
@@ -173,68 +175,6 @@ const {
           border-bottom-color: var(--win98-button-face);
           border-right-color: var(--win98-button-face);
           border-image: none;
-        }
-      }
-
-      &::-webkit-scrollbar {
-        width: 16px;
-      }
-      &::-webkit-scrollbar:horizontal {
-        height: 17px;
-      }
-
-      &::-webkit-scrollbar-corner {
-        background: var(--win98-button-face);
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background-color: var(--win98-surface);
-        box-shadow: var(--win98-border-raised-outer), var(--win98-border-raised-inner);
-        cursor: default;
-      }
-
-      &::-webkit-scrollbar-button:horizontal:start:decrement,
-      &::-webkit-scrollbar-button:horizontal:end:increment,
-      &::-webkit-scrollbar-button:vertical:start:decrement,
-      &::-webkit-scrollbar-button:vertical:end:increment {
-        display: block;
-      }
-
-      &::-webkit-scrollbar-track {
-        background-image: url('../assets/win98-scrollbar-background.svg');
-      }
-      &::-webkit-scrollbar-button:vertical:start {
-        height: 17px;
-        background-image: url('../assets/win98-scrollbar-button-up.svg');
-      }
-      &::-webkit-scrollbar-button:vertical:end {
-        height: 17px;
-        background-image: url('../assets/win98-scrollbar-button-down.svg');
-      }
-      &::-webkit-scrollbar-button:horizontal:start {
-        width: 16px;
-        background-image: url('../assets/win98-scrollbar-button-left.svg');
-      }
-      &::-webkit-scrollbar-button:horizontal:end {
-        width: 16px;
-        background-image: url('../assets/win98-scrollbar-button-right.svg');
-      }
-
-      @media (prefers-color-scheme: dark) {
-        &::-webkit-scrollbar-track {
-          background-image: url('../assets/win98-scrollbar-background-dark.svg');
-        }
-        &::-webkit-scrollbar-button:vertical:start {
-          background-image: url('../assets/win98-scrollbar-button-up-dark.svg');
-        }
-        &::-webkit-scrollbar-button:vertical:end {
-          background-image: url('../assets/win98-scrollbar-button-down-dark.svg');
-        }
-        &::-webkit-scrollbar-button:horizontal:start {
-          background-image: url('../assets/win98-scrollbar-button-left-dark.svg');
-        }
-        &::-webkit-scrollbar-button:horizontal:end {
-          background-image: url('../assets/win98-scrollbar-button-right-dark.svg');
         }
       }
     }

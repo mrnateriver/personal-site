@@ -184,6 +184,8 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
 </div>
 
 <style lang="scss">
+  @use '../styles/win98' as win98;
+
   @keyframes line-appear {
     0%,
     50% {
@@ -215,6 +217,8 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
   }
 
   .terminal {
+    @include win98.scrollbars();
+
     padding: var(--padding-xs);
     font-family: var(--font-family-terminal);
 
