@@ -27,14 +27,10 @@ const {
 } = Astro.props;
 ---
 
-<Container
-  class={`win98-window ${inactive ? 'win98-window-inactive' : ''} ${className ?? ''}`}
-  {...htmlProps}
-  title={htmlProps.title ?? caption}
->
+<Container class={`win98-window ${inactive ? 'win98-window-inactive' : ''} ${className ?? ''}`} {...htmlProps}>
   {
     caption && (
-      <div class="win98-window-caption">
+      <div class="win98-window-caption" title={htmlProps.title ?? caption}>
         {iconSrc && <img class="win98-window-caption-icon" src={iconSrc} alt="" aria-hidden="true" />}
         <span class="win98-window-caption-label" role="heading">
           {caption}
