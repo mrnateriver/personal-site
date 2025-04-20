@@ -38,13 +38,13 @@ const { root = true, nodes = [] } = Astro.props;
 
 <style lang="scss">
   .tree {
+    --tree-icon-size: 11px;
     --tree-vertical-offset: var(--padding-sm);
-    --tree-icon-size: 12px;
     --tree-border-color: var(--color-text-secondary);
 
     position: relative;
     font-family: var(--font-family-win98);
-    font-size: var(--font-size-xss);
+    font-size: var(--win98-element-font-size);
 
     @media (prefers-color-scheme: dark) {
       --tree-border-color: var(--color-text-tertiary);
@@ -101,8 +101,19 @@ const { root = true, nodes = [] } = Astro.props;
           color: var(--color-text-primary);
           text-decoration: none;
 
-          &:hover {
+          &:hover:not(:focus):not(:active) {
             text-decoration: underline dotted;
+          }
+
+          &:focus,
+          &:active {
+            --selection-padding: var(--padding-xs);
+            color: var(--win98-button-highlight);
+            background-color: var(--win98-dialog-blue);
+            padding: var(--selection-padding);
+            margin: calc(-1 * var(--selection-padding));
+            outline: 1px dotted var(--win98-link-blue);
+            outline-offset: 0px;
           }
         }
       }
