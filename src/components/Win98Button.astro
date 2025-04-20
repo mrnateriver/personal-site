@@ -32,7 +32,6 @@ const {
     --win98-button-min-height: 23px;
 
     -webkit-font-smoothing: none;
-    font-family: var(--font-family-win98);
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
@@ -44,6 +43,9 @@ const {
     line-height: normal;
     font-weight: 400;
     border-radius: 0;
+    user-select: none;
+    color: transparent;
+    font-family: var(--font-family-win98);
     font-size: var(--win98-element-font-size);
     text-shadow: 0 0 var(--win98-text-color);
     background: var(--win98-surface);
@@ -51,8 +53,6 @@ const {
     min-width: var(--win98-button-min-width);
     min-height: var(--win98-button-min-height);
     padding: 0 var(--padding-md);
-    user-select: none;
-    color: transparent;
 
     &:visited {
       color: transparent;
@@ -86,10 +86,17 @@ const {
     }
 
     &-disabled,
-    &:disabled {
+    &:disabled,
+    &-disabled:visited,
+    &:disabled:visited {
       color: var(--win98-button-shadow);
       text-shadow: 1px 1px 0 var(--win98-button-highlight);
       pointer-events: none;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--win98-button-highlight);
+        text-shadow: none;
+      }
     }
 
     @media (not (hover)) {

@@ -86,6 +86,7 @@ const { root = true, nodes = [] } = Astro.props;
     }
 
     &-node {
+      --selection-padding: var(--padding-xs);
       position: relative;
 
       &:not(:last-of-type) {
@@ -107,12 +108,11 @@ const { root = true, nodes = [] } = Astro.props;
 
           &:focus,
           &:active {
-            --selection-padding: var(--padding-xs);
-            color: var(--win98-button-highlight);
+            color: white;
             background-color: var(--win98-dialog-blue);
             padding: var(--selection-padding);
             margin: calc(-1 * var(--selection-padding));
-            outline: 1px dotted var(--win98-link-blue);
+            outline: 1px dotted var(--win98-dialog-blue);
             outline-offset: 0px;
           }
         }
