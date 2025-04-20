@@ -1,0 +1,19 @@
+---
+import type { JSX } from 'astro/jsx-runtime';
+
+export type Props = Omit<JSX.IntrinsicElements['a'], 'href' | 'title'>;
+
+const { class: className, ...htmlProps } = Astro.props;
+---
+
+<a class={`back-home ${className}`} href="/" title="Return to main page" {...htmlProps}>return to main page</a>
+
+<style lang="scss">
+  .back-home {
+    font-family: var(--font-family-win98);
+    text-decoration: underline dotted;
+    text-transform: lowercase;
+    text-align: center;
+    display: block;
+  }
+</style>

@@ -7,6 +7,7 @@ import Acknowledgments from '../components/Acknowledgments.astro';
 import Terminal, { type TerminalLine } from '../components/Terminal.astro';
 import Win98Window from '../components/Win98Window.astro';
 import Layout from '../layouts/Layout.astro';
+import IndexLink from '../components/IndexLink.astro';
 
 const terminalPrefix = await fs.readFile('src/assets/terminal-header.txt', 'utf-8');
 
@@ -62,51 +63,46 @@ const terminalLines: TerminalLine[] = [
 ---
 
 <Layout title="Resume">
-  <main>
-    <a class="back-home" href="/">{'<'} INDEX</a>
+  <div class="layout-resume">
+    <IndexLink />
 
-    <article class="screen-reader">
-      <h1>Resume</h1>
-      {screenReaderResume.map((line) => <p>{line}</p>)}
-    </article>
+    <main>
+      <article class="screen-reader">
+        <h1>Resume</h1>
+        {screenReaderResume.map((line) => <p>{line}</p>)}
+      </article>
 
-    <Win98Window
-      class="terminal-window"
-      caption="Command Prompt"
-      closeButtonHref="/"
-      fullWindowControls
-      canvasBackground
-    >
-      <Terminal class="terminal-content" lines={terminalLines} header={terminalPrefix} />
-    </Win98Window>
-  </main>
+      <Win98Window
+        class="terminal-window"
+        caption="Command Prompt"
+        closeButtonHref="/"
+        fullWindowControls
+        canvasBackground
+      >
+        <Terminal class="terminal-content" lines={terminalLines} header={terminalPrefix} />
+      </Win98Window>
+    </main>
 
-  <Acknowledgments class="acks" />
+    <Acknowledgments class="acks" />
+  </div>
 </Layout>
 
 <style lang="scss">
-  .acks {
-    position: fixed;
-    bottom: var(--padding-md);
-    right: 0;
-    left: 0;
-  }
-
-  .back-home {
-    font-family: var(--font-family-win98);
-    margin-top: var(--padding-sm);
-    position: relative;
-    z-index: 2;
-  }
-
-  main {
+  .layout-resume {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: var(--padding-sm);
-    padding: 0 var(--padding-xlg);
+    padding: var(--padding-sm) var(--padding-xlg);
+    box-sizing: border-box;
     height: 100%;
+  }
+
+  main {
+    flex: 1;
+    max-width: 1000px;
+    width: 100%;
 
     .screen-reader {
       position: absolute;
@@ -118,13 +114,9 @@ const terminalLines: TerminalLine[] = [
 
   .terminal {
     &-window {
-      flex: 1;
-      width: 100%;
+      height: 100%;
       min-height: 300px;
-      max-width: 1000px;
       margin-bottom: calc(var(--padding-xlg) * 2);
-      position: relative;
-      z-index: 1;
     }
 
     &-content {
