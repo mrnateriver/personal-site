@@ -1,8 +1,7 @@
 ---
 import type { JSX } from 'astro/jsx-runtime';
 
-export type Props<AsElem extends keyof JSX.IntrinsicElements> = JSX.IntrinsicElements[AsElem] & {
-  class?: string;
+export type Props<AsElem extends keyof JSX.IntrinsicElements = 'div'> = JSX.IntrinsicElements[AsElem] & {
   caption?: string;
   fullWindowControls?: boolean;
   closeButtonHref?: string;
@@ -64,6 +63,11 @@ const {
     box-sizing: border-box;
     background: var(--win98-background);
 
+    border-top: var(--win98-border-width) solid var(--win98-border-light);
+    border-left: var(--win98-border-width) solid var(--win98-border-light);
+    border-bottom: var(--win98-border-width) solid var(--win98-border-dark);
+    border-right: var(--win98-border-width) solid var(--win98-border-dark);
+
     @media (prefers-color-scheme: dark) {
       --win98-border-light: #4a4a4a;
       --win98-border-dark: #171717;
@@ -71,11 +75,6 @@ const {
       --win98-title-end: #000013;
       background: var(--win98-background-dark);
     }
-
-    border-top: var(--win98-border-width) solid var(--win98-border-light);
-    border-left: var(--win98-border-width) solid var(--win98-border-light);
-    border-bottom: var(--win98-border-width) solid var(--win98-border-dark);
-    border-right: var(--win98-border-width) solid var(--win98-border-dark);
 
     &-caption {
       font-family: var(--font-family-win98);

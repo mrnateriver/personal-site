@@ -1,0 +1,101 @@
+---
+import type { JSX } from 'astro/jsx-runtime';
+
+export type Props<AsElem extends keyof JSX.IntrinsicElements = 'button'> = JSX.IntrinsicElements[AsElem] & {
+  default?: boolean;
+  as?: AsElem;
+  disabled?: boolean;
+};
+
+const {
+  class: className,
+  default: isDefault = false,
+  as: Component = 'button',
+  disabled: isDisabled = false,
+  ...htmlProps
+} = Astro.props;
+---
+
+<Component
+  class={`win98-button ${isDefault ? 'win98-button-default' : ''} ${isDisabled ? 'win98-button-disabled' : ''} ${className}`}
+  disabled={Component === 'button' ? isDisabled : undefined}
+  tabindex={Component !== 'button' && isDisabled ? '-1' : undefined}
+  aria-disabled={isDisabled}
+  {...htmlProps}
+>
+  <slot />
+</Component>
+
+<style lang="scss">
+  .win98-button {
+    --win98-button-min-width: 75px;
+    --win98-button-min-height: 23px;
+
+    -webkit-font-smoothing: none;
+    font-family: var(--font-family-win98);
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    text-align: center;
+    border: none;
+    cursor: default;
+    line-height: normal;
+    font-weight: 400;
+    border-radius: 0;
+    font-size: var(--win98-element-font-size);
+    text-shadow: 0 0 var(--win98-text-color);
+    background: var(--win98-surface);
+    box-shadow: var(--win98-border-raised-outer), var(--win98-border-raised-inner);
+    min-width: var(--win98-button-min-width);
+    min-height: var(--win98-button-min-height);
+    padding: 0 var(--padding-md);
+    user-select: none;
+    color: transparent;
+
+    &:visited {
+      color: transparent;
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    $self: &;
+    &-default {
+      box-shadow: var(--win98-default-button-border-raised-outer), var(--win98-default-button-border-raised-inner);
+
+      &:not(:disabled):not(#{$self}-disabled):active {
+        box-shadow: var(--win98-default-button-border-sunken-outer), var(--win98-default-button-border-sunken-inner);
+      }
+    }
+
+    &:not(:disabled):not(&-disabled):active {
+      box-shadow: var(--win98-border-sunken-outer), var(--win98-border-sunken-inner);
+      text-shadow: 1px 1px var(--win98-text-color);
+    }
+
+    &:focus {
+      outline: 1px dotted var(--win98-button-outline);
+      outline-offset: var(--win98-button-outline-offset);
+    }
+
+    &::-moz-focus-inner {
+      border: 0;
+    }
+
+    &-disabled,
+    &:disabled {
+      color: var(--win98-button-shadow);
+      text-shadow: 1px 1px 0 var(--win98-button-highlight);
+      pointer-events: none;
+    }
+
+    @media (not (hover)) {
+      &:not(:disabled):not(&-disabled):hover {
+        box-shadow: var(--win98-border-sunken-outer), var(--win98-border-sunken-inner);
+      }
+    }
+  }
+</style>

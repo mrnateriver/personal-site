@@ -3,6 +3,57 @@
   @include dimensions();
   @include palette();
   @include effects();
+  @include win98();
+}
+
+@mixin win98() {
+  & {
+    --win98-text-color: #222222;
+    --win98-surface: #c0c0c0;
+    --win98-button-outline: #000000;
+    --win98-button-highlight: #ffffff;
+    --win98-button-face: #dfdfdf;
+    --win98-button-shadow: #808080;
+    --win98-window-frame: #0a0a0a;
+    --win98-dialog-blue: #000080;
+    --win98-dialog-blue-light: #1084d0;
+    --win98-dialog-gray: #808080;
+    --win98-dialog-gray-light: #b5b5b5;
+    --win98-link-blue: #0000ff;
+
+    --win98-element-font-size: 0.55rem;
+    --win98-element-spacing: 8px;
+    --win98-button-outline-offset: -4px;
+    --win98-grouped-button-spacing: 4px;
+    --win98-grouped-element-spacing: 6px;
+
+    --win98-border-width: 1px;
+    --win98-border-raised-outer: inset -1px -1px var(--win98-window-frame), inset 1px 1px var(--win98-button-highlight);
+    --win98-border-raised-inner: inset -2px -2px var(--win98-button-shadow), inset 2px 2px var(--win98-button-face);
+    --win98-border-sunken-outer: inset -1px -1px var(--win98-button-highlight), inset 1px 1px var(--win98-window-frame);
+    --win98-border-sunken-inner: inset -2px -2px var(--win98-button-face), inset 2px 2px var(--win98-button-shadow);
+    --win98-default-button-border-raised-outer:
+      inset -2px -2px var(--win98-window-frame), inset 1px 1px var(--win98-window-frame);
+    --win98-default-button-border-raised-inner:
+      inset 2px 2px var(--win98-button-highlight), inset -3px -3px var(--win98-button-shadow),
+      inset 3px 3px var(--win98-button-face);
+    --win98-default-button-border-sunken-outer:
+      inset 2px 2px var(--win98-window-frame), inset -1px -1px var(--win98-window-frame);
+    --win98-default-button-border-sunken-inner:
+      inset -2px -2px var(--win98-button-highlight), inset 3px 3px var(--win98-button-shadow),
+      inset -3px -3px var(--win98-button-face);
+
+    --win98-border-window-outer: inset -1px -1px var(--win98-window-frame), inset 1px 1px var(--win98-button-face);
+    --win98-border-window-inner:
+      inset -2px -2px var(--win98-button-shadow), inset 2px 2px var(--win98-button-highlight);
+
+    --win98-border-field:
+      inset -1px -1px var(--win98-button-highlight), inset 1px 1px var(--win98-button-shadow),
+      inset -2px -2px var(--win98-button-face), inset 2px 2px var(--win98-window-frame);
+    --win98-border-status-field: inset -1px -1px var(--win98-button-face), inset 1px 1px var(--win98-button-shadow);
+  }
+
+  // TODO: dark theme
 }
 
 @mixin typography() {
