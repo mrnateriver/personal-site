@@ -56,6 +56,7 @@ const {
   <div class={`win98-window-content ${canvasBackground ? 'win98-window-content-white' : ''}`}>
     <slot />
   </div>
+  <slot name="footer" />
   {
     statusFields?.length && (
       <div class="win98-window-status-bar">
