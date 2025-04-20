@@ -1,0 +1,86 @@
+---
+import Win98Button from './Win98Button.astro';
+import Win98Window from './Win98Window.astro';
+
+export interface Props {
+  class?: string;
+  maxPagesToShow?: number;
+  totalPages: number;
+  currentPage: number;
+  pageHrefTemplate: `${string}[page]${string}`;
+}
+
+const { class: className, totalPages, currentPage, pageHrefTemplate, maxPagesToShow = 5 } = Astro.props;
+
+function generateUrl(page: number): { page: number; url: string } {
+  return {
+    page,
+    url: pageHrefTemplate.replace('[page]', page.toString()),
+  };
+}
+
+const urls: Array<{ page: number; url: string } | null> = [];
+
+let startPage = Math.max(1, currentPage + (maxPagesToShow % 2 === 0 ? 1 : 0) - Math.floor(maxPagesToShow / 2));
+const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+const overflow = startPage + maxPagesToShow - 1 - totalPages;
+if (overflow > 0) {
+  startPage = Math.max(1, startPage - overflow);
+}
+
+if (startPage > 1) {
+  urls.push(generateUrl(1));
+}
+if (startPage > 2) {
+  urls.push(null);
+}
+
+for (let page = startPage; page <= endPage; page++) {
+  urls.push(generateUrl(page));
+}
+
+if (endPage < totalPages - 1) {
+  urls.push(null);
+}
+if (endPage < totalPages) {
+  urls.push(generateUrl(totalPages));
+}
+---
+
+<Win98Window class={`pagination ${className}`} caption="Pagination">
+  {
+    urls.map((url) =>
+      url ? (
+        <Win98Button
+          class={`pagination-button ${url.page === currentPage ? 'pagination-button-current' : ''}`}
+          as="a"
+          href={url.url}
+        >
+          {url.page}
+        </Win98Button>
+      ) : (
+        <Win98Button class="pagination-button pagination-button-gap" disabled>
+          ...
+        </Win98Button>
+      ),
+    )
+  }
+</Win98Window>
+
+<style lang="scss">
+  .pagination {
+    --pagination-button-size: 22px;
+
+    &-button {
+      min-width: var(--pagination-button-size);
+      padding: 0;
+
+      &-current {
+        font-weight: bold;
+      }
+
+      &-gap {
+      }
+    }
+  }
+</style>
