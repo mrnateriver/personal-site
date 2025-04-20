@@ -7,9 +7,10 @@
 
 @mixin typography() {
   & {
-    --font-family-header: 'Catamaran', sans-serif;
-    --font-family-paragraph: 'Source Sans 3', sans-serif;
-    --font-family-decoration: 'Silkscreen', cursive;
+    --font-family-header: sans-serif; // FIXME: change to Hyperlegible
+    --font-family-paragraph: sans-serif; // FIXME: change to Hyperlegible
+    --font-family-win98: 'Pixelated MS Sans Serif', Arial;
+    --font-family-terminal: 'VT323', monospace;
     --font-size-base: 20px;
 
     --font-size-xss: 0.5rem; // caption

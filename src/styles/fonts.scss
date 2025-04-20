@@ -1,0 +1,19 @@
+// Terminal
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+// Win98
+@font-face {
+  font-family: 'Pixelated MS Sans Serif';
+  src: url('../assets/fonts/ms-sans-serif.woff') format('woff');
+  src: url('../assets/fonts/ms-sans-serif.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pixelated MS Sans Serif';
+  src: url('../assets/fonts/ms-sans-serif-bold.woff') format('woff');
+  src: url('../assets/fonts/ms-sans-serif-bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
