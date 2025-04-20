@@ -216,7 +216,7 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
 
   .terminal {
     padding: var(--padding-xs);
-    font-family: 'VT323', monospace;
+    font-family: var(--font-family-terminal);
 
     background-color: var(--color-background);
     color: black;
@@ -275,6 +275,8 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
       height: 1em;
       display: inline-block;
       vertical-align: bottom;
+      position: relative;
+      left: -1ch;
 
       background: black;
       @media (prefers-color-scheme: dark) {
