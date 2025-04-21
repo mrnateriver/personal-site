@@ -23,6 +23,7 @@ const {
   statusFields,
   inactive,
   as: Container = 'div',
+  title,
   ...htmlProps
 } = Astro.props;
 ---
@@ -30,7 +31,7 @@ const {
 <Container class:list={['win98-window', inactive ? 'win98-window-inactive' : '', className]} {...htmlProps}>
   {
     caption && (
-      <div class="win98-window-caption" title={htmlProps.title ?? caption}>
+      <div class="win98-window-caption" title={title ?? caption}>
         {iconSrc && <img class="win98-window-caption-icon" src={iconSrc} alt="" aria-hidden="true" />}
         <span class="win98-window-caption-label" role="heading">
           {caption}
@@ -55,7 +56,7 @@ const {
 
   <slot name="footer" />
   {
-    statusFields?.length && (
+    !!statusFields?.length && (
       <div class="win98-window-status-bar">
         {statusFields.map((field) => (
           <div class="win98-window-status-bar-field">{field}</div>

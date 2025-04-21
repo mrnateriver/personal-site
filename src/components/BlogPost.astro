@@ -10,6 +10,10 @@ export interface Props {
   imageSrc?: string;
   tags?: string[];
   summaryAiGenerated?: boolean;
+  readTimeMinutes?: number;
+  wordCount?: number;
+  codeBlocksCount?: number;
+  imagesCount?: number;
 }
 
 const {
@@ -20,26 +24,29 @@ const {
   imageSrc,
   tags = [],
   summaryAiGenerated: isSummaryAiGenerated = false,
+  readTimeMinutes,
+  wordCount,
+  codeBlocksCount,
+  imagesCount,
 } = Astro.props;
 
 const caption = tags.length > 0 ? `${tags.join(', ')}` : 'Article';
 
-const formattedDate = date.toISOString();
+const formattedDate = date.toLocaleString();
 const humanDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-const aiIconSize = '16px';
-
-const readTime = 'Read time: 29 minutes'; // TODO: implement calculation or move to props
-const wordCount = 'Words: 1234'; // TODO: implement calculation or move to props
-const codeBlocksCount = 'Code blocks: 5'; // TODO: implement calculation or move to props
-const imagesCount = 'Images: 1'; // TODO: implement calculation or move to props
+const readTimeField = typeof readTimeMinutes === 'number' ? `Read time: ${readTimeMinutes} minutes` : '';
+const wordCountField = typeof wordCount === 'number' ? `Words: ${wordCount}` : '';
+const codeBlocksCountField = typeof codeBlocksCount === 'number' ? `Code blocks: ${codeBlocksCount}` : '';
+const imagesCountField = typeof imagesCount === 'number' ? `Images: ${imagesCount}` : '';
 ---
 
 <Win98Window
   class="blog-post"
   as="article"
   caption={`${caption} - ${humanDate}`}
-  statusFields={[readTime, wordCount, codeBlocksCount, imagesCount]}
+  title={`${caption} - ${formattedDate}`}
+  statusFields={[readTimeField, wordCountField, codeBlocksCountField, imagesCountField].filter(Boolean)}
   canvasBackground
 >
   {imageSrc && <img src={imageSrc} alt={title} class="blog-post-image" />}
