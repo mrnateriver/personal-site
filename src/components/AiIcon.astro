@@ -14,7 +14,7 @@ const normalizedWidth = normalizeCssValue(width ?? size, 'px');
 const normalizedHeight = normalizeCssValue(height ?? size, 'px');
 ---
 
-<span class={`ai-icon-container ${className ?? ''}`} title={title}>
+<span class:list={['ai-icon-container', className]} title={title}>
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"

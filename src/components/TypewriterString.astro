@@ -15,7 +15,7 @@ const normalizedAnimationDuration = normalizeCssValue(animationDurationPerChar, 
 ---
 
 <span
-  class={`typewriter-string ${className ?? ''}`}
+  class:list={['typewriter-string', className]}
   style={{
     '--typewriter-string-length': string.length,
     '--typewriter-animation-delay': normalizedAnimationDelay,

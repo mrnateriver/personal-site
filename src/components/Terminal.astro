@@ -76,7 +76,7 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
 });
 ---
 
-<div class={`terminal ${className ?? ''}`}>
+<div class:list={['terminal', className]}>
   {
     header && (
       <div class="terminal-header">

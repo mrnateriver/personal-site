@@ -47,12 +47,12 @@ if (endPage < totalPages) {
 }
 ---
 
-<Win98Window class={`pagination ${className}`} caption="Pagination">
+<Win98Window class:list={['pagination', className]} caption="Pagination" as="footer">
   {
     urls.map((url) =>
       url ? (
         <Win98Button
-          class={`pagination-button ${url.page === currentPage ? 'pagination-button-current' : ''}`}
+          class:list={['pagination-button', url.page === currentPage && 'pagination-button-current']}
           as="a"
           href={url.url}
         >

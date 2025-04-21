@@ -17,7 +17,7 @@ const {
 ---
 
 <Component
-  class={`win98-button ${isDefault ? 'win98-button-default' : ''} ${isDisabled ? 'win98-button-disabled' : ''} ${className}`}
+  class:list={['win98-button', isDefault && 'win98-button-default', isDisabled && 'win98-button-disabled', className]}
   disabled={Component === 'button' ? isDisabled : undefined}
   tabindex={Component !== 'button' && isDisabled ? '-1' : undefined}
   aria-disabled={isDisabled}

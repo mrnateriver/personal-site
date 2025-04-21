@@ -27,7 +27,7 @@ const {
 } = Astro.props;
 ---
 
-<Container class={`win98-window ${inactive ? 'win98-window-inactive' : ''} ${className ?? ''}`} {...htmlProps}>
+<Container class:list={['win98-window', inactive ? 'win98-window-inactive' : '', className]} {...htmlProps}>
   {
     caption && (
       <div class="win98-window-caption" title={htmlProps.title ?? caption}>
@@ -52,6 +52,7 @@ const {
   <div class={`win98-window-content ${canvasBackground ? 'win98-window-content-white' : ''}`}>
     <slot />
   </div>
+
   <slot name="footer" />
   {
     statusFields?.length && (

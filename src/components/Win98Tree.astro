@@ -16,7 +16,7 @@ export interface Props {
 const { root = true, nodes = [] } = Astro.props;
 ---
 
-<ul class={`tree ${root ? 'tree-root' : 'tree-nested'}`}>
+<ul class:list={['tree', root ? 'tree-root' : 'tree-nested']}>
   {
     nodes.map((node) => (
       <li class="tree-node">

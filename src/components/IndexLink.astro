@@ -6,7 +6,7 @@ export type Props = Omit<JSX.IntrinsicElements['a'], 'href' | 'title'>;
 const { class: className, ...htmlProps } = Astro.props;
 ---
 
-<a class={`back-home ${className}`} href="/" title="Return to main page" {...htmlProps}>return to main page</a>
+<a class:list={['back-home', className]} href="/" title="Return to main page" {...htmlProps}>return to main page</a>
 
 <style lang="scss">
   .back-home {

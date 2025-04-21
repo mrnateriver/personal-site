@@ -20,7 +20,7 @@ const heightNormalized = normalizeCssValue(height, 'px');
 const lengthNormalized = normalizeCssValue(length, 'px');
 ---
 
-<div class={`desk ${className ?? ''}`} style={{ '--desk-height': heightNormalized, '--desk-length': lengthNormalized }}>
+<div class:list={['desk', className]}>
   <Box
     class="desk-surface"
     surfaceColor={surfaceColorNormalized}
@@ -50,7 +50,7 @@ const lengthNormalized = normalizeCssValue(length, 'px');
   />
 </div>
 
-<style lang="scss">
+<style lang="scss" define:vars={{ 'desk-height': heightNormalized, 'desk-length': lengthNormalized }}>
   .desk {
     --desk-width: 128px;
     --desk-surface-height: 8px;

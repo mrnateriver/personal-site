@@ -19,7 +19,7 @@ const plasticColorNormalized = normalizeColor(plasticColor) ?? 'beige';
 ---
 
 <div
-  class={`computer ${className ?? ''}`}
+  class:list={['computer', className]}
   style={{ ...(style ?? {}), '--computer-plastic-color': plasticColorNormalized }}
 >
   <div class="computer-screen">

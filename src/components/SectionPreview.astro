@@ -13,7 +13,7 @@ const { class: className, href, caption, title, description } = Astro.props;
 
 <Win98Window
   as={href ? 'a' : 'div'}
-  class={`section-preview ${href ? 'section-preview-clickable' : ''} ${className ?? ''}`}
+  class:list={['section-preview', href && 'section-preview-clickable', className]}
   title={href ? `${caption ? `${caption} - ` : ''}${title}` : undefined}
   caption={caption}
   href={href}

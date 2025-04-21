@@ -21,7 +21,7 @@ const frameColorNormalized = normalizeColor(frameColor) ?? 'gray';
 const seatColorNormalized = normalizeColor(seatColor) ?? '#190b00';
 ---
 
-<div class={`chair ${className ?? ''}`}>
+<div class:list={['chair', className]}>
   <div class="chair-wheels">
     <Box class="chair-wheels-wheel" size={baseWidth} surfaceColor={wheelsColorNormalized} />
     <Box class="chair-wheels-wheel" size={baseWidth} surfaceColor={wheelsColorNormalized} />

@@ -128,7 +128,7 @@ const pixels = stringPixels.reduce<ImagePixelFrames[][]>((acc, [letter, letterPi
 }, []);
 ---
 
-<figure class={`box-string ${className ?? ''}`} title={string}>
+<figure class:list={['box-string', className]} title={string}>
   <BoxGrid
     rows={pixels}
     hideSurfaces={hideSurfaces}

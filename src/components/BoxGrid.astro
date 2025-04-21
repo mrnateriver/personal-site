@@ -163,14 +163,14 @@ const baseSectionProps: BoxProps = {
     Array.from(rowsByColors.entries()).map(([surfaceColor, rows]) => (
       <div class="grid-section" style={getBoxStyleVars({ ...baseSectionProps, surfaceColor })} aria-hidden="true">
         {Array.from(rows.entries()).map(([rowIndex, cells]) => (
-          <div class={`grid-section-row ${waveDisabled ? '' : 'grid-section-row-wave'}`} style={{ '--ri': rowIndex }}>
+          <div class:list={['grid-section-row', !waveDisabled && 'grid-section-row-wave']} style={{ '--ri': rowIndex }}>
             {cells.map((columnIndex) => {
               const cellIndex = rowIndex * rowLength + columnIndex;
               const frames = cellsFrames.get(cellIndex);
 
               return (
                 <Box
-                  class={`grid-section-row-cell ${frames?.count ? `frame-animate-${frames.count}` : ''}`}
+                  class:list={['grid-section-row-cell', frames?.count && `frame-animate-${frames.count}`]}
                   style={{ '--ci': `${columnIndex}`, ...frames?.styles }}
                   hideSurfaces={{ ...hideSurfaces, ...cellsHiddenSurfaces.get(cellIndex) }}
                   hideGradient={hideGradient}
