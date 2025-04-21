@@ -3,6 +3,7 @@ import Win98Button from './Win98Button.astro';
 import Win98Window from './Win98Window.astro';
 
 export interface Props {
+  class?: string;
   title: string;
   summary: string;
   date: Date;
@@ -17,6 +18,7 @@ export interface Props {
 }
 
 const {
+  class: className,
   title,
   summary,
   date,
@@ -42,7 +44,7 @@ const imagesCountField = typeof imagesCount === 'number' ? `Images: ${imagesCoun
 ---
 
 <Win98Window
-  class="blog-post"
+  class:list={['blog-post', className]}
   as="article"
   caption={`${caption} - ${humanDate}`}
   title={`${caption} - ${formattedDate}`}

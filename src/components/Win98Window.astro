@@ -1,5 +1,6 @@
 ---
 import type { JSX } from 'astro/jsx-runtime';
+
 import Win98Button from './Win98Button.astro';
 
 export type Props<AsElem extends keyof JSX.IntrinsicElements = 'div'> = JSX.IntrinsicElements[AsElem] & {
@@ -98,6 +99,7 @@ const {
       display: flex;
       justify-content: flex-start;
       align-items: center;
+      user-select: none;
 
       &-icon {
         width: var(--win98-caption-icon-size);
