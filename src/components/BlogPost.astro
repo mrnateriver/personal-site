@@ -7,11 +7,20 @@ export interface Props {
   summary: string;
   date: Date;
   href: string;
+  imageSrc?: string;
   tags?: string[];
   summaryAiGenerated?: boolean;
 }
 
-const { title, summary, date, href, tags = [], summaryAiGenerated: isSummaryAiGenerated = false } = Astro.props;
+const {
+  title,
+  summary,
+  date,
+  href,
+  imageSrc,
+  tags = [],
+  summaryAiGenerated: isSummaryAiGenerated = false,
+} = Astro.props;
 
 const caption = tags.length > 0 ? `${tags.join(', ')}` : 'Article';
 
@@ -33,6 +42,8 @@ const imagesCount = 'Images: 1'; // TODO: implement calculation or move to props
   statusFields={[readTime, wordCount, codeBlocksCount, imagesCount]}
   canvasBackground
 >
+  {imageSrc && <img src={imageSrc} alt={title} class="blog-post-image" />}
+
   <h2 class="blog-post-title">{title}</h2>
 
   <div class="blog-post-content">
@@ -49,6 +60,13 @@ const imagesCount = 'Images: 1'; // TODO: implement calculation or move to props
 
 <style lang="scss">
   .blog-post {
+    &-image {
+      margin-bottom: var(--padding-lg);
+      max-height: 200px;
+      width: 100%;
+      object-fit: cover;
+    }
+
     &-title {
       -webkit-font-smoothing: initial;
       font-family: var(--font-family-content);
