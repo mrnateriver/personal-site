@@ -55,11 +55,13 @@ if (endPage < totalPages) {
           class:list={['pagination-button', url.page === currentPage && 'pagination-button-current']}
           as="a"
           href={url.url}
+          title={`Navigate to page ${url.page}`}
+          aria-label={`Navigate to page ${url.page}`}
         >
           {url.page}
         </Win98Button>
       ) : (
-        <Win98Button class="pagination-button pagination-button-gap" disabled>
+        <Win98Button class="pagination-button pagination-button-gap" disabled aria-hidden="true">
           ...
         </Win98Button>
       ),

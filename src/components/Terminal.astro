@@ -217,8 +217,6 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
   }
 
   .terminal {
-    @include win98.scrollbars();
-
     padding: var(--padding-xs);
     font-family: var(--font-family-terminal);
 
@@ -331,5 +329,7 @@ const outputLines: TerminalOutputLine[] = lines.map((line, i) => {
         font-weight: 600;
       }
     }
+
+    @include win98.scrollbars();
   }
 </style>
