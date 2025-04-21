@@ -82,6 +82,8 @@ const terminalLines: TerminalLine[] = [
         <Terminal class="terminal-content" lines={terminalLines} header={terminalPrefix} />
       </Win98Window>
     </main>
+
+    <Acknowledgments class="acks" />
   </div>
 </Layout>
 
@@ -92,7 +94,7 @@ const terminalLines: TerminalLine[] = [
     align-items: center;
     justify-content: flex-start;
     gap: var(--padding-sm);
-    padding: var(--padding-sm) var(--padding-xlg) calc(var(--padding-sm) * 2 + var(--font-size-sm) * 1.5);
+    padding: var(--padding-sm) var(--padding-xlg);
     box-sizing: border-box;
     height: 100%;
   }

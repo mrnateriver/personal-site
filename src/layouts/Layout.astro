@@ -1,7 +1,6 @@
 ---
 import { SEO } from 'astro-seo';
 import '../styles/global.scss';
-import Acknowledgments from '../components/Acknowledgments.astro';
 
 import manifest from '../../public/manifest.json';
 
@@ -79,16 +78,5 @@ const faviconSizes = [16, 32, 48, 24, 64].map((size) => `${size}x${size}`).join(
   </head>
   <body>
     <slot />
-
-    <Acknowledgments class="acks" />
   </body>
 </html>
-
-<style lang="scss">
-  .acks {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: var(--padding-sm);
-  }
-</style>
