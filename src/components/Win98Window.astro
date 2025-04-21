@@ -147,8 +147,6 @@ const {
     }
 
     &-content {
-      @include win98.scrollbars();
-
       padding: var(--padding-md);
       position: relative;
       overflow: hidden;
@@ -174,6 +172,8 @@ const {
           border-image: none;
         }
       }
+
+      @include win98.scrollbars();
     }
 
     &-status-bar {
