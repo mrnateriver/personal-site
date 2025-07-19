@@ -56,7 +56,7 @@ const imagesCountField = typeof imagesCount === 'number' ? `Images: ${imagesCoun
 >
   {image && <Image src={image} alt={title} class="blog-post-image" />}
 
-  <h2 class="blog-post-title">{title}</h2>
+  <h2 class:list={['blog-post-title', image && 'blog-post-title-image']}>{title}</h2>
 
   {
     summary && (
@@ -77,10 +77,13 @@ const imagesCountField = typeof imagesCount === 'number' ? `Images: ${imagesCoun
 <style lang="scss">
   .blog-post {
     &-image {
-      margin-bottom: var(--padding-lg);
-      height: 200px;
-      width: 100%;
+      --image-size: 200px;
+
+      margin-right: var(--padding-lg);
+      height: var(--image-size);
+      width: var(--image-size);
       object-fit: cover;
+      float: left;
     }
 
     &-title {
@@ -88,6 +91,10 @@ const imagesCountField = typeof imagesCount === 'number' ? `Images: ${imagesCoun
       font-family: var(--font-family-content);
       font-size: 2rem;
       margin: var(--padding-sm) 0 var(--padding-lg) 0;
+
+      &-image {
+        margin-top: 0;
+      }
     }
 
     &-content {
