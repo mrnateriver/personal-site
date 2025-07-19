@@ -4,6 +4,8 @@
 @use 'variables';
 @use 'reset';
 
+@use '../styles/win98' as win98;
+
 :root {
   @include variables.variables();
   & {
@@ -23,6 +25,8 @@ body {
 body {
   color: var(--color-text-primary);
   background: var(--color-background);
+
+  @include win98.scrollbars();
 }
 
 $sizes: xxxxl, xxxl, xxl, xl, lg;
