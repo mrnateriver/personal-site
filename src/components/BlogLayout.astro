@@ -7,18 +7,21 @@ import Acknowledgments from './Acknowledgments.astro';
 import BoxString from './BoxString.astro';
 import IndexLink from './IndexLink.astro';
 
+import '../styles/blog.scss';
+
 export interface Props {
   title?: string;
   description?: string;
+  narrow?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, narrow = false } = Astro.props;
 
 const labelsColor = 'var(--color-primary)';
 ---
 
 <Layout title={title} description={description}>
-  <div class="layout-blog">
+  <div class:list={['layout-blog', narrow && 'layout-blog-narrow']}>
     <header class="layout-blog-header">
       <a href="/blog">
         <h1 class="layout-blog-header-title" id="blog-page-title">
@@ -122,6 +125,10 @@ const labelsColor = 'var(--color-primary)';
 
   .layout-blog {
     --max-layout-blog-width: 1000px;
+
+    &-narrow {
+      --max-layout-blog-width: 700px;
+    }
 
     max-width: var(--max-layout-blog-width);
     min-height: 100vh;

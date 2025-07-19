@@ -1,35 +1,63 @@
-p,
-blockquote {
-  margin: var(--padding-lg) 0;
-  text-indent: var(--padding-lg);
-}
-
-blockquote {
-  display: block;
-  font-style: italic;
-  padding-inline-start: var(--padding-lg);
-  position: relative;
-
-  &::before {
-    content: '';
+.blog-content {
+  img {
+    max-width: 100%;
+    // max-height: 500px;
+    object-fit: contain;
+    height: auto;
     display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: var(--padding-xs);
-    background-color: var(--color-text-tertiary);
+    margin: 0 auto;
   }
 
-  cite {
+  img + em {
+    font-size: var(--font-size-sm);
     display: block;
+    margin: var(--padding-sm) 0;
     text-indent: 0;
-    text-align: end;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  p,
+  blockquote {
+    margin: var(--padding-lg) 0;
+    text-indent: var(--padding-lg);
+  }
+
+  blockquote {
+    display: block;
+    margin: calc(1.5 * var(--padding-xlg)) 0;
+    padding-inline-start: var(--padding-xlg);
+    position: relative;
     color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
 
     &::before {
-      content: '—';
-      padding-inline-end: var(--padding-sm);
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: var(--padding-xs);
+      background-color: var(--color-accent);
+    }
+
+    cite {
+      display: block;
+      text-indent: 0;
+      text-align: end;
+      color: var(--color-text-secondary);
+
+      &::before {
+        content: '—';
+        padding-inline-end: var(--padding-sm);
+      }
     }
   }
 }

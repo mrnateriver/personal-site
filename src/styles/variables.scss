@@ -30,10 +30,10 @@
     --font-size-sm: 0.85rem; // small
     --font-size-md: 1rem; // p
     --font-size-lg: 1.25rem; // h5
-    --font-size-xl: 1.75rem; // h4
-    --font-size-xxl: 2.25rem; // h3
-    --font-size-xxxl: 2.75rem; // h2
-    --font-size-xxxxl: 3.5rem; // h1
+    --font-size-xl: 1.5rem; // h4
+    --font-size-xxl: 1.75rem; // h3
+    --font-size-xxxl: 2rem; // h2
+    --font-size-xxxxl: 2.75rem; // h1
   }
 }
 
@@ -71,6 +71,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
+    --color-accent: #0cabab;
     --color-background: #0c0c0c;
     --color-surface: #121212;
     --color-text-primary: white;

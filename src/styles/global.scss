@@ -33,7 +33,7 @@ $sizes: xxxxl, xxxl, xxl, xl, lg;
 @for $i from 1 through 5 {
   h#{$i} {
     font-size: var(--font-size-#{list.nth($sizes, $i)});
-    margin: calc((6 - $i) / 2 * var(--padding-lg)) 0;
+    margin: calc((6 - $i) / 2 * var(--padding-md)) 0;
     font-weight: 700;
   }
 }
