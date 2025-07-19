@@ -74,8 +74,6 @@ const [firstPost, ...otherPosts] = (posts as [CollectionEntry<'blog'>?, ...Colle
         {heading && <h2 class="layout-blog-content-main-separator-title">{heading}</h2>}
 
         {
-          // TODO: perhaps use slug in href instead
-          // TODO: metrics
           firstPost && (
             <BlogPost
               class="window-draggable"
@@ -84,11 +82,8 @@ const [firstPost, ...otherPosts] = (posts as [CollectionEntry<'blog'>?, ...Colle
               summary={firstPost.data.summary}
               date={firstPost.data.date}
               tags={firstPost.data.tags}
+              body={firstPost.body}
               href={`/blog/${firstPost.id}`}
-              readTimeMinutes={4}
-              codeBlocksCount={2}
-              imagesCount={1}
-              wordCount={3}
             />
           )
         }
@@ -104,11 +99,8 @@ const [firstPost, ...otherPosts] = (posts as [CollectionEntry<'blog'>?, ...Colle
               summary={post.data.summary}
               date={post.data.date}
               tags={post.data.tags}
+              body={post.body}
               href={`/blog/${post.id}`}
-              readTimeMinutes={4}
-              codeBlocksCount={2}
-              imagesCount={1}
-              wordCount={3}
             />
           ))
         }
