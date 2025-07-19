@@ -5,7 +5,7 @@ export interface Props {
   caption?: string;
   href?: string;
   title: string;
-  description: string;
+  description?: string;
 }
 
 const { class: className, href, caption, title, description } = Astro.props;
@@ -19,7 +19,7 @@ const { class: className, href, caption, title, description } = Astro.props;
   href={href}
 >
   <h2>{title}</h2>
-  <p>{description}</p>
+  {description && <p>{description}</p>}
 
   <slot />
 </Win98Window>

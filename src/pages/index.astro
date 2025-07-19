@@ -1,4 +1,6 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxString from '../components/BoxString.astro';
 import Chair from '../components/Chair.astro';
@@ -21,9 +23,11 @@ const commonLabelsProps = {
   gap: 0,
 };
 
-// TODO: last blog post summary
-const latestBlogPostTitle = 'Meaning of life';
-const latestBlogPostDescription = 'Lorem ipsum and other stuff like this.';
+const latestBlogPost = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .at(0);
+const latestBlogPostTitle = latestBlogPost?.data.title;
+const latestBlogPostDescription = latestBlogPost?.data.oneliner;
 ---
 
 <Layout>
@@ -84,13 +88,17 @@ const latestBlogPostDescription = 'Lorem ipsum and other stuff like this.';
       </section>
 
       <section title="Recent Content" class="section-preview-container">
-        <SectionPreview
-          href="/blog"
-          class="section-preview-blog"
-          caption="Latest Blog Entry"
-          title={latestBlogPostTitle}
-          description={latestBlogPostDescription}
-        />
+        {
+          latestBlogPostTitle && (
+            <SectionPreview
+              href="/blog"
+              class="section-preview-blog"
+              caption="Latest Blog Entry"
+              title={latestBlogPostTitle}
+              description={latestBlogPostDescription}
+            />
+          )
+        }
         <SectionPreview
           href="/resume"
           class="section-preview-resume"
