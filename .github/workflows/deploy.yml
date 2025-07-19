@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate Astro types
+        run: npm run astro sync
+
       - name: Lint project
         run: npm run lint
 
