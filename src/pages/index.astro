@@ -1,6 +1,4 @@
 ---
-import { getCollection } from 'astro:content';
-
 import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxString from '../components/BoxString.astro';
 import Chair from '../components/Chair.astro';
@@ -11,7 +9,6 @@ import Room from '../components/Room.astro';
 import SectionLink from '../components/SectionLink.astro';
 import SectionPreview from '../components/SectionPreview.astro';
 import Layout from '../layouts/Layout.astro';
-import { callAIFunction } from '../open-ai';
 
 const hideSurfacesLabels = { right: true, back: true, bottom: true };
 const hideSurfacesShadows = { right: true, left: true, back: true, bottom: true, top: true };
@@ -24,25 +21,9 @@ const commonLabelsProps = {
   gap: 0,
 };
 
-const entries = await getCollection('resume');
-
-const resumeText = entries
-  .map((entry, i) => [
-    `${i + 1}. ${entry.body?.trim()}`,
-    `Tech stack:`,
-    ...(entry.data.stack ?? ['N/A']).map((s) => `- ${s}`),
-  ])
-  .flat()
-  .join('\n');
-
-const { summary: resumeSummary } = await callAIFunction(
-  `${import.meta.env.INDEX_RESUME_SUMMARY_PROMPT || ''}
-  Do not generate summary longer than 15 words. You will be punished if you generate a summary longer than 15 words.
-  Summarize the following resume of a software engineer in a creative, but not cringe manner:
-  ${resumeText}`,
-  [{ name: 'summary', description: 'Resume summarization.' }],
-  0.5,
-);
+// TODO: last blog post summary
+const latestBlogPostTitle = 'Meaning of life';
+const latestBlogPostDescription = 'Lorem ipsum and other stuff like this.';
 ---
 
 <Layout>
@@ -107,15 +88,15 @@ const { summary: resumeSummary } = await callAIFunction(
           href="/blog"
           class="section-preview-blog"
           caption="Latest Blog Entry"
-          title="Meaning of life"
-          description="Lorem ipsum and other stuff like this."
+          title={latestBlogPostTitle}
+          description={latestBlogPostDescription}
         />
         <SectionPreview
           href="/resume"
           class="section-preview-resume"
           caption="Resume Summary"
           title="Career story"
-          description={resumeSummary}
+          description={'From coding fundamentals to cloud expertise—navigating diverse tech landscapes while crafting passionate side projects.'}
         />
       </section>
 
