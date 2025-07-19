@@ -35,6 +35,7 @@ export default eslintPluginTypescript.config(
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/restrict-plus-operands': 'off',
       '@typescript-eslint/triple-slash-reference': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'warn',
     },
   },
 
