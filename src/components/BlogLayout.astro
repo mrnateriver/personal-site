@@ -126,10 +126,6 @@ const labelsColor = 'var(--color-primary)';
   .layout-blog {
     --max-layout-blog-width: 1000px;
 
-    &-narrow {
-      --max-layout-blog-width: 700px;
-    }
-
     max-width: var(--max-layout-blog-width);
     min-height: 100vh;
     margin: 0 auto;
@@ -137,6 +133,10 @@ const labelsColor = 'var(--color-primary)';
     display: flex;
     flex-direction: column;
     position: relative;
+
+    &-narrow {
+      --max-layout-blog-width: 700px;
+    }
 
     &-header {
       display: flex;
@@ -178,43 +178,6 @@ const labelsColor = 'var(--color-primary)';
       @media (max-width: $column-breakpoint) {
         flex-direction: column;
       }
-
-      // &-tags {
-      //   width: 150px;
-      //   min-height: 190px;
-
-      //   @media (max-width: $column-breakpoint) {
-      //     width: 100%;
-      //   }
-      // }
-
-      // &-main,
-      // main {
-      //   flex: 1;
-      //   display: flex;
-      //   flex-direction: column;
-      //   gap: var(--padding-lg);
-      // }
-
-      // &-main-separator-title {
-      //   color: var(--color-text-secondary);
-      //   text-align: center;
-      //   font-family: var(--font-family-win98);
-      //   font-weight: normal;
-      //   font-size: var(--font-size-sm);
-      //   line-height: 0.5;
-      //   margin: var(--padding-lg) 0 0;
-
-      //   &-hidden {
-      //     opacity: 0;
-      //     position: absolute;
-      //     user-select: none;
-      //   }
-      // }
-
-      // &-pagination {
-      //   align-self: flex-start;
-      // }
     }
   }
 </style>
