@@ -8,14 +8,15 @@ export interface Props {
   totalPages: number;
   currentPage: number;
   pageHrefTemplate: `${string}[page]${string}`;
+  firstPageHref?: string;
 }
 
-const { class: className, totalPages, currentPage, pageHrefTemplate, maxPagesToShow = 5 } = Astro.props;
+const { class: className, totalPages, currentPage, pageHrefTemplate, maxPagesToShow = 5, firstPageHref } = Astro.props;
 
 function generateUrl(page: number): { page: number; url: string } {
   return {
     page,
-    url: pageHrefTemplate.replace('[page]', page.toString()),
+    url: firstPageHref && page === 1 ? firstPageHref : pageHrefTemplate.replace('[page]', page.toString()),
   };
 }
 

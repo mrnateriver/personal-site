@@ -1,0 +1,188 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+import win98iconComputer from '../assets/win98-icon-computer.png';
+import win98iconSearch from '../assets/win98-icon-search.png';
+import { kebabCase } from '../utils';
+
+import BlogLayout from './BlogLayout.astro';
+import BlogPost from './BlogPost.astro';
+import Pagination from './Pagination.astro';
+import Win98Tree from './Win98Tree.astro';
+import Win98Window from './Win98Window.astro';
+
+export interface Props {
+  pageTitle?: string;
+  pageDescription?: string;
+  heading?: string;
+  posts?: CollectionEntry<'blog'>[];
+  totalPages?: number;
+  currentPage?: number;
+  pageHrefTemplate: `${string}[page]${string}`;
+  firstPageHref?: string;
+}
+
+const {
+  pageTitle = 'Blog',
+  pageDescription,
+  heading,
+  posts,
+  totalPages,
+  currentPage = 1,
+  pageHrefTemplate,
+  firstPageHref,
+} = Astro.props;
+
+const allPosts = await getCollection('blog');
+const tags = Array.from(new Set(allPosts.flatMap((p) => p.data.tags ?? [])));
+const tagsNodes = [
+  {
+    label: 'Tags',
+    iconSrc: win98iconComputer.src,
+    children: tags.map((tag) => ({
+      label: tag,
+      href: `/blog/${kebabCase(tag)}`,
+    })),
+  },
+];
+
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+const [firstPost, ...otherPosts] = (posts as [CollectionEntry<'blog'>?, ...CollectionEntry<'blog'>[]]) || [];
+---
+
+<BlogLayout title={pageTitle} description={pageDescription}>
+  <div class="layout-blog-content">
+    <Win98Window
+      class="layout-blog-content-tags window-draggable"
+      as="aside"
+      caption="Tags"
+      iconSrc={win98iconSearch.src}
+      canvasBackground
+    >
+      <Win98Tree nodes={tagsNodes} />
+    </Win98Window>
+
+    <div class="layout-blog-content-main">
+      <main>
+        {
+          !heading && (
+            <h2 class="layout-blog-content-main-separator-title layout-blog-content-main-separator-title-hidden">
+              Latest post
+            </h2>
+          )
+        }
+        {heading && <h2 class="layout-blog-content-main-separator-title">{heading}</h2>}
+
+        {
+          // TODO: perhaps use slug in href instead
+          // TODO: metrics
+          firstPost && (
+            <BlogPost
+              class="window-draggable"
+              image={firstPost.data.image}
+              title={firstPost.data.title}
+              summary={firstPost.data.summary}
+              date={firstPost.data.date}
+              tags={firstPost.data.tags}
+              href={`/blog/${firstPost.id}`}
+              readTimeMinutes={4}
+              codeBlocksCount={2}
+              imagesCount={1}
+              wordCount={3}
+            />
+          )
+        }
+
+        {otherPosts.length > 0 && <h2 class="layout-blog-content-main-separator-title">Previous posts</h2>}
+
+        {
+          otherPosts.map((post) => (
+            <BlogPost
+              class="window-draggable"
+              image={post.data.image}
+              title={post.data.title}
+              summary={post.data.summary}
+              date={post.data.date}
+              tags={post.data.tags}
+              href={`/blog/${post.id}`}
+              readTimeMinutes={4}
+              codeBlocksCount={2}
+              imagesCount={1}
+              wordCount={3}
+            />
+          ))
+        }
+      </main>
+
+      {
+        (totalPages ?? 0) > 1 && (
+          <Pagination
+            class="layout-blog-content-pagination window-draggable"
+            totalPages={totalPages!}
+            currentPage={currentPage}
+            firstPageHref={firstPageHref}
+            pageHrefTemplate={pageHrefTemplate}
+          />
+        )
+      }
+    </div>
+  </div>
+</BlogLayout>
+
+<style is:global>
+  .layout-blog-content-tags .win98-window-content {
+    overflow-y: scroll;
+  }
+</style>
+
+<style lang="scss">
+  .layout-blog-content {
+    $column-breakpoint: 565px;
+
+    flex: 1;
+    display: flex;
+    align-items: start;
+    gap: var(--padding-lg);
+
+    @media (max-width: $column-breakpoint) {
+      flex-direction: column;
+    }
+
+    &-tags {
+      width: 150px;
+      min-height: 190px;
+
+      @media (max-width: $column-breakpoint) {
+        width: 100%;
+      }
+    }
+
+    &-main,
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding-lg);
+    }
+
+    &-main-separator-title {
+      color: var(--color-text-secondary);
+      text-align: center;
+      font-family: var(--font-family-win98);
+      font-weight: normal;
+      font-size: var(--font-size-sm);
+      line-height: 0.5;
+      margin: var(--padding-lg) 0 0;
+
+      &-hidden {
+        opacity: 0;
+        position: absolute;
+        user-select: none;
+      }
+    }
+
+    &-pagination {
+      align-self: flex-start;
+    }
+  }
+</style>

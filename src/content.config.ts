@@ -11,9 +11,15 @@ const resumeCollection = defineCollection({
 
 const blogCollection = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/blog' }),
-  schema: z.object({
-    tags: z.array(z.string()).optional(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      slug: z.string(),
+      summary: z.string().optional(),
+      tags: z.array(z.string()).optional(),
+      date: z.coerce.date(),
+      image: image().optional(),
+    }),
 });
 
 export const collections = {

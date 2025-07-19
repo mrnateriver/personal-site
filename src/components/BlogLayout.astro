@@ -1,0 +1,212 @@
+---
+import type { JSX } from 'astro/jsx-runtime';
+
+import Layout from '../layouts/Layout.astro';
+
+import Acknowledgments from './Acknowledgments.astro';
+import BoxString from './BoxString.astro';
+import IndexLink from './IndexLink.astro';
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+const labelsColor = 'var(--color-primary)';
+---
+
+<Layout title={title} description={description}>
+  <div class="layout-blog">
+    <header class="layout-blog-header">
+      <a href="/blog">
+        <h1 class="layout-blog-header-title" id="blog-page-title">
+          <BoxString string="blog" color={labelsColor} cellSize="16px" gap={0} />
+        </h1>
+      </a>
+      <div class="layout-blog-header-appendix">
+        <span
+          class="layout-blog-header-subtitle"
+          role={'doc-subtitle' as JSX.IntrinsicElements['span']['role']}
+          aria-labelledby="blog-page-title">Opinionated Tales</span
+        >
+        <IndexLink class="layout-blog-header-back-home" />
+      </div>
+    </header>
+
+    <slot />
+
+    <Acknowledgments class="acks" />
+  </div>
+</Layout>
+
+<script>
+  const windows = document.querySelectorAll('.window-draggable');
+  for (const window of windows) {
+    makeWindowDraggable(window as HTMLElement);
+  }
+
+  let draggedWindow: HTMLElement | undefined;
+  let dragStartX: number | undefined;
+  let dragStartY: number | undefined;
+  let initialTransformX: number | undefined;
+  let initialTransformY: number | undefined;
+  let initialUserSelect: string;
+  let lastZIndex = 1;
+
+  function makeWindowDraggable(window: HTMLElement) {
+    const titleBar = window.querySelector('.win98-window-caption') as HTMLElement;
+    if (!titleBar) {
+      return;
+    }
+
+    titleBar.addEventListener('mousedown', startDragHandler.bind(undefined, window), { passive: true });
+  }
+
+  function startDragHandler(target: HTMLElement, event: MouseEvent) {
+    draggedWindow = target;
+
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+
+    const style = window.getComputedStyle(target);
+    const matrix = new DOMMatrix(style.transform);
+    initialTransformX = matrix.m41;
+    initialTransformY = matrix.m42;
+
+    target.style.zIndex = (lastZIndex++).toString();
+
+    initialUserSelect = document.documentElement.style.userSelect;
+    document.documentElement.style.userSelect = 'none';
+
+    document.addEventListener('mousemove', onMouseMove, { passive: true });
+    document.addEventListener('mouseup', stopDragHander);
+    window.addEventListener('focusout', stopDragHander);
+    document.addEventListener('visibilitychange', stopDragHander);
+  }
+
+  function stopDragHander() {
+    draggedWindow = undefined;
+
+    document.documentElement.style.userSelect = initialUserSelect;
+
+    document.removeEventListener('mouseup', stopDragHander);
+    window.removeEventListener('focusout', stopDragHander);
+    document.removeEventListener('visibilitychange', stopDragHander);
+    document.removeEventListener('mousemove', onMouseMove);
+  }
+
+  function onMouseMove(event: MouseEvent) {
+    if (
+      !draggedWindow ||
+      typeof dragStartX !== 'number' ||
+      typeof dragStartY !== 'number' ||
+      typeof initialTransformX !== 'number' ||
+      typeof initialTransformY !== 'number'
+    ) {
+      return;
+    }
+
+    const dx = event.clientX - dragStartX;
+    const dy = event.clientY - dragStartY;
+
+    draggedWindow.style.transform = `translate(${initialTransformX + dx}px, ${initialTransformY + dy}px)`;
+  }
+</script>
+
+<style lang="scss">
+  .acks {
+    margin: var(--padding-sm) 0;
+  }
+
+  .layout-blog {
+    --max-layout-blog-width: 1000px;
+
+    max-width: var(--max-layout-blog-width);
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 0 var(--padding-lg);
+    display: flex;
+    flex-direction: column;
+
+    &-header {
+      display: flex;
+      align-items: stretch;
+      gap: var(--padding-xlg);
+      flex-wrap: wrap;
+      padding: var(--padding-lg) 0;
+
+      &-title {
+        margin: 0;
+      }
+
+      &-subtitle {
+        color: var(--color-text-secondary);
+        font-family: var(--font-family-win98);
+        font-size: 1rem;
+        margin: 0;
+      }
+
+      &-back-home {
+      }
+
+      &-appendix {
+        display: flex;
+        flex-flow: column;
+        align-items: flex-start;
+        justify-content: center;
+      }
+    }
+
+    &-content {
+      $column-breakpoint: 565px;
+
+      flex: 1;
+      display: flex;
+      align-items: start;
+      gap: var(--padding-lg);
+
+      @media (max-width: $column-breakpoint) {
+        flex-direction: column;
+      }
+
+      // &-tags {
+      //   width: 150px;
+      //   min-height: 190px;
+
+      //   @media (max-width: $column-breakpoint) {
+      //     width: 100%;
+      //   }
+      // }
+
+      // &-main,
+      // main {
+      //   flex: 1;
+      //   display: flex;
+      //   flex-direction: column;
+      //   gap: var(--padding-lg);
+      // }
+
+      // &-main-separator-title {
+      //   color: var(--color-text-secondary);
+      //   text-align: center;
+      //   font-family: var(--font-family-win98);
+      //   font-weight: normal;
+      //   font-size: var(--font-size-sm);
+      //   line-height: 0.5;
+      //   margin: var(--padding-lg) 0 0;
+
+      //   &-hidden {
+      //     opacity: 0;
+      //     position: absolute;
+      //     user-select: none;
+      //   }
+      // }
+
+      // &-pagination {
+      //   align-self: flex-start;
+      // }
+    }
+  }
+</style>

@@ -4,10 +4,10 @@ import * as fs from 'fs/promises';
 import { getCollection } from 'astro:content';
 
 import Acknowledgments from '../components/Acknowledgments.astro';
+import IndexLink from '../components/IndexLink.astro';
 import Terminal, { type TerminalLine } from '../components/Terminal.astro';
 import Win98Window from '../components/Win98Window.astro';
 import Layout from '../layouts/Layout.astro';
-import IndexLink from '../components/IndexLink.astro';
 
 const terminalPrefix = await fs.readFile('src/assets/terminal-header.txt', 'utf-8');
 

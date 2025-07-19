@@ -1,0 +1,85 @@
+---
+import type { GetStaticPathsOptions, Page } from 'astro';
+import { getCollection } from 'astro:content';
+
+import type { CollectionEntry } from 'astro:content';
+import BlogPostList from '../../components/BlogPostList.astro';
+import { kebabCase } from '../../utils';
+
+type Mode = 'post' | 'pagination' | 'tag';
+
+export interface Props {
+  mode?: Mode;
+  tag?: string;
+  page?: Page<CollectionEntry<'blog'>>;
+  post?: CollectionEntry<'blog'>;
+  pageUrlPrefix?: string;
+}
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const pageSize = 5;
+
+  const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const tags = Array.from(new Set(posts.flatMap((p) => p.data.tags ?? [])));
+
+  let paths: Array<{
+    params: { page: string | undefined };
+    props: Props;
+  }> = paginate(posts, {
+    pageSize,
+    props: { mode: 'pagination' as Mode, pageUrlPrefix: '/blog' },
+  }).map((page) => ({
+    ...page,
+    params: page.params.page ? { page: page.params.page as string | undefined } : { page: undefined },
+  }));
+
+  paths = paths.concat(
+    tags
+      .map((tag) => {
+        const kebabTag = kebabCase(tag);
+        return paginate(
+          posts.filter((p) => p.data.tags?.includes(tag)),
+          {
+            pageSize,
+            props: { mode: 'tag' as Mode, tag, pageUrlPrefix: `/blog/${kebabTag}` },
+          },
+        ).map((page) => ({
+          ...page,
+          params: page.params.page ? { page: `${kebabTag}/${page.params.page}` } : { page: kebabTag },
+        }));
+      })
+      .flat(),
+  );
+
+  paths = paths.concat(
+    posts.map((post) => ({
+      params: { page: post.id },
+      props: { mode: 'post', post },
+    })),
+  );
+
+  return paths;
+}
+
+const { mode, page, post, tag, pageUrlPrefix } = Astro.props;
+
+const pageTitle = mode === 'post' ? post?.data.title : mode === 'tag' ? `${tag} Blog` : 'Blog';
+const heading = mode === 'tag' ? `${tag} Posts` : undefined;
+---
+
+{
+  page && (
+    <BlogPostList
+      pageTitle={pageTitle}
+      heading={heading}
+      posts={page.data}
+      totalPages={page.lastPage}
+      currentPage={page.currentPage}
+      firstPageHref={pageUrlPrefix}
+      pageHrefTemplate={`${pageUrlPrefix}/[page]`}
+    />
+  )
+}
+
+<!-- // TODO: render post -->
+{post && <p>hello</p>}
