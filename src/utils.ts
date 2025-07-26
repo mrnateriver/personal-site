@@ -1,3 +1,7 @@
+export function normalizeBlogTag(tag: string): string {
+  return kebabCase(tag);
+}
+
 export function kebabCase(str: string): string {
   return str
     .replace(/([a-z])([A-Z])/g, '$1-$2')

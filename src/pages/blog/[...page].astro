@@ -6,7 +6,7 @@ import Win98Tree, { type TreeNode } from '../../components/Win98Tree.astro';
 import Win98Window from '../../components/Win98Window.astro';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import BlogPostList from '../../layouts/BlogListLayout.astro';
-import { kebabCase } from '../../utils';
+import { normalizeBlogTag } from '../../utils';
 
 type Mode = 'post' | 'pagination' | 'tag';
 
@@ -38,7 +38,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   paths = paths.concat(
     tags
       .map((tag) => {
-        const kebabTag = kebabCase(tag);
+        const kebabTag = normalizeBlogTag(tag);
         return paginate(
           posts.filter((p) => p.data.tags?.includes(tag)),
           {
@@ -72,10 +72,13 @@ const renderedPost = post ? await render(post) : null;
 
 const postNavigationNodes: TreeNode[] = [{ label: post?.data.title ?? '', href: '#heading-start' }];
 
+const tags = post?.data.tags ?? [];
+const headings = renderedPost?.headings ?? [];
+
 let previousHeading: MarkdownHeading | null = null;
 let previousNode: TreeNode | null = null;
 let parentHeadingsStack: TreeNode[] = [];
-for (const heading of renderedPost?.headings ?? []) {
+for (const heading of headings) {
   if (previousHeading && previousNode) {
     if (heading.depth > previousHeading.depth) {
       parentHeadingsStack.push(previousNode);
@@ -124,6 +127,15 @@ const PostContent = renderedPost?.Content ?? null!;
         <p class="blog-post-header-date">
           Published on {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
+        {tags.length && (
+          <p class="blog-post-header-tags">
+            Tags:{' '}
+            {tags.map((tag, i, self) => [
+              <a href={`/blog/${normalizeBlogTag(tag)}`}>{tag}</a>,
+              i === self.length - 1 ? null : ', ',
+            ])}
+          </p>
+        )}
       </header>
       <main class="blog-content">
         <PostContent />
@@ -145,10 +157,13 @@ const PostContent = renderedPost?.Content ?? null!;
 
       &-title {
         line-height: 1;
-        margin: 0;
+        margin: 0 0 var(--padding-lg) 0;
       }
 
-      &-date {
+      &-date,
+      &-tags {
+        font-family: var(--font-family-win98);
+        font-size: var(--font-size-sm);
         color: var(--color-text-tertiary);
         text-indent: 0 !important;
         margin: 0;

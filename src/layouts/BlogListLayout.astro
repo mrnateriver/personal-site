@@ -7,7 +7,7 @@ import BlogPost from '../components/BlogPost.astro';
 import Pagination from '../components/Pagination.astro';
 import Win98Tree from '../components/Win98Tree.astro';
 import Win98Window from '../components/Win98Window.astro';
-import { kebabCase } from '../utils';
+import { normalizeBlogTag } from '../utils';
 
 import BlogLayout from './BlogLayout.astro';
 
@@ -41,7 +41,7 @@ const tagsNodes = [
     iconSrc: win98iconComputer.src,
     children: tags.map((tag) => ({
       label: tag,
-      href: `/blog/${kebabCase(tag)}`,
+      href: `/blog/${normalizeBlogTag(tag)}`,
     })),
   },
 ];
