@@ -2,10 +2,10 @@
 import type { GetStaticPathsOptions, Page } from 'astro';
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 
-import BlogLayout from '../../components/BlogLayout.astro';
-import BlogPostList from '../../components/BlogPostList.astro';
 import Win98Tree from '../../components/Win98Tree.astro';
 import Win98Window from '../../components/Win98Window.astro';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import BlogPostList from '../../layouts/BlogListLayout.astro';
 import { kebabCase } from '../../utils';
 
 type Mode = 'post' | 'pagination' | 'tag';

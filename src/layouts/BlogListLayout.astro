@@ -3,13 +3,13 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 
 import win98iconComputer from '../assets/win98-icon-computer.png';
 import win98iconSearch from '../assets/win98-icon-search.png';
+import BlogPost from '../components/BlogPost.astro';
+import Pagination from '../components/Pagination.astro';
+import Win98Tree from '../components/Win98Tree.astro';
+import Win98Window from '../components/Win98Window.astro';
 import { kebabCase } from '../utils';
 
 import BlogLayout from './BlogLayout.astro';
-import BlogPost from './BlogPost.astro';
-import Pagination from './Pagination.astro';
-import Win98Tree from './Win98Tree.astro';
-import Win98Window from './Win98Window.astro';
 
 export interface Props {
   pageTitle?: string;
