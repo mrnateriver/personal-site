@@ -7,12 +7,20 @@ import manifest from '../../public/manifest.json';
 export interface Props {
   title?: string;
   description?: string;
+  type?: 'website' | 'article';
+  currentUrl?: string;
+  tags?: string[];
+  imageUrl?: string;
+  publishDate?: Date;
 }
 
-const { title, description } = Astro.props;
+const { title, description, imageUrl, type, currentUrl, tags, publishDate } = Astro.props;
 
 const pageTitle = [title, manifest.name].filter(Boolean).join(' — ');
+const contentTitle = title;
 const pageDescription = description ?? manifest.description;
+const pageImageUrl = imageUrl ?? '/opengraph.png';
+const pageType = type ?? 'website';
 
 const faviconSizes = [16, 32, 48, 24, 64].map((size) => `${size}x${size}`).join(' ');
 ---
@@ -29,10 +37,19 @@ const faviconSizes = [16, 32, 48, 24, 64].map((size) => `${size}x${size}`).join(
       noindex
       title={pageTitle}
       description={pageDescription}
-      twitter={{ image: '/opengraph.png', title: pageTitle, description: pageDescription }}
+      twitter={{ image: pageImageUrl, title: contentTitle, description: pageDescription }}
       openGraph={{
-        basic: { image: '/opengraph.png', title: pageTitle, type: 'website' },
-        optional: { locale: 'en-US', siteName: manifest.name, description: manifest.description },
+        basic: { image: pageImageUrl, title: contentTitle ?? pageTitle, type: pageType, url: currentUrl },
+        optional: { locale: 'en-US', siteName: manifest.name, description: pageDescription },
+        article:
+          pageType === 'article'
+            ? {
+                publishedTime: publishDate?.toISOString().substring(0, 10),
+                authors: ['Evgenii'],
+                section: 'blog',
+                tags,
+              }
+            : undefined,
       }}
       extend={{
         link: [{ rel: 'manifest', href: '/manifest.json' }],

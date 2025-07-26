@@ -48,7 +48,16 @@ for (const heading of headings) {
 }
 ---
 
-<BlogLayout title={post.data.title} description={post.data.oneliner} narrow>
+<BlogLayout
+  type="article"
+  title={post.data.title}
+  description={post.data.oneliner}
+  currentUrl={`/blog/${post.id}`}
+  imageUrl={post.data.image?.src}
+  publishDate={post.data.date}
+  tags={tags}
+  narrow
+>
   <header class="blog-post-header">
     <h1 id="heading-start" class="blog-post-header-title">
       {post.data.title}

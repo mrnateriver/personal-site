@@ -4,22 +4,22 @@ import type { JSX } from 'astro/jsx-runtime';
 import Acknowledgments from '../components/Acknowledgments.astro';
 import BoxString from '../components/BoxString.astro';
 import IndexLink from '../components/IndexLink.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout, { type Props as BaseLayoutProps } from '../layouts/Layout.astro';
 
 import '../styles/blog.scss';
 
-export interface Props {
+export interface Props extends BaseLayoutProps {
   title?: string;
   description?: string;
   narrow?: boolean;
 }
 
-const { title, description, narrow = false } = Astro.props;
+const { title, description, narrow = false, ...layoutProps } = Astro.props;
 
 const labelsColor = 'var(--color-primary)';
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} {...layoutProps}>
   <div class:list={['layout-blog', narrow && 'layout-blog-narrow']}>
     <header class="layout-blog-header">
       <a href="/blog">
