@@ -20,6 +20,8 @@ const postNavigationNodes: TreeNode[] = [{ label: post.data.title, href: '#headi
 const tags = post.data.tags ?? [];
 const headings = renderedPost.headings;
 
+// TODO: ESLint fails to resolve TreeNode; this gotta be a parsing error of *.astro file, because if you move TreeNode to this file, it resolves just fine
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 let previousNode: TreeNode | null = null;
 let previousHeading: MarkdownHeading | null = null;
 let parentHeadingsStack: TreeNode[] = [];
