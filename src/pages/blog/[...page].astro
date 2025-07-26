@@ -1,11 +1,9 @@
 ---
-import type { GetStaticPathsOptions, MarkdownHeading, Page } from 'astro';
-import { type CollectionEntry, getCollection, render } from 'astro:content';
+import type { GetStaticPathsOptions, Page } from 'astro';
+import { type CollectionEntry, getCollection } from 'astro:content';
 
-import Win98Tree, { type TreeNode } from '../../components/Win98Tree.astro';
-import Win98Window from '../../components/Win98Window.astro';
-import BlogLayout from '../../layouts/BlogLayout.astro';
 import BlogPostList from '../../layouts/BlogListLayout.astro';
+import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
 import { normalizeBlogTag } from '../../utils';
 
 type Mode = 'post' | 'pagination' | 'tag';
@@ -67,40 +65,6 @@ const { mode, page, post, tag, pageUrlPrefix } = Astro.props;
 
 const pageTitle = mode === 'post' ? post?.data.title : mode === 'tag' ? `${tag} Blog` : 'Blog';
 const heading = mode === 'tag' ? `${tag} Posts` : undefined;
-
-const renderedPost = post ? await render(post) : null;
-
-const postNavigationNodes: TreeNode[] = [{ label: post?.data.title ?? '', href: '#heading-start' }];
-
-const tags = post?.data.tags ?? [];
-const headings = renderedPost?.headings ?? [];
-
-let previousHeading: MarkdownHeading | null = null;
-let previousNode: TreeNode | null = null;
-let parentHeadingsStack: TreeNode[] = [];
-for (const heading of headings) {
-  if (previousHeading && previousNode) {
-    if (heading.depth > previousHeading.depth) {
-      parentHeadingsStack.push(previousNode);
-      previousNode.children = [];
-    } else if (heading.depth < previousHeading.depth) {
-      parentHeadingsStack.pop();
-    }
-  }
-
-  const nodes = parentHeadingsStack.at(-1)?.children ?? postNavigationNodes;
-
-  nodes.push(
-    (previousNode = {
-      label: heading.text,
-      href: `#${heading.slug}`,
-    }),
-  );
-
-  previousHeading = heading;
-}
-
-const PostContent = renderedPost?.Content ?? null!;
 ---
 
 {
@@ -117,67 +81,4 @@ const PostContent = renderedPost?.Content ?? null!;
   )
 }
 
-{
-  post && (
-    <BlogLayout title={post.data.title} description={post.data.oneliner} narrow>
-      <header class="blog-post-header">
-        <h1 id="heading-start" class="blog-post-header-title">
-          {post.data.title}
-        </h1>
-        <p class="blog-post-header-date">
-          Published on {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </p>
-        {tags.length && (
-          <p class="blog-post-header-tags">
-            Tags:{' '}
-            {tags.map((tag, i, self) => [
-              <a href={`/blog/${normalizeBlogTag(tag)}`}>{tag}</a>,
-              i === self.length - 1 ? null : ', ',
-            ])}
-          </p>
-        )}
-      </header>
-      <main class="blog-content">
-        <PostContent />
-      </main>
-      <Win98Window class="blog-post-navigation window-draggable" as="aside" caption="Contents" canvasBackground>
-        <Win98Tree nodes={postNavigationNodes} />
-      </Win98Window>
-    </BlogLayout>
-  )
-}
-
-<style lang="scss">
-  .blog-post {
-    display: flex;
-    align-items: flex-start;
-
-    &-header {
-      margin: calc(1.5 * var(--padding-xlg)) 0;
-
-      &-title {
-        line-height: 1;
-        margin: 0 0 var(--padding-lg) 0;
-      }
-
-      &-date,
-      &-tags {
-        font-family: var(--font-family-win98);
-        font-size: var(--font-size-sm);
-        color: var(--color-text-tertiary);
-        text-indent: 0 !important;
-        margin: 0;
-      }
-    }
-
-    &-navigation {
-      width: 200px;
-      position: fixed;
-      left: calc(50% - var(--max-layout-blog-width) / 2 - 200px - var(--padding-lg));
-      top: var(--padding-lg);
-    }
-  }
-  .blog-content {
-    margin-bottom: calc(10 * var(--padding-xlg));
-  }
-</style>
+{post && <BlogPostLayout post={post} />}
