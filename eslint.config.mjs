@@ -2,7 +2,6 @@
 
 import eslint from '@eslint/js';
 import * as eslintPluginAstro from 'eslint-plugin-astro';
-// @ts-expect-error No types available
 import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import * as eslintPluginTypescript from 'typescript-eslint';
@@ -10,7 +9,6 @@ import * as eslintPluginTypescript from 'typescript-eslint';
 export default eslintPluginTypescript.config(
   eslint.configs.recommended,
   eslintPluginTypescript.configs.strictTypeChecked,
-
   eslintPluginAstro.configs.recommended,
   {
     languageOptions: {
@@ -27,15 +25,15 @@ export default eslintPluginTypescript.config(
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/strict-boolean-expressions': 'off',
       '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'warn',
+      '@typescript-eslint/restrict-plus-operands': 'off',
+      '@typescript-eslint/triple-slash-reference': 'off',
       // These rules are incompatible with Astro due to the way it handles JSX
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/restrict-plus-operands': 'off',
-      '@typescript-eslint/triple-slash-reference': 'off',
-      '@typescript-eslint/no-unnecessary-condition': 'warn',
     },
   },
 
