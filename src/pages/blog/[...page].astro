@@ -1,8 +1,8 @@
 ---
-import type { GetStaticPathsOptions, Page } from 'astro';
+import type { GetStaticPathsOptions, MarkdownHeading, Page } from 'astro';
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 
-import Win98Tree from '../../components/Win98Tree.astro';
+import Win98Tree, { type TreeNode } from '../../components/Win98Tree.astro';
 import Win98Window from '../../components/Win98Window.astro';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import BlogPostList from '../../layouts/BlogListLayout.astro';
@@ -70,13 +70,32 @@ const heading = mode === 'tag' ? `${tag} Posts` : undefined;
 
 const renderedPost = post ? await render(post) : null;
 
-const postNavigationNodes = [
-  { text: post?.data.title ?? '', slug: 'heading-start' },
-  ...(renderedPost?.headings ?? []),
-].map((heading) => ({
-  label: heading.text,
-  href: `#${heading.slug}`,
-}));
+const postNavigationNodes: TreeNode[] = [{ label: post?.data.title ?? '', href: '#heading-start' }];
+
+let previousHeading: MarkdownHeading | null = null;
+let previousNode: TreeNode | null = null;
+let parentHeadingsStack: TreeNode[] = [];
+for (const heading of renderedPost?.headings ?? []) {
+  if (previousHeading && previousNode) {
+    if (heading.depth > previousHeading.depth) {
+      parentHeadingsStack.push(previousNode);
+      previousNode.children = [];
+    } else if (heading.depth < previousHeading.depth) {
+      parentHeadingsStack.pop();
+    }
+  }
+
+  const nodes = parentHeadingsStack.at(-1)?.children ?? postNavigationNodes;
+
+  nodes.push(
+    (previousNode = {
+      label: heading.text,
+      href: `#${heading.slug}`,
+    }),
+  );
+
+  previousHeading = heading;
+}
 
 const PostContent = renderedPost?.Content ?? null!;
 ---
