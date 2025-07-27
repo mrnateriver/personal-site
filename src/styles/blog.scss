@@ -60,4 +60,15 @@
       }
     }
   }
+
+  ol {
+    list-style: decimal;
+    margin-left: var(--padding-lg);
+  }
+
+  hr {
+    display: block;
+    margin: calc(var(--padding-lg) * 3) 0;
+    border-color: var(--color-text-tertiary);
+  }
 }
