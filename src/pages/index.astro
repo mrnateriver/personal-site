@@ -91,7 +91,7 @@ const latestBlogPostDescription = latestBlogPost?.data.oneliner;
         {
           latestBlogPostTitle && (
             <SectionPreview
-              href="/blog"
+              href={`/blog/${latestBlogPost.id}`}
               class="section-preview-blog"
               caption="Latest Blog Entry"
               title={latestBlogPostTitle}
