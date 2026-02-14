@@ -5,8 +5,10 @@ import { readBmpImage, type ImagePixelFrames } from '../images';
 import type { Props as BoxGridProps } from './BoxGrid.astro';
 import BoxGrid from './BoxGrid.astro';
 
-export interface Props
-  extends Pick<BoxGridProps, 'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient' | 'waveDisabled'> {
+export interface Props extends Pick<
+  BoxGridProps,
+  'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient' | 'waveDisabled'
+> {
   class?: string;
   string: string;
   color?: Color | null;

@@ -4,11 +4,10 @@ import { readBmpImage, type BitmapImagePath, type ImagePixelFrames } from '../im
 
 import BoxGrid, { type Props as BoxGridProps } from './BoxGrid.astro';
 
-interface BaseProps
-  extends Pick<
-    BoxGridProps,
-    'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient' | 'animationFrame' | 'animationDelay'
-  > {
+interface BaseProps extends Pick<
+  BoxGridProps,
+  'gap' | 'cellSize' | 'hideSurfaces' | 'hideGradient' | 'animationFrame' | 'animationDelay'
+> {
   class?: string;
   title?: string;
   cellsColor?: Color;

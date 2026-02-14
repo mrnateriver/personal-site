@@ -1,6 +1,6 @@
 ---
 title: 'Meaning of Code'
-summary: "Focus on value, not code —- until the implementation’s risks, trade-offs, and failure modes become your problem. LLMs make changes cheaper, but they don’t erase security cliffs or accumulated liabilities. Code matters because it determines the cost when things break."
+summary: 'Focus on value, not code —- until the implementation’s risks, trade-offs, and failure modes become your problem. LLMs make changes cheaper, but they don’t erase security cliffs or accumulated liabilities. Code matters because it determines the cost when things break.'
 oneliner: 'Value comes first, but code sets the bill when reality shows up.'
 tags: ['AI', 'Software Engineering', 'Programming']
 date: '2026-02-14'
