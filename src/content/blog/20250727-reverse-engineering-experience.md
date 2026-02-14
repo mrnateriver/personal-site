@@ -2,7 +2,7 @@
 title: 'Reverse Engineering Experience'
 summary: "Imagine a bicycle. Visualise its frame, with all its bends, welds, bolts. A steerer tube with handlebars on top, adorned with a gear selector and a brake lever. Brake lever pulling on a cable that pushes the calipers, which clamp the wheels' rims or brake discs. Then the wheels themselves with spokes, tires and an intricate tread on them. A well-oiled chain, which then goes over the rear derailleur. The derailleur with a set of gears with carefully calculated gear ratios in a geometric progression. Magnificently simple, yet non-trivial mechanism.\n\nMost likely you'll be able to imagine every detail of it. But can you explain how to _ride_ it?"
 oneliner: 'Tacit knowledge and cognition process.'
-tags: ['Learning', 'Knowledge Management', 'Tacit Knowledge', 'Cognition', 'Reverse Engineering']
+tags: ['AI', 'Learning', 'Knowledge Management', 'Tacit Knowledge', 'Cognition', 'Reverse Engineering']
 date: '2025-07-27'
 ---
 
