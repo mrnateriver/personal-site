@@ -19,6 +19,23 @@ interface HSLA {
   a: number; // 0 - 1
 }
 
+/**
+ * Normalizes a color input into a CSS color string.
+ *
+ * @param {Color} [color] - The color to normalize, which can be a number (32-bit RGBA) or a CSS color string.
+ * @returns {CssColor | undefined} A normalized CSS color string, or undefined if the input is undefined.
+ *
+ * The function supports various color formats:
+ * - Named colors (e.g., "red", "blue", "transparent")
+ * - Hexadecimal colors (#rgb, #rrggbb, #rrggbbaa)
+ * - RGB/RGBA functional notation (e.g., rgb(255, 0, 0), rgba(255, 0, 0, 0.5))
+ * - HSL/HSLA functional notation (e.g., hsl(120, 100%, 50%), hsla(120, 100%, 50%, 0.5))
+ * - CSS variables (e.g., var(--my-color))
+ * - The special keyword "currentcolor"
+ *
+ * If the input is a number, it is treated as a 32-bit RGBA value, where the highest byte is red and the lowest byte is alpha.
+ * If the input is a string, it is parsed according to the supported formats. If the string is not a valid color format, an error is thrown.
+ */
 export function normalizeColor(color?: Color): CssColor | undefined {
   if (typeof color === 'undefined') {
     return undefined;
