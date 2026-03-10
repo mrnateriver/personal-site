@@ -1,6 +1,6 @@
 ---
 title: 'Artificial Intelligence'
-summary: 'People worry about the future because of the AI. They are probably so concerned because of the unknowns, rather than specific transformations the AI could bring, and a lot of people worry about job security first and foremost. Can't blame them, since this is the most practical layer of AI\'s effects on our world.'
+summary: "People worry about the future because of the AI. They are probably so concerned because of the unknowns, rather than specific transformations the AI could bring, and a lot of people worry about job security first and foremost. Can't blame them, since this is the most practical layer of AI's effects on our world."
 oneliner: 'AI, please take my job.'
 tags: ['AI', 'Software Engineering', 'Programming', 'Future']
 date: '2026-03-10'
