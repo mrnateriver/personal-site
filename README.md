@@ -2,11 +2,7 @@
 
 [Slightly creative personal site](https://mrnateriver.io).
 
-Contains a career story, with plans for a blog as well.
-
 All of the effects are done purely in CSS, with no frontend JS whatsoever.
-
-Some of the site's content is generated using OpenAI API (not the resume part).
 
 ## Tech Stack
 
